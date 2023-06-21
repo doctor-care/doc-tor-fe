@@ -1,44 +1,82 @@
+import { useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import { Formik, useFormik } from 'formik';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 function Login() {
+    const [error, setErr] = useState();
+    const [view, setView] = useState(false);
+    const navigate = useNavigate();
+    const validationSchema = Yup.object().shape({
+        username: Yup.string().required('Username is required'),
+        password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            const apiUrl = 'http://localhost:8080/user/login';
+            const headers = {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Methods': 'PUT, POST, GET, DELETE, PATCH, OPTIONS',
+            };
+            const requestData = {
+                userName: values.username,
+                password: values.password,
+            };
+            axios
+                .post(apiUrl, requestData, { headers })
+                .then((res) => {
+                    localStorage.setItem('jwt', res.data.jwt);
+                    navigate('/');
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setErr('Sai tên đăng nhập hoặc mật khẩu!');
+                });
+            // Xử lý response từ API  console.log(response.data);
+        },
+    });
+
+    const { touched } = formik;
+    const handleInputChange = (event) => {
+        formik.handleChange(event);
+        setErr('');
+    };
+
     return (
         <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-lg text-center">
                 <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
 
-                <p className="mt-4 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque ipsa
-                    culpa autem, at itaque nostrum!
+                <p className="mt-4 text-danger" style={{ height: '1.5rem' }}>
+                    {error}
                 </p>
             </div>
 
-            <form action="" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
+            <form className="mx-auto mb-0 mt-8 max-w-md space-y-4" onSubmit={formik.handleSubmit}>
                 <div>
                     <label htmlFor="email" className="sr-only">
-                        Email
+                        userName
                     </label>
 
                     <div className="relative">
                         <input
-                            type="email"
+                            type="text"
+                            name="username"
                             className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
-                            placeholder="Enter email"
+                            placeholder="Enter username"
+                            value={formik.values.username}
+                            onChange={handleInputChange}
                         />
-
-                        <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 text-gray-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                                />
-                            </svg>
-                        </span>
+                        {formik.errors.username && touched.username && (
+                            <div className="text-danger">{formik.errors.username}</div>
+                        )}
                     </div>
                 </div>
 
@@ -49,32 +87,23 @@ function Login() {
 
                     <div className="relative">
                         <input
-                            type="password"
+                            type={view ? 'text' : 'password'}
+                            name="password"
                             className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
                             placeholder="Enter password"
+                            value={formik.values.password}
+                            onChange={handleInputChange}
                         />
-
-                        <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 text-gray-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                            </svg>
+                        {formik.errors.password && touched.username && (
+                            <div className="text-danger">{formik.errors.password}</div>
+                        )}
+                        <span className="absolute inset-y-0 end-0 grid place-content-center px-4 text-gray-400">
+                            <i
+                                className={view ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'}
+                                onClick={() => {
+                                    setView(!view);
+                                }}
+                            ></i>
                         </span>
                     </div>
                 </div>
