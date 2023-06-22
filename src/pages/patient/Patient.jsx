@@ -14,7 +14,7 @@ export default function Patient() {
     const yup = require("yup");
     const navigate = useNavigate();
     const [city, setCity] = useState([]);
-    const [message, setMessage] = useState("");
+    const [messageAddress, setMessageAddress] = useState("");
     const [files, setFiles] = useState("");
     const [previewUrls, setPreviewUrls] = useState("");
     const [district, setDistrict] = useState([]);
@@ -26,6 +26,7 @@ export default function Patient() {
     const schema = yup.object({
         userName: yup.string().required(),
         password: yup.string().required(),
+        address: yup.string().required(),
         email: yup.string().required()
             .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "mail sai định dạng"),
         avatarUrl: yup.mixed().required('File is required'),
@@ -57,6 +58,8 @@ export default function Patient() {
     });
 
     const onSubmit = async (data) => {
+        if (checkEnable.city === '0' && checkEnable.district === "0") { setMessageAddress("dia chi khong duoc de trong"); return }
+        if (files === null) { setMessageAddress("dia chi khong duoc de trong"); return }
         if (checkEnable.city !== '0' && checkEnable.district !== "0") {
             const folderRef = ref(storage, "image");
             if (files !== "") {
@@ -73,11 +76,9 @@ export default function Patient() {
                     },
                     () => {
                         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            console.log(downloadURL);
                             data.avatarUrl = downloadURL;
                             data.city = checkEnable.city;
                             data.district = checkEnable.district;
-                            console.log(data);
                             axios.post("http://localhost:8080/patient/signup", data).then(resp => {
                                 if (resp.status == HttpStatusCode.Created) {
                                     navigate("/");
@@ -88,14 +89,13 @@ export default function Patient() {
                     })
             }
         }
-        setMessage("address khong de trong");
     };
 
     useEffect(() => {
         axios.get("https://vapi.vnappmob.com/api/province/").then((resp) => {
             setCity(resp.data.results);
         });
-    }, [message]);
+    }, [messageAddress]);
 
     const handleChangeCity = (e) => {
         setCheckEnable({ ...checkEnable, city: e.target.value });
@@ -167,6 +167,7 @@ export default function Patient() {
                         }
                     </div>
                 </div>
+
                 <div className="formData">
                     <div>
                         <label>avatarUrl</label>
@@ -238,10 +239,22 @@ export default function Patient() {
                         )}
                     </div>
                 </div>
-
                 <div className="formData">
                     <div>
                         <label>Address</label>
+                    </div>
+                    <div>
+                        <input className="form-control" {...register("address")} type="text" />
+                    </div>
+                    <div>
+                        {errors.address &&
+                            <ErrorMessage messageId={errors.address.message} />
+                        }
+                    </div>
+                </div>
+                <div className="formData">
+                    <div>
+                        <label>City</label>
                     </div>
                     <div style={{ display: "flex" }}>
                         <div className="col-md-6 mr-4 ">
@@ -261,28 +274,30 @@ export default function Patient() {
                             </div>
                         </div>
                         {checkEnable.city !== "0" && (
-                            <div className="col-md-6 mr-4">
-                                <select
-                                    name="district"
-                                    defaultValue="0"
-                                    onChange={handleChangeDistrict}
-                                >
-                                    <option value="0">-Choice something-</option>
-                                    {district.map((item) => (
-                                        <option value={item.district_id} key={item.district_id}>
-                                            {item.district_name}
-                                        </option>
-                                    ))}
-                                </select>
-
-                            </div>
+                            <React.Fragment>
+                                <label>District</label>
+                                <div className="col-md-6 mr-4" style={{ paddingLeft: "0.1em" }}>
+                                    <select
+                                        name="district"
+                                        defaultValue="0"
+                                        onChange={handleChangeDistrict}
+                                    >
+                                        <option value="0">-Choice something-</option>
+                                        {district.map((item) => (
+                                            <option value={item.district_id} key={item.district_id}>
+                                                {item.district_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </React.Fragment>
                         )}
 
                     </div>
                     <div>
-                        {message !== '' && (
+                        {messageAddress !== '' && (
                             <ErrorMessage
-                                messageId={message}
+                                messageId={messageAddress}
                             />
                         )}
                     </div>
