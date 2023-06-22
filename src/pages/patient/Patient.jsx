@@ -1,33 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../utils/firebase";
 import './style.css';
 import ErrorMessage from "@/components/common/NotFound/ErrorMessage";
 import axios, { HttpStatusCode } from "axios";
 import { useNavigate } from "react-router-dom";
 import Option from "@/components/common/SelectOption/Option";
+import UploadFirebase from "@/utils/upload/UploadFirebase";
 
 export default function Patient() {
     const yup = require("yup");
     const navigate = useNavigate();
+    const [city, setCity] = useState([]);
+    const [message, setMessage] = useState("");
+    const [files, setFiles] = useState("");
+    const [previewUrls, setPreviewUrls] = useState("");
+    const [district, setDistrict] = useState([]);
+    const [checkEnable, setCheckEnable] = useState({
+        city: "0",
+        district: "0",
+    });
 
     const schema = yup.object({
         userName: yup.string().required(),
         password: yup.string().required(),
         email: yup.string().required()
             .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "mail sai định dạng"),
-        avatarUrl: yup.string().required(),
+        avatarUrl: yup.mixed().required('File is required'),
         phone: yup.string().required()
             .matches(/^((090)[0-9]{7})|(84)[0-9]{8}$/, "phone sai định dạng"),
-        birthday: yup.date().required()
-            .max(new Date(), "ngay sinh khong qua hien tai")
+        birthday: yup
+            .string()
+            .required()
             .test('dob', 'tuoi phai lon hon 18', function (value, ctx) {
                 const dob = new Date(value);
                 const validDate = new Date();
                 const valid = validDate.getFullYear() - dob.getFullYear() >= 18;
                 return !valid ? ctx.createError() : valid;
             }),
-        address: yup.string().required(),
         name: yup.string().required(),
         healthHistory: yup.string().required(),
         bloodType: yup.string().required(),
@@ -45,10 +57,86 @@ export default function Patient() {
     });
 
     const onSubmit = async (data) => {
-        const resp = await axios.post("http://localhost:8080/patient/signup", data);
-        if (resp.status === HttpStatusCode.Created) { navigate("/"); }
+        if (checkEnable.city !== '0' && checkEnable.district !== "0") {
+            const folderRef = ref(storage, "image");
+            if (files !== "") {
+                const timestamp = Date.now();
+                const fileName = `${timestamp}_${files.name}`;
+                const fileRef = ref(folderRef, fileName);
+                const uploadTask = uploadBytesResumable(fileRef, files);
+                uploadTask.on("state_changed",
+                    (snapshot) => {
+                        console.log(snapshot);
+                    },
+                    (error) => {
+                        console.log(error);
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            console.log(downloadURL);
+                            data.avatarUrl = downloadURL;
+                            data.city = checkEnable.city;
+                            data.district = checkEnable.district;
+                            console.log(data);
+                            axios.post("http://localhost:8080/patient/signup", data).then(resp => {
+                                if (resp.status == HttpStatusCode.Created) {
+                                    navigate("/");
+                                }
+                            })
+                            return;
+                        });
+                    })
+            }
+        }
+        setMessage("address khong de trong");
     };
 
+    useEffect(() => {
+        axios.get("https://vapi.vnappmob.com/api/province/").then((resp) => {
+            setCity(resp.data.results);
+        });
+    }, [message]);
+
+    const handleChangeCity = (e) => {
+        setCheckEnable({ ...checkEnable, city: e.target.value });
+    };
+
+    const handleChangeDistrict = (e) => {
+        setCheckEnable({ ...checkEnable, district: e.target.value });
+    };
+    useEffect(() => {
+        getData();
+    }, [checkEnable.city]);
+
+    const getData = async () => {
+        let resp = await axios.get(
+            `https://vapi.vnappmob.com/api/province/district/${checkEnable.city}`
+        );
+        setDistrict(resp.data.results);
+    };
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        let imageFiles = [];
+        let urls = "";
+        let isImage = true;
+
+        if (selectedFiles.length > 0) {
+            selectedFiles.forEach((file) => {
+                const fileExtension = file.name.split(".").pop();
+                const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+                if (allowedExtensions.includes(fileExtension.toLowerCase())) {
+                    imageFiles = file;
+                    urls = URL.createObjectURL(file);
+                } else {
+                    isImage = false;
+                }
+            });
+            if (isImage) {
+                setFiles(imageFiles);
+                setPreviewUrls(urls);
+            }
+        }
+    };
     return (
         <div>
             <h1>Form Patient</h1>
@@ -71,7 +159,7 @@ export default function Patient() {
                         <label>Password</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("password")} />
+                        <input className="form-control" {...register("password")} type="password" />
                     </div>
                     <div>
                         {errors.password &&
@@ -84,7 +172,26 @@ export default function Patient() {
                         <label>avatarUrl</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("avatarUrl")} type="file" />
+                        <input
+                            type="file"
+                            className="form-control"
+                            {...register("avatarUrl")}
+                            multiple
+                            onChange={handleFileChange}
+                            accept="image/jpeg, image/png, image/jpg"
+                        />
+                        <div>
+                            {previewUrls && <img
+                                key={previewUrls}
+                                src={previewUrls}
+                                alt="Preview"
+                                style={{
+                                    width: "auto",
+                                    height: "150px",
+                                    margin: "5px",
+                                }}
+                            />}
+                        </div>
                     </div>
                     <div>
                         {errors.avatarUrl &&
@@ -131,16 +238,52 @@ export default function Patient() {
                         )}
                     </div>
                 </div>
+
                 <div className="formData">
                     <div>
                         <label>Address</label>
                     </div>
-                    <div>
-                        <input className="form-control" {...register("address")} />
+                    <div style={{ display: "flex" }}>
+                        <div className="col-md-6 mr-4 ">
+                            <div className="form-outline datepicker">
+                                <select
+                                    name="city"
+                                    defaultValue="0"
+                                    onChange={handleChangeCity}
+                                >
+                                    <option value="0">-Choice something-</option>
+                                    {city.map((item) => (
+                                        <option value={item.province_id} key={item.province_id}>
+                                            {item.province_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        {checkEnable.city !== "0" && (
+                            <div className="col-md-6 mr-4">
+                                <select
+                                    name="district"
+                                    defaultValue="0"
+                                    onChange={handleChangeDistrict}
+                                >
+                                    <option value="0">-Choice something-</option>
+                                    {district.map((item) => (
+                                        <option value={item.district_id} key={item.district_id}>
+                                            {item.district_name}
+                                        </option>
+                                    ))}
+                                </select>
+
+                            </div>
+                        )}
+
                     </div>
                     <div>
-                        {errors?.address && (
-                            <ErrorMessage messageId={errors.address.message} />
+                        {message !== '' && (
+                            <ErrorMessage
+                                messageId={message}
+                            />
                         )}
                     </div>
                 </div>
