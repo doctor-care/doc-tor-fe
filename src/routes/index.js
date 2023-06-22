@@ -12,16 +12,15 @@ import ChatBox from '@/pages/Chat/Chat';
 import Patient from '@/pages/patient/Patient';
 
 // Public routes
-const currentUser = 'user1';
 const publicRoutes = [
     { path: '/', component: Home },
-    { path: '/doctors', component: Doctors, layout: null },
+    { path: '/doctors', component: Doctors },
     { path: '/patient', component: Patient, layout: null },
     { path: '/services', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/login', component: Login, layout: null },
     { path: '/register', component: Register, layout: null },
-    { path: '/chat', component: ChatBox, layout: OnlyHeader,props:{user:currentUser}},
+    { path: '/chat', component: ChatBox, layout: OnlyHeader},
 ];
 
 const privateRoutes = [];
