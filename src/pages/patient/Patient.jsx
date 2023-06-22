@@ -87,8 +87,9 @@ export default function Patient() {
                         });
                     })
             }
+        }else{
+            setMessage("address khong de trong");
         }
-        setMessage("address khong de trong");
     };
 
     useEffect(() => {
@@ -104,6 +105,7 @@ export default function Patient() {
     const handleChangeDistrict = (e) => {
         setCheckEnable({ ...checkEnable, district: e.target.value });
     };
+    
     useEffect(() => {
         getData();
     }, [checkEnable.city]);
@@ -192,6 +194,9 @@ export default function Patient() {
                                 }}
                             />}
                         </div>
+                        <div>
+                       
+                    </div>
                     </div>
                     <div>
                         {errors.avatarUrl &&

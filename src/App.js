@@ -7,9 +7,12 @@ import { OnlyHeader } from '@/layouts';
 import NotFound from './components/common/NotFound';
 
 function App() {
+
     return (
+       
         <Router>
             <div className="App">
+            
                 <Routes>
                     {publicRoutes.map((route, index) => {
                         const Page = route.component;
@@ -21,6 +24,7 @@ function App() {
                         }
 
                         return (
+                            
                             <Route
                                 key={index}
                                 path={route.path}
@@ -30,6 +34,7 @@ function App() {
                                     </Layout>
                                 }
                             />
+                            
                         );
                     })}
                     <Route
@@ -41,9 +46,11 @@ function App() {
                         }
                     />
                 </Routes>
+                
             </div>
         </Router>
     );
+    
 }
 
 export default App;

@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import { Formik, useFormik } from 'formik';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import jwt from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 function Login() {
     const [error, setErr] = useState();
     const [view, setView] = useState(false);
@@ -32,7 +33,13 @@ function Login() {
             axios
                 .post(apiUrl, requestData, { headers })
                 .then((res) => {
-                    localStorage.setItem('jwt', res.data.jwt);
+                    localStorage.setItem('accessToken', res.data.jwt);
+                    localStorage.setItem('userName', jwtDecode(res.data.jwt).sub);
+                    localStorage.setItem('role', jwtDecode(res.data.jwt).aud);
+                    const encodedPayload = res.data.jwt.split('.')[1];
+                    // const decodedPayload = JSON.parse(atob(encodedPayload));
+                    console.log('encodedPayload', encodedPayload);
+                    // const username = decodedPayload.username; const userrole = decodedPayload.userrole;
                     navigate('/');
                 })
                 .catch((err) => {
