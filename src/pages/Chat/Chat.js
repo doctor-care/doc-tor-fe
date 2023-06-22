@@ -1,17 +1,15 @@
-import React, { useEffect, useState, useRef, useMemo,useContext } from 'react';
-import ReactModal from 'react-modal';
+import React, { useEffect, useState, useRef} from 'react';
+
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import './Chat.css';
 import axios from 'axios';
-import { UserContext } from '../../UserContext';
+
 
 var stompClient = null;
 const ChatBox = () => {
-    const user = useContext(UserContext);
-    console.log("user.React.useContext(UserContext)",useContext(UserContext));
-    // const { user } = props;
-   
+    
+    const [user, setUser]=useState(localStorage.getItem('userName')?localStorage.getItem('userName'):'user1');
     const [listUserNew, setListUserNew] = useState([]);
     const chatMessagesRef = useRef(null);
     const [listUser, setListUser] = useState([]);
@@ -39,7 +37,7 @@ const ChatBox = () => {
     };
     const handleSearch = (event) => {
         setSearchText(event.target.value);
-        console.log("search text" + searchText);
+        console.log('search text' + searchText);
     };
     const handleMessage = (event) => {
         if (!editable) {
@@ -57,21 +55,26 @@ const ChatBox = () => {
     };
 
     const connect = () => {
-        const Sock = new SockJS('http://localhost:8080/chat');
+        const Sock = new SockJS("http://localhost:8080/chat");
         stompClient = over(Sock);
-         stompClient.connect({}, onConnected);
-     
-    };
+        stompClient.connect({}, onConnected);
+      };
 
-    const onConnected = () => {
-        stompClient.subscribe('/user/' + user + '/queue/messages', (message) => {
-            //  if(reciptientnamecurrent!==""&&reciptientnamecurrent===message.body.sender){
-            setListMessage((listMessage) => [...listMessage, JSON.parse(message.body)]);
 
-            console.log(listMessage, 'Day la list message sau khi nhan dc message');
+      const onConnected = () => {
+        stompClient.subscribe("/user/" + user + "/queue/messages", (message) => {
+          //  if(reciptientnamecurrent!==""&&reciptientnamecurrent===message.body.sender){
+          setListMessage((listMessage) => [
+            ...listMessage,
+            JSON.parse(message.body),
+          ]);
+          console.log('userData.content:', userData.content);
+          console.log('stompClient:', stompClient);
+          console.log('stompClient.connected:', stompClient.connected);
+          console.log(listMessage, "Day la list message sau khi nhan dc message");
         });
-        console.log('WebSocket connected'); // Thêm log để kiểm tra kết nối WebSocket
-    };
+        console.log("WebSocket connected"); // Thêm log để kiểm tra kết nối WebSocket
+      };
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && userData.content !== '') {
             sendPrivateValue(); // Gọi hàm xử lý khi người dùng nhấn phím Enter
@@ -79,27 +82,29 @@ const ChatBox = () => {
     };
 
     const sendPrivateValue = () => {
-        if (userData.content !== '') {
-            if (stompClient && stompClient.connected) {
-                setUserData({ ...userData, reciptient: reciptientname });
-                setUserData({ ...userData, sender: user });
-                const message = userData;
-                message.sender = user;
-                message.reciptient = reciptientname;
-                console.log(message, 'day la message truoc khi gui');
-                stompClient.send(`/app/message`, {}, JSON.stringify(message));
-                setUserData({ ...userData, content: '' });
-            } else {
-                alert('WebSocket connection has not been established yet');
-            }
+        if (stompClient && stompClient.connected && stompClient.ws.readyState === 1) {
+          if (userData.content !== "") {
+            setUserData({ ...userData, reciptient: reciptientname });
+            setUserData({ ...userData, sender: user });
+            const message = userData;
+            message.sender = user;
+            message.reciptient = reciptientname;
+            console.log(message, "day la message truoc khi gui");
+            stompClient.send(`/app/message`, {}, JSON.stringify(message));
+            setUserData({ ...userData, content: "" });
+          } else {
+            alert("Hãy nhập nội dung cho tin nhắn!!");
+          }
         } else {
-            alert('Hãy nhập nội dung cho tin nhắn!!');
+          alert("Kết nối WebSocket chưa được thiết lập.");
         }
-    };
+      };
 
     function getChat(name) {
         console.log('name', name);
-        axios.delete(`http://localhost:8080/chat-box/delete-new-message?user=${name}&reciptient=${user}`).catch((error) => console.error);
+        axios
+            .delete(`http://localhost:8080/chat-box/delete-new-message?user=${name}&reciptient=${user}`)
+            .catch((error) => console.error);
         updateListUserNew();
         axios
             .get(`http://localhost:8080/chat-box/getchat?sender=${name}&reciptient=${user}`)
@@ -146,28 +151,27 @@ const ChatBox = () => {
     useEffect(() => {
         console.log('day la listmessage mới');
         if (searchText === '') {
-                axios
-                    .get(`http://localhost:8080/chat-box/list-user?user=${user}`)
-                    .then((response) => {
-                        const data = response.data;
-                        setListUser(data);
-                    })
-                    .catch((error) => console.error);
+            axios
+                .get(`http://localhost:8080/chat-box/list-user?user=${user}`)
+                .then((response) => {
+                    const data = response.data;
+                    setListUser(data);
+                })
+                .catch((error) => console.error);
         }
-       
-            console.log('day la listmessage', listMessage);
-            console.log('day la listUserNew truoc khi them: ', listUserNew);
-            if (Array.isArray(listMessage) && listMessage.length > 0) {
-                const lastms = listMessage[listMessage.length - 1]?.sender;
-                if (lastms && lastms !== reciptientnamecurrent && lastms !== user) {
-                    console.log('Day la last message', lastms);
-                    console.log('Day la reciptientnamecurrent', reciptientnamecurrent);
-                    axios
-                        .get(`http://localhost:8080/chat-box/save-new-message?user=${lastms}&reciptient=${user}`)
-                        .catch((error) => console.error);
-                    getChat(reciptientnamecurrent);
-                }
-            
+
+        console.log('day la listmessage', listMessage);
+        console.log('day la listUserNew truoc khi them: ', listUserNew);
+        if (Array.isArray(listMessage) && listMessage.length > 0) {
+            const lastms = listMessage[listMessage.length - 1]?.sender;
+            if (lastms && lastms !== reciptientnamecurrent && lastms !== user) {
+                console.log('Day la last message', lastms);
+                console.log('Day la reciptientnamecurrent', reciptientnamecurrent);
+                axios
+                    .get(`http://localhost:8080/chat-box/save-new-message?user=${lastms}&reciptient=${user}`)
+                    .catch((error) => console.error);
+                getChat(reciptientnamecurrent);
+            }
         }
     }, [listMessage]);
 
@@ -180,6 +184,10 @@ const ChatBox = () => {
         getChat('');
         setEditable(false);
         console.log(user);
+        if(localStorage.getItem('userName') !==''){
+            setUser(localStorage.getItem('userName'))
+        }
+       
     }, []);
 
     useEffect(() => {
@@ -196,113 +204,108 @@ const ChatBox = () => {
     }, [componentOpened, listMessage]);
 
     useEffect(() => {
-        
-            axios
-                .get(`http://localhost:8080/chat-box/list-user?user=${user}`)
-                .then((response) => {
-                    const data = response.data;
-                    setListUser(data);
-                    setListALLUser(data);
-                })
-                .catch((error) => console.error);
-            axios
-                .get(`http://localhost:8080/chat-box/new-message?reciptient=${user}`)
-                .then((response) => {
-                    const data = response.data;
-                    setListUserNew(data);
-                })
-                .catch((error) => console.error);
+        axios
+            .get(`http://localhost:8080/chat-box/list-user?user=${user}`)
+            .then((response) => {
+                const data = response.data;
+                setListUser(data);
+                setListALLUser(data);
+            })
+            .catch((error) => console.error);
+        axios
+            .get(`http://localhost:8080/chat-box/new-message?reciptient=${user}`)
+            .then((response) => {
+                const data = response.data;
+                setListUserNew(data);
+            })
+            .catch((error) => console.error);
         if (user !== '') {
             connect();
         }
     }, [user]);
 
-
-
     return (
         <div className="chat">
-                <div className="tieu-de">
-                    <div className="wrap">CHĂM SÓC KHÁCH HÀNG</div>
-                </div>
-                <div className="chat-box">
-                    <div className="member-list">
-                        <input
-                            className="btn-search"
-                            type="text"
-                            value={searchText}
-                            onChange={handleSearch}
-                            placeholder="Nhập tên khách hàng"
-                        />
-                        <ul className="list-member">
-                            {listUser.length > 0 &&
-                                listUser.map(
-                                    (item, index) =>
-                                        item !== {user} && (
-                                            <li key={index}>
-                                                <button
-                                                    className={activeIndex === item ? 'active btn-li' : 'btn-li'}
-                                                    onClick={() => getChat(item)}
-                                                >
-                                                    {item}
-                                                </button>
-                                                {listUserNew.find((newUser) => newUser.user === item) &&
-                                                    (() => {
-                                                        let newUserFound = listUserNew.find(
-                                                            (newUser) => newUser.user === item,
-                                                        );
-                                                        return (
-                                                            <div className="btn-new">{`${newUserFound.quatity}`}</div>
-                                                        );
-                                                    })()}
-                                            </li>
-                                        ),
-                                )}
-                        </ul>
-                    </div>
-                    <div className="chat-content">
-                        <div className="chat-wrap-ul">
-                            {editable && (
-                                <ul className="chat-messages" ref={chatMessagesRef} onLoad={handleComponentOpen}>
-                                    {console.log('Day la listmessage ben admin', listMessage)}
-                                    {Array.isArray(listMessage) &&
-                                        listMessage.map(
-                                            (chat, index) =>
-                                                (chat.sender === reciptientnamecurrent || chat.sender === {user}) && (
-                                                    <li
-                                                        className={`message ${
-                                                            chat.sender === {user} ? 'self' : 'client'
-                                                        }`}
-                                                        key={index}
-                                                    >
-                                                        <div className="message-data">{chat.content}</div>
-                                                    </li>
-                                                ),
-                                        )}
-                                </ul>
+            <div className="tieu-de">
+                <div className="wrap">CHĂM SÓC KHÁCH HÀNG</div>
+            </div>
+            <div className="chat-box">
+                <div className="member-list">
+                    <input
+                        className="btn-search"
+                        type="text"
+                        value={searchText}
+                        onChange={handleSearch}
+                        placeholder="Nhập tên khách hàng"
+                    />
+                    <ul className="list-member">
+                        {listUser.length > 0 &&
+                            listUser.map(
+                                (item, index) =>
+                                    item !== (user !== '' ? user : '') && (
+                                        <li key={index}>
+                                            <button
+                                                className={activeIndex === item ? 'active btn-li' : 'btn-li'}
+                                                onClick={() => getChat(item)}
+                                            >
+                                                {item}
+                                            </button>
+                                            {listUserNew.find((newUser) => newUser.user === item) &&
+                                                (() => {
+                                                    let newUserFound = listUserNew.find(
+                                                        (newUser) => newUser.user === item,
+                                                    );
+                                                    return <div className="btn-new">{`${newUserFound.quatity}`}</div>;
+                                                })()}
+                                        </li>
+                                    ),
                             )}
-                        </div>
+                    </ul>
+                </div>
+                <div className="chat-content">
+                    <div className="chat-wrap-ul">
+                        {editable && (
+                            <ul className="chat-messages" ref={chatMessagesRef} onLoad={handleComponentOpen}>
+                                {console.log('Day la listmessage ben admin', listMessage)}
+                                {Array.isArray(listMessage) &&
+                                    listMessage.map(
+                                        (chat, index) =>
+                                            (chat.sender === reciptientnamecurrent || chat.sender === (user !== '' ? user : '') ) && (
+                                                <li
+                                                    className={`message ${
+                                                        chat.sender === (user !== '' ? user : '') ? 'self' : 'client'
+                                                    }`}
+                                                    key={index}
+                                                >
+                                                    <div className="message-data">{chat.content}</div>
+                                                </li>
+                                            ),
+                                    )}
+                            </ul>
+                        )}
+                    </div>
 
-                        <div className="send-message">
-                            <input
-                                type="text"
-                                className="input-message"
-                                placeholder="Nhập tin nhắn"
-                                value={userData.content}
-                                onChange={handleMessage}
-                                onKeyDown={handleKeyDown}
-                                readOnly={!editable}
-                            />
-                            <button
-                                type="button"
-                                className="send-chat"
-                                onClick={sendPrivateValue}
-                                disabled={buttonDisabled}
-                            >
-                                <i class="fa-regular fa-paper-plane"></i>
-                            </button>
-                        </div>
+                    <div className="send-message">
+                        <input
+                            type="text"
+                            className="input-message"
+                            placeholder="Nhập tin nhắn"
+                            value={userData.content}
+                            onChange={handleMessage}
+                            onKeyDown={handleKeyDown}
+                            readOnly={!editable}
+                        />
+                        <button
+                            type="button"
+                            className="send-chat"
+                            onClick={sendPrivateValue}
+                            disabled={buttonDisabled}
+                        >
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
+            </div>
         </div>
     );
 };

@@ -5,14 +5,11 @@ import { DefaultLayout } from '@/layouts';
 
 import { OnlyHeader } from '@/layouts';
 import NotFound from './components/common/NotFound';
-import { UserContext } from './UserContext';
-
-
 
 function App() {
-    const user = "user1";
+
     return (
-        <UserContext.Provider value={user}>
+       
         <Router>
             <div className="App">
             
@@ -20,7 +17,6 @@ function App() {
                     {publicRoutes.map((route, index) => {
                         const Page = route.component;
                         let Layout = DefaultLayout;
-
                         if (route.layout) {
                             Layout = route.layout;
                         } else if (route.layout === null) {
@@ -53,7 +49,6 @@ function App() {
                 
             </div>
         </Router>
-        </UserContext.Provider>
     );
     
 }

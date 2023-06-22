@@ -8,22 +8,23 @@ function Header() {
             <div id="topbar" className="d-flex align-items-center fixed-top">
                 <div className="container d-flex justify-content-between">
                     <div className="contact-info d-flex align-items-center">
-                        <i className="bi bi-envelope"></i> <a href="mailto:contact@example.com">contact@example.com</a>
+                        <i className="bi bi-envelope"></i>
+                        <a href="mailto:contact@example.com">contact@example.com</a>
                         <i className="bi bi-phone"></i> +1 5589 55488 55
                     </div>
-                    <div class="d-none d-lg-flex social-links align-items-center">
-                        <a href="#" className="twitter">
-                            <i class="bi bi-twitter"></i>
-                        </a>
-                        <a href="#" className="facebook">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="#" className="instagram">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="#" className="linkedin">
+                    <div className="d-none d-lg-flex social-links align-items-center">
+                        <Link className="twitter">
+                            <i className="bi bi-twitter"></i>
+                        </Link>
+                        <Link className="facebook">
+                            <i className="bi bi-facebook"></i>
+                        </Link>
+                        <Link className="instagram">
+                            <i className="bi bi-instagram"></i>
+                        </Link>
+                        <Link className="linkedin">
                             <i class="bi bi-linkedin"></i>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -61,43 +62,60 @@ function Header() {
                                 </Link>
                             </li>
                             <li className="dropdown">
-                                <a href="#">
-                                    <span>Drop Down</span> <i class="bi bi-chevron-down"></i>
-                                </a>
+                                <Link>
+                                    <span>Patient</span> <i className="bi bi-chevron-down"></i>
+                                </Link>
                                 <ul>
                                     <li>
-                                        <a href="#">Drop Down 1</a>
+                                        <Link as={Link} to="/patient" className="nav-link scrollto">
+                                            Create
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link as={Link} to="/patient" className="nav-link scrollto">
+                                            Edit
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li className="dropdown">
+                                <Link>
+                                    <span>Drop Down</span> <i className="bi bi-chevron-down"></i>
+                                </Link>
+                                <ul>
+                                    <li>
+                                        <Link >Drop Down 1</Link>
                                     </li>
                                     <li className="dropdown">
-                                        <a href="#">
-                                            <span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i>
-                                        </a>
+                                        <Link>
+                                            <span>Deep Drop Down</span> <i className="bi bi-chevron-right"></i>
+                                        </Link>
                                         <ul>
                                             <li>
-                                                <a href="#">Deep Drop Down 1</a>
+                                                <Link>Deep Drop Down 1</Link>
                                             </li>
                                             <li>
-                                                <a href="#">Deep Drop Down 2</a>
+                                                <Link>Deep Drop Down 2</Link>
                                             </li>
                                             <li>
-                                                <a href="#">Deep Drop Down 3</a>
+                                                <Link>Deep Drop Down 3</Link>
                                             </li>
                                             <li>
-                                                <a href="#">Deep Drop Down 4</a>
+                                                <Link>Deep Drop Down 4</Link>
                                             </li>
                                             <li>
-                                                <a href="#">Deep Drop Down 5</a>
+                                                <Link>Deep Drop Down 5</Link>
                                             </li>
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="#">Drop Down 2</a>
+                                        <Link>Drop Down 2</Link>
                                     </li>
                                     <li>
-                                        <a href="#">Drop Down 3</a>
+                                        <Link>Drop Down 3</Link>
                                     </li>
                                     <li>
-                                        <a href="#">Drop Down 4</a>
+                                        <Link>Drop Down 4</Link>
                                     </li>
                                 </ul>
                             </li>
