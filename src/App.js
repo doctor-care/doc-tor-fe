@@ -5,11 +5,17 @@ import { DefaultLayout } from '@/layouts';
 
 import { OnlyHeader } from '@/layouts';
 import NotFound from './components/common/NotFound';
+import { UserContext } from './UserContext';
+
+
 
 function App() {
+    const user = "user1";
     return (
+        <UserContext.Provider value={user}>
         <Router>
             <div className="App">
+            
                 <Routes>
                     {publicRoutes.map((route, index) => {
                         const Page = route.component;
@@ -22,6 +28,7 @@ function App() {
                         }
 
                         return (
+                            
                             <Route
                                 key={index}
                                 path={route.path}
@@ -31,6 +38,7 @@ function App() {
                                     </Layout>
                                 }
                             />
+                            
                         );
                     })}
                     <Route
@@ -42,9 +50,12 @@ function App() {
                         }
                     />
                 </Routes>
+                
             </div>
         </Router>
+        </UserContext.Provider>
     );
+    
 }
 
 export default App;
