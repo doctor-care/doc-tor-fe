@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../utils/firebase";
+
 import './style.css';
 import ErrorMessage from "@/components/common/NotFound/ErrorMessage";
-import axios, { HttpStatusCode } from "axios";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Option from "@/components/common/SelectOption/Option";
-import UploadFirebase from "@/utils/upload/UploadFirebase";
+import emailjs from '@emailjs/browser';
+import randomOTP from "@/utils/randomOTP";
+
 
 export default function Patient() {
     const yup = require("yup");
     const navigate = useNavigate();
     const [city, setCity] = useState([]);
     const [messageAddress, setMessageAddress] = useState("");
+    const [messageFile, setMessageFiles] = useState("");
     const [files, setFiles] = useState("");
     const [previewUrls, setPreviewUrls] = useState("");
     const [district, setDistrict] = useState([]);
+    const form = useRef();
     const [checkEnable, setCheckEnable] = useState({
         city: "0",
         district: "0",
@@ -26,21 +29,21 @@ export default function Patient() {
     const schema = yup.object({
         userName: yup.string().required(),
         password: yup.string().required(),
-        address: yup.string().required(),
         email: yup.string().required()
             .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "mail sai định dạng"),
-        avatarUrl: yup.mixed().required('File is required'),
         phone: yup.string().required()
             .matches(/^((090)[0-9]{7})|(84)[0-9]{8}$/, "phone sai định dạng"),
         birthday: yup
             .string()
             .required()
-            .test('dob', 'tuoi phai lon hon 18', function (value, ctx) {
+            .test('dob', 'tuổi phải trên 18', function (value, ctx) {
                 const dob = new Date(value);
                 const validDate = new Date();
                 const valid = validDate.getFullYear() - dob.getFullYear() >= 18;
                 return !valid ? ctx.createError() : valid;
             }),
+        address: yup.string().required(),
+        otp: yup.string().required(),
         name: yup.string().required(),
         healthHistory: yup.string().required(),
         bloodType: yup.string().required(),
@@ -57,39 +60,23 @@ export default function Patient() {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
         if (checkEnable.city === '0' && checkEnable.district === "0") { setMessageAddress("dia chi khong duoc de trong"); return }
-        if (files === null) { setMessageAddress("dia chi khong duoc de trong"); return }
         if (checkEnable.city !== '0' && checkEnable.district !== "0") {
-            const folderRef = ref(storage, "image");
-            if (files !== "") {
-                const timestamp = Date.now();
-                const fileName = `${timestamp}_${files.name}`;
-                const fileRef = ref(folderRef, fileName);
-                const uploadTask = uploadBytesResumable(fileRef, files);
-                uploadTask.on("state_changed",
-                    (snapshot) => {
-                        console.log(snapshot);
-                    },
-                    (error) => {
-                        console.log(error);
-                    },
-                    () => {
-                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            data.avatarUrl = downloadURL;
-                            data.city = checkEnable.city;
-                            data.district = checkEnable.district;
-                            axios.post("http://localhost:8080/patient/signup", data).then(resp => {
-                                if (resp.status == HttpStatusCode.Created) {
-                                    navigate("/");
-                                }
-                            })
-                            return;
-                        });
+            data.city = checkEnable.city;
+            data.district = checkEnable.district;
+            console.log(form.current);
+            console.log(data);
+            emailjs.sendForm('service_gu18tah', 'template_eomflh8', form.current, 'nGzNvmaDuhf2VKbq8')
+                .then((result) => {
+                    navigate("/otp", {
+                        state: {
+                            data: data,
+                        }
                     })
-            }
-        }else{
-            setMessage("address khong de trong");
+                }, (error) => {
+                    console.log(error.text);
+                });
         }
     };
 
@@ -106,7 +93,7 @@ export default function Patient() {
     const handleChangeDistrict = (e) => {
         setCheckEnable({ ...checkEnable, district: e.target.value });
     };
-    
+
     useEffect(() => {
         getData();
     }, [checkEnable.city]);
@@ -117,39 +104,45 @@ export default function Patient() {
         );
         setDistrict(resp.data.results);
     };
+
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         let imageFiles = [];
         let urls = "";
         let isImage = true;
-
-        if (selectedFiles.length > 0) {
-            selectedFiles.forEach((file) => {
-                const fileExtension = file.name.split(".").pop();
-                const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
-                if (allowedExtensions.includes(fileExtension.toLowerCase())) {
-                    imageFiles = file;
-                    urls = URL.createObjectURL(file);
-                } else {
-                    isImage = false;
+        if (selectedFiles[0].size < 1000000) {
+            setMessageFiles("");
+            if (selectedFiles.length > 0) {
+                selectedFiles.forEach((file) => {
+                    const fileExtension = file.name.split(".").pop();
+                    const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+                    if (allowedExtensions.includes(fileExtension.toLowerCase())) {
+                        imageFiles = file;
+                        urls = URL.createObjectURL(file);
+                    } else {
+                        isImage = false;
+                    }
+                });
+                if (isImage) {
+                    setFiles(imageFiles);
+                    setPreviewUrls(urls);
                 }
-            });
-            if (isImage) {
-                setFiles(imageFiles);
-                setPreviewUrls(urls);
             }
+            return;
         }
+        setMessageFiles("file to big");
     };
+
     return (
         <div>
             <h1>Form Patient</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} ref={form}>
                 <div className="formData">
                     <div>
                         <label>Username</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("userName")} />
+                        <input className="form-control" {...register("userName")} name="userName" />
                     </div>
                     <div>
                         {errors?.userName &&
@@ -163,6 +156,7 @@ export default function Patient() {
                     </div>
                     <div>
                         <input className="form-control" {...register("password")} type="password" />
+                        <input name="otp" hidden  {...register("otp")} defaultValue={randomOTP()} />
                     </div>
                     <div>
                         {errors.password &&
@@ -179,8 +173,6 @@ export default function Patient() {
                         <input
                             type="file"
                             className="form-control"
-                            {...register("avatarUrl")}
-                            multiple
                             onChange={handleFileChange}
                             accept="image/jpeg, image/png, image/jpg"
                         />
@@ -196,13 +188,10 @@ export default function Patient() {
                                 }}
                             />}
                         </div>
-                        <div>
-                       
-                    </div>
                     </div>
                     <div>
-                        {errors.avatarUrl &&
-                            <ErrorMessage messageId={errors.avatarUrl.message} />
+                        {messageFile &&
+                            <ErrorMessage messageId={messageFile} />
                         }
                     </div>
                 </div>
@@ -211,7 +200,7 @@ export default function Patient() {
                         <label>Email</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("email")} />
+                        <input className="form-control" {...register("email")} name="email" />
                     </div>
                     <div>
                         {errors?.email && (
@@ -224,7 +213,7 @@ export default function Patient() {
                         <label>Phone</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("phone")} />
+                        <input className="form-control" {...register("phone")} name="phone" />
                     </div>
                     <div>
                         {errors?.phone && (
@@ -237,7 +226,7 @@ export default function Patient() {
                         <label>Birthday</label>
                     </div>
                     <div>
-                        <input className="form-control" type="date" {...register("birthday")} />
+                        <input className="form-control" type="date" {...register("birthday")} name="birthday" />
                     </div>
                     <div>
                         {errors?.birthday && (
@@ -250,7 +239,7 @@ export default function Patient() {
                         <label>Address</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("address")} type="text" />
+                        <input className="form-control" {...register("address")} type="text" name="address" />
                     </div>
                     <div>
                         {errors.address &&
@@ -282,7 +271,7 @@ export default function Patient() {
                         {checkEnable.city !== "0" && (
                             <React.Fragment>
                                 <label>District</label>
-                                <div className="col-md-6 mr-4" style={{ paddingLeft: "0.1em" }}>
+                                <div className="col-md-6 mr-4" style={{ paddingLeft: "0.em" }}>
                                     <select
                                         name="district"
                                         defaultValue="0"
@@ -313,7 +302,7 @@ export default function Patient() {
                         <label>Name</label>
                     </div>
                     <div>
-                        <input className="form-control" {...register("name")} />
+                        <input className="form-control" {...register("name")} name="name" />
                     </div>
                     <div>
                         {errors?.name && (
@@ -328,7 +317,7 @@ export default function Patient() {
                         <label>Health History</label>
                     </div>
                     <div>
-                        <input className="form-control"  {...register("healthHistory")} />
+                        <input className="form-control"  {...register("healthHistory")} name="healthHistory" />
                     </div>
                     <div>
                         {errors?.healthHistory && (
@@ -343,7 +332,7 @@ export default function Patient() {
                         <label>Blood Type</label>
                     </div>
                     <div>
-                        <select className="form-control"  {...register("bloodType")} defaultValue="">
+                        <select className="form-control"  {...register("bloodType")} defaultValue="" name="bloodType">
                             <Option label={"Blood Type"} list={["A", "B", "AB", "O", "Other"]} />
                         </select>
                     </div>
@@ -360,7 +349,7 @@ export default function Patient() {
                         <label>Gender</label>
                     </div>
                     <div>
-                        <select className="form-control"  {...register("sex")} defaultValue="">
+                        <select className="form-control"  {...register("sex")} defaultValue="" name="sex">
                             <Option label={"sex"} list={["Nam", "Nu", "LBGT", "Other"]} />
                         </select>
                     </div>

@@ -10,6 +10,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ChatBox from '@/pages/Chat/Chat';
 import Patient from '@/pages/patient/Patient';
+import Otp from '@/pages/Otp/Otp';
 
 // Public routes
 const publicRoutes = [
@@ -19,8 +20,9 @@ const publicRoutes = [
     { path: '/services', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/login', component: Login, layout: null },
+    { path: '/otp', component: Otp, layout: null },
     { path: '/register', component: Register, layout: null },
-    { path: '/chat', component: ChatBox, layout: OnlyHeader},
+    { path: '/chat', component: ChatBox, layout: OnlyHeader },
 ];
 
 const privateRoutes = [];
