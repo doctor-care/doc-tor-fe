@@ -35,19 +35,19 @@ export default function Footer() {
                             <h4>Useful Links</h4>
                             <ul>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Home</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Home</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">About us</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">About us</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Services</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Services</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Terms of service</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Privacy policy</a>
                                 </li>
                             </ul>
                         </div>
@@ -55,19 +55,19 @@ export default function Footer() {
                             <h4>Our Services</h4>
                             <ul>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Web Design</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Web Design</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Web Development</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Web Development</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Product Management</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Product Management</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Marketing</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Marketing</a>
                                 </li>
                                 <li>
-                                    <i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a>
+                                    <i className="bx bx-chevron-right"></i> <a href="#">Graphic Design</a>
                                 </li>
                             </ul>
                         </div>
@@ -95,21 +95,21 @@ export default function Footer() {
                         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
                     </div>
                 </div>
-                <div class="social-links text-center text-md-right pt-3 pt-md-0">
+                <div className="social-links text-center text-md-right pt-3 pt-md-0">
                     <a href="#" className="twitter">
-                        <i class="bx bxl-twitter"></i>
+                        <i className="bx bxl-twitter"></i>
                     </a>
                     <a href="#" className="facebook">
-                        <i class="bx bxl-facebook"></i>
+                        <i className="bx bxl-facebook"></i>
                     </a>
                     <a href="#" className="instagram">
-                        <i class="bx bxl-instagram"></i>
+                        <i className="bx bxl-instagram"></i>
                     </a>
                     <a href="#" className="google-plus">
-                        <i class="bx bxl-skype"></i>
+                        <i className="bx bxl-skype"></i>
                     </a>
                     <a href="#" className="linkedin">
-                        <i class="bx bxl-linkedin"></i>
+                        <i className="bx bxl-linkedin"></i>
                     </a>
                 </div>
             </div>

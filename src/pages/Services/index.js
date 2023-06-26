@@ -19,7 +19,7 @@ export default function Service() {
           <div className="col-lg-4 col-md-6 d-flex align-items-stretch">
             <div className="icon-box">
               <div className="icon">
-                <i class="fas fa-heartbeat"></i>
+                <i className="fas fa-heartbeat"></i>
               </div>
               <h4>
                 <a href="">Lorem Ipsum</a>
@@ -34,7 +34,7 @@ export default function Service() {
           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
             <div className="icon-box">
               <div className="icon">
-                <i class="fas fa-pills"></i>
+                <i className="fas fa-pills"></i>
               </div>
               <h4>
                 <a className="">Sed ut perspiciatis</a>
@@ -49,7 +49,7 @@ export default function Service() {
           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
             <div className="icon-box">
               <div className="icon">
-                <i class="fas fa-hospital-user"></i>
+                <i className="fas fa-hospital-user"></i>
               </div>
               <h4>
                 <a href="">Magni Dolores</a>
@@ -64,7 +64,7 @@ export default function Service() {
           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
             <div className="icon-box">
               <div className="icon">
-                <i class="fas fa-dna"></i>
+                <i className="fas fa-dna"></i>
               </div>
               <h4>
                 <a href="">Nemo Enim</a>
@@ -79,7 +79,7 @@ export default function Service() {
           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
             <div className="icon-box">
               <div className="icon">
-                <i class="fas fa-wheelchair"></i>
+                <i className="fas fa-wheelchair"></i>
               </div>
               <h4>
                 <a href="">Dele cardo</a>
@@ -94,7 +94,7 @@ export default function Service() {
           <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
             <div className="icon-box">
               <div className="icon">
-                <i class="fas fa-notes-medical"></i>
+                <i className="fas fa-notes-medical"></i>
               </div>
               <h4>
                 <a href="">Divera don</a>
