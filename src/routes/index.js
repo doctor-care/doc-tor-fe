@@ -24,6 +24,7 @@ const publicRoutes = [
     { path: '/createDoc', component: CreateDoctor, layout: null },
     { path: '/editDoc', component: EditDoctor, layout: null },
     { path: '/patient', component: Patient, layout: null },
+    { path: '/service/:id', component: Services, layout: OnlyHeader },
     { path: '/editPatient', component: EditPatient, layout: null },
     { path: '/services', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
