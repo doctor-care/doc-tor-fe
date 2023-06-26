@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Option from "@/components/common/SelectOption/Option";
 import emailjs from '@emailjs/browser';
 import randomOTP from "@/utils/randomOTP";
+import InputInForm from "@/components/common/SelectOption/InputInForm";
 
 
 export default function Patient() {
@@ -26,13 +27,48 @@ export default function Patient() {
         district: "0",
     });
 
-    const schema = yup.object({
-        userName: yup.string().required(),
+    const schema = yup.object().shape({
+        userName: yup
+            .string()
+            .required()
+            .test('userName', 'Username already in use',
+                function (value) {
+                    if (value === '') return true;
+                    return new Promise((resolve, reject) => {
+                        axios.get(`http://localhost:8080/valid/username/${value}`)
+                            .then((res) => {
+                                console.log(`http://localhost:8080/valid/username/${value}`)
+                                resolve(true)
+                            })
+                            .catch((error) => {
+                                if (error.response.status === 400) {
+                                    resolve(false);
+                                }
+                            })
+                    })
+                }),
         password: yup.string().required(),
-        email: yup.string().required()
-            .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "mail sai định dạng"),
+        email: yup
+            .string()
+            .required()
+            .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Mail sai định dạng")
+            .test('email', 'Email already in use',
+                function (value) {
+                    if (value === '') return true;
+                    return new Promise((resolve, reject) => {
+                        axios.get(`http://localhost:8080/valid/email/${value}`)
+                            .then((res) => {
+                                resolve(true)
+                            })
+                            .catch((error) => {
+                                if (error.response.status === 400) {
+                                    resolve(false);
+                                }
+                            })
+                    })
+                }),
         phone: yup.string().required()
-            .matches(/^((090)[0-9]{7})|(84)[0-9]{8}$/, "phone sai định dạng"),
+            .matches(/^([(0|(+84)])(9)([012])[0-9]{7,8}$/, "phone sai định dạng"),
         birthday: yup
             .string()
             .required()
@@ -65,8 +101,7 @@ export default function Patient() {
         if (checkEnable.city !== '0' && checkEnable.district !== "0") {
             data.city = checkEnable.city;
             data.district = checkEnable.district;
-            console.log(form.current);
-            console.log(data);
+            data.avatarUrl = files;
             emailjs.sendForm('service_gu18tah', 'template_eomflh8', form.current, 'nGzNvmaDuhf2VKbq8')
                 .then((result) => {
                     navigate("/otp", {
@@ -95,15 +130,12 @@ export default function Patient() {
     };
 
     useEffect(() => {
-        getData();
+        axios.get(
+            `https://vapi.vnappmob.com/api/province/district/${checkEnable.city}`
+        ).then(resp => setDistrict(resp.data.results))
+
     }, [checkEnable.city]);
 
-    const getData = async () => {
-        let resp = await axios.get(
-            `https://vapi.vnappmob.com/api/province/district/${checkEnable.city}`
-        );
-        setDistrict(resp.data.results);
-    };
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
@@ -137,34 +169,19 @@ export default function Patient() {
         <div>
             <h1>Form Patient</h1>
             <form onSubmit={handleSubmit(onSubmit)} ref={form}>
-                <div className="formData">
-                    <div>
-                        <label>Username</label>
-                    </div>
-                    <div>
-                        <input className="form-control" {...register("userName")} name="userName" />
-                    </div>
-                    <div>
-                        {errors?.userName &&
-                            <ErrorMessage messageId={errors.userName.message} />
-                        }
-                    </div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <label>Password</label>
-                    </div>
-                    <div>
-                        <input className="form-control" {...register("password")} type="password" />
-                        <input name="otp" hidden  {...register("otp")} defaultValue={randomOTP()} />
-                    </div>
-                    <div>
-                        {errors.password &&
-                            <ErrorMessage messageId={errors.password.message} />
-                        }
-                    </div>
-                </div>
-
+                <InputInForm
+                    label={"Username"}
+                    properties={"userName"}
+                    register={register("userName")}
+                    error={errors?.userName?.message}
+                    type={"text"} />
+                <InputInForm
+                    label={"Password"}
+                    properties={"password"}
+                    register={register("password")}
+                    error={errors?.password?.message}
+                    type={"password"} />
+                <input name="otp" hidden  {...register("otp")} defaultValue={randomOTP()} />
                 <div className="formData">
                     <div>
                         <label>avatarUrl</label>
@@ -195,58 +212,35 @@ export default function Patient() {
                         }
                     </div>
                 </div>
-                <div className="formData">
-                    <div>
-                        <label>Email</label>
-                    </div>
-                    <div>
-                        <input className="form-control" {...register("email")} name="email" />
-                    </div>
-                    <div>
-                        {errors?.email && (
-                            <ErrorMessage messageId={errors.email.message} />
-                        )}
-                    </div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <label>Phone</label>
-                    </div>
-                    <div>
-                        <input className="form-control" {...register("phone")} name="phone" />
-                    </div>
-                    <div>
-                        {errors?.phone && (
-                            <ErrorMessage messageId={errors.phone.message} />
-                        )}
-                    </div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <label>Birthday</label>
-                    </div>
-                    <div>
-                        <input className="form-control" type="date" {...register("birthday")} name="birthday" />
-                    </div>
-                    <div>
-                        {errors?.birthday && (
-                            <ErrorMessage messageId={errors.birthday.message} />
-                        )}
-                    </div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <label>Address</label>
-                    </div>
-                    <div>
-                        <input className="form-control" {...register("address")} type="text" name="address" />
-                    </div>
-                    <div>
-                        {errors.address &&
-                            <ErrorMessage messageId={errors.address.message} />
-                        }
-                    </div>
-                </div>
+
+                <InputInForm
+                    label={"Email"}
+                    properties={"email"}
+                    register={register("email")}
+                    error={errors?.email?.message}
+                    type={"text"} />
+
+                <InputInForm
+                    label={"Phone"}
+                    properties={"phone"}
+                    register={register("phone")}
+                    error={errors?.phone?.message}
+                    type={"text"} />
+
+                <InputInForm
+                    label={"Birthday"}
+                    properties={"birthday"}
+                    register={register("birthday")}
+                    error={errors?.birthday?.message}
+                    type={"date"} />
+
+                <InputInForm
+                    label={"Address"}
+                    properties={"address"}
+                    register={register("address")}
+                    error={errors?.address?.message}
+                    type={"text"} />
+
                 <div className="formData">
                     <div>
                         <label>City</label>
@@ -297,36 +291,20 @@ export default function Patient() {
                         )}
                     </div>
                 </div>
-                <div className="formData">
-                    <div>
-                        <label>Name</label>
-                    </div>
-                    <div>
-                        <input className="form-control" {...register("name")} name="name" />
-                    </div>
-                    <div>
-                        {errors?.name && (
-                            <ErrorMessage
-                                messageId={errors.name.message}
-                            />
-                        )}
-                    </div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <label>Health History</label>
-                    </div>
-                    <div>
-                        <input className="form-control"  {...register("healthHistory")} name="healthHistory" />
-                    </div>
-                    <div>
-                        {errors?.healthHistory && (
-                            <ErrorMessage
-                                messageId={errors.healthHistory.message}
-                            />
-                        )}
-                    </div>
-                </div>
+                <InputInForm
+                    label={"Name"}
+                    properties={"name"}
+                    register={register("name")}
+                    error={errors?.name?.message}
+                    type={"text"} />
+
+                <InputInForm
+                    label={"Health History"}
+                    properties={"healthHistory"}
+                    register={register("healthHistory")}
+                    error={errors?.healthHistory?.message}
+                    type={"text"} />
+
                 <div className="formData">
                     <div>
                         <label>Blood Type</label>
@@ -362,9 +340,11 @@ export default function Patient() {
                     </div>
                 </div>
                 <div className="formData">
-                    <div> <button className="btn btn-secondary" type="button" onClick={() => navigate("/")}>
-                        Back List
-                    </button></div>
+                    <div>
+                        <button className="btn btn-secondary" type="button" onClick={() => navigate("/")}>
+                            Back List
+                        </button>
+                    </div>
                     <div>
                         <button className="btn btn-success" type="submit">
                             Submit

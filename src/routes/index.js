@@ -11,12 +11,18 @@ import Register from '@/pages/Register';
 import ChatBox from '@/pages/Chat/Chat';
 import Patient from '@/pages/patient/Patient';
 import Otp from '@/pages/Otp/Otp';
+import EditPatient from '@/pages/patient/EditPatient';
+import CreateDoctor from '@/pages/Doctors/CreateDoctor';
+import EditDoctor from '@/pages/Doctors/EditDoctor';
 
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home },
     { path: '/doctors', component: Doctors },
+    { path: '/createDoc', component: CreateDoctor, layout: null },
+    { path: '/editDoc', component: EditDoctor, layout: null },
     { path: '/patient', component: Patient, layout: null },
+    { path: '/editPatient', component: EditPatient, layout: null },
     { path: '/services', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/login', component: Login, layout: null },
