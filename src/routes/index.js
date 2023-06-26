@@ -14,6 +14,8 @@ import Otp from '@/pages/Otp/Otp';
 import EditPatient from '@/pages/patient/EditPatient';
 import CreateDoctor from '@/pages/Doctors/CreateDoctor';
 import EditDoctor from '@/pages/Doctors/EditDoctor';
+import Specialist from '@/pages/Doctors/Specialist';
+import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
 
 // Public routes
 const publicRoutes = [
@@ -29,6 +31,9 @@ const publicRoutes = [
     { path: '/otp', component: Otp, layout: null },
     { path: '/register', component: Register, layout: null },
     { path: '/chat', component: ChatBox, layout: OnlyHeader },
+
+    { path: '/specialist', component: Specialist, layout: null },
+    { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
 ];
 
 const privateRoutes = [];
