@@ -12,6 +12,8 @@ import ChatBox from '@/pages/Chat/Chat';
 import Patient from '@/pages/patient/Patient';
 import Specialist from '@/pages/Doctors/Specialist';
 import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
+import AppointmentByDoctor from '@/pages/Appointments/AppointmentByDoctor';
+import BookingSchedule from '@/pages/Schedule/BookingSchedule';
 
 // Public routes
 const publicRoutes = [
@@ -25,6 +27,8 @@ const publicRoutes = [
     { path: '/chat', component: ChatBox, layout: OnlyHeader },
     { path: '/specialist', component: Specialist, layout: null },
     { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
+    { path: '/appointment-list', component: AppointmentByDoctor, layout: null },
+    { path: '/booking-schedule', component: BookingSchedule, layout: null },
 ];
 
 const privateRoutes = [];

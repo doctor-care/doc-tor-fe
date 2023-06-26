@@ -10,12 +10,14 @@ export default function Specialist() {
     const [render, setRender] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/specialist/get-all').then((response) => {
-            setSpecialists(response.data);
-        });
+        try {
+            axios.get('http://localhost:8080/specialist/get-all').then((response) => {
+                setSpecialists(response.data);
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }, [render]);
-
-    console.log(specialists);
     return (
         <div className="container-fluid">
             <div className="">
@@ -25,14 +27,15 @@ export default function Specialist() {
             </div>
             <div>
                 <ul>
-                    {specialists.map((item) => (
-                        <Link to={`/doctor-list?&idSPL=${item.idSPL}`}>
-                            <li>
-                                <img src={item.imageUrl} alt="okay" />
-                                <h3>{item.name}</h3>
-                            </li>
-                        </Link>
-                    ))}
+                    {specialists.length > 0 &&
+                        specialists.map((item) => (
+                            <Link to={`/doctor-list?idSPL=${item.idSPL}`}>
+                                <li>
+                                    <img src={item.imageUrl} alt="okay" />
+                                    <h3>{item.name}</h3>
+                                </li>
+                            </Link>
+                        ))}
                 </ul>
             </div>
         </div>
