@@ -25,7 +25,7 @@ export default function Doctor() {
               <div className="pic">
                 <img
                   src={Doctors1}
-                  class="img-fluid"
+                  className="img-fluid"
                   alt=""
                 ></img>
               </div>
@@ -126,7 +126,7 @@ export default function Doctor() {
             <div className="member d-flex align-items-start">
               <div className="pic">
                 <img
-                src={Doctors4}
+                  src={Doctors4}
                   className="img-fluid"
                   alt="Amanda Jepson"
                 ></img>

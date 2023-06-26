@@ -9,7 +9,6 @@ export default function Service() {
     const [listDoctorService, setListDoctorService] = useState([]);
     const [service, setService] = useState('');
 
-
     useEffect(() => {
         axios
             .get(`http://localhost:8080/service/list-doctor-by-id-service?idService=${id}`)
@@ -19,7 +18,7 @@ export default function Service() {
             })
             .catch((error) => console.error);
 
-            axios
+        axios
             .get(`http://localhost:8080/service/service-by-id-service?idService=${id}`)
             .then((response) => {
                 const data = response.data;
@@ -32,56 +31,49 @@ export default function Service() {
         <section id="services" className="services">
             <div className="container">
                 <div className="section-title">
-                  <br></br>
-                  <br></br>
-                  <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
                     <h2>{service.nameService}</h2>
                     <h3>{service.priceService} vnd</h3>
-                    <p>
-                       {service.description}
-                    </p>
+                    <p>{service.description}</p>
                 </div>
 
                 <div className="row">
-                {listDoctorService.map((doctorService) => (  <div className="col-lg-6 mt-4 mt-lg-0">
-            <div className="member d-flex align-items-start">
-              <div className="pic">
-                <img
-                  src={doctorService.doctor.avatarUrl}
-                  class="img-fluid"
-                  alt=""
-                ></img>
-              </div>
-              <div className="member-info">
-                <h4>{doctorService.doctor.name}</h4>
-                <span>{doctorService.doctor.birthday}</span>
-                <p>
-                  Aut maiores voluptates amet et quis praesentium qui senda para
-                </p>
-                <div>
-                        <button type="button"  className="btn btn-warning">
-                            Đặt lịch
-                        </button>
-                    </div>
-                <div className="social">
-                  <a href="">
-                    <i class="ri-twitter-fill"></i>
-                  </a>
-                  <a href="">
-                    <i class="ri-facebook-fill"></i>
-                  </a>
-                  <a href="">
-                    <i class="ri-instagram-fill"></i>
-                  </a>
-                  <a href="">
-                    {" "}
-                    <i class="ri-linkedin-box-fill"></i>{" "}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-  ))}
+                    {listDoctorService.map((doctorService) => (
+                        <div className="col-lg-6 mt-4 mt-lg-0">
+                            <div className="member d-flex align-items-start">
+                                <div className="pic">
+                                    <img src={doctorService.doctor.avatarUrl} class="img-fluid" alt=""></img>
+                                </div>
+                                <div className="member-info">
+                                    <h4>{doctorService.doctor.name}</h4>
+                                    <span>{doctorService.doctor.birthday}</span>
+                                    <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
+                                    <div>
+                                        <button type="button" className="btn btn-warning">
+                                            Đặt lịch
+                                        </button>
+                                    </div>
+                                    <div className="social">
+                                        <a href="">
+                                            <i class="ri-twitter-fill"></i>
+                                        </a>
+                                        <a href="">
+                                            <i class="ri-facebook-fill"></i>
+                                        </a>
+                                        <a href="">
+                                            <i class="ri-instagram-fill"></i>
+                                        </a>
+                                        <a href="">
+                                            {' '}
+                                            <i class="ri-linkedin-box-fill"></i>{' '}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                     {/* <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
                         <div className="icon-box">
                             <div className="icon">
@@ -142,7 +134,7 @@ export default function Service() {
                         </div>
                     </div>
                 */}
-                </div> 
+                </div>
             </div>
         </section>
     );

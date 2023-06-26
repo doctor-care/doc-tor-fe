@@ -69,10 +69,26 @@ function Header() {
                                     Departments
                                 </a>
                             </li>
-                            <li>
-                                <Link as={Link} to="/doctors" className="nav-link scrollto">
-                                    Doctors
+
+                            <li className="dropdown">
+                                <Link>
+                                    <span>Doctors</span> <i className="bi bi-chevron-down"></i>
                                 </Link>
+                                <ul>
+                                    <li>
+                                        <Link as={Link} to="/doctors" className="nav-link scrollto">
+                                            Information Doctors
+                                        </Link>
+                                        <Link as={Link} to="/createDoc" className="nav-link scrollto">
+                                            Create Doctor
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link as={Link} to="/editDoc" className="nav-link scrollto">
+                                            Edit Doctor
+                                        </Link>
+                                    </li>
+                                </ul>
                             </li>
                             <li className="dropdown">
                                 <Link>
@@ -85,8 +101,8 @@ function Header() {
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link as={Link} to="/patient" className="nav-link scrollto">
-                                            Edit
+                                        <Link as={Link} to="/editPatient" className="nav-link scrollto">
+                                            Edit Patient
                                         </Link>
                                     </li>
                                 </ul>
