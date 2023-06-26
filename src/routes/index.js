@@ -18,7 +18,7 @@ const publicRoutes = [
     { path: '/', component: Home },
     { path: '/doctors', component: Doctors },
     { path: '/patient', component: Patient, layout: null },
-    { path: '/services', component: Services, layout: OnlyHeader },
+    { path: '/service/:id', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/login', component: Login, layout: null },
     { path: '/register', component: Register, layout: null },

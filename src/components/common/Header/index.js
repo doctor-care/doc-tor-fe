@@ -1,7 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Header() {
+    const [listService, setListService] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8080/service/list-service`)
+            .then((response) => {
+                const data = response.data;
+                setListService(data);
+            })
+            .catch((error) => console.error);
+    }, []);
+
     return (
         <div>
             {' '}
@@ -80,42 +93,32 @@ function Header() {
                             </li>
                             <li className="dropdown">
                                 <Link>
-                                    <span>Drop Down</span> <i className="bi bi-chevron-down"></i>
+                                    <span>Service Medical</span> <i className="bi bi-chevron-down"></i>
                                 </Link>
                                 <ul>
-                                    <li>
-                                        <Link >Drop Down 1</Link>
+                                    <li className="dropdown">
+                                        <Link>
+                                            <span>Dịch vụ Đông y</span> <i className="bi bi-chevron-right"></i>
+                                        </Link>
+                                        <ul>
+                                            {listService.map((service) => (
+                                              service.typeService === 1 &&(  <Link key={service.idService} as={Link} to={`/service/${service.idService}`}>
+                                                    <span>{service.nameService}</span>
+                                                </Link>)
+                                            ))}
+                                        </ul>
                                     </li>
                                     <li className="dropdown">
                                         <Link>
-                                            <span>Deep Drop Down</span> <i className="bi bi-chevron-right"></i>
+                                            <span>Dịch vụ Tây y</span> <i className="bi bi-chevron-right"></i>
                                         </Link>
                                         <ul>
-                                            <li>
-                                                <Link>Deep Drop Down 1</Link>
-                                            </li>
-                                            <li>
-                                                <Link>Deep Drop Down 2</Link>
-                                            </li>
-                                            <li>
-                                                <Link>Deep Drop Down 3</Link>
-                                            </li>
-                                            <li>
-                                                <Link>Deep Drop Down 4</Link>
-                                            </li>
-                                            <li>
-                                                <Link>Deep Drop Down 5</Link>
-                                            </li>
+                                            {listService.map((service) => (
+                                              service.typeService === 2 &&(  <Link key={service.idService} to={`/service/${service.idService}`}>
+                                                    <span>{service.nameService}</span>
+                                                </Link>)
+                                            ))}
                                         </ul>
-                                    </li>
-                                    <li>
-                                        <Link>Drop Down 2</Link>
-                                    </li>
-                                    <li>
-                                        <Link>Drop Down 3</Link>
-                                    </li>
-                                    <li>
-                                        <Link>Drop Down 4</Link>
                                     </li>
                                 </ul>
                             </li>
