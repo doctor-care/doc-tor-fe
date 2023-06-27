@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './AppointmentByDoctor.css';
 
 export default function AppointmentByDoctor() {
+    const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
 
     //search doctor from attribute
-    const [doctorId, setDoctorId] = useState(queryParams.get('doctorId'));
+    const [doctorId] = useState(queryParams.get('doctorId'));
     const [date, setDate] = useState([]);
     const [dateSearch, setDateSearch] = useState('');
     const [appointmentList, setAppointmentList] = useState([]);
@@ -22,17 +24,16 @@ export default function AppointmentByDoctor() {
     }, [doctorId]);
 
     useEffect(() => {
-        getAppointmentList();
+        getAppointmentList(dateSearch);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dateSearch]);
 
-    const getAppointmentList = () => {
+    const getAppointmentList = (date) => {
         try {
             axios
-                .get('http://localhost:8080/appointment/get-list?doctorId=' + doctorId + '&dateSearch=' + dateSearch)
+                .get('http://localhost:8080/appointment/get-list?doctorId=' + doctorId + '&dateSearch=' + date)
                 .then((response) => {
                     setAppointmentList(response.data);
-                    console.log('setAppointmentList', response.data);
                 });
         } catch (error) {
             console.log(error);
@@ -43,10 +44,15 @@ export default function AppointmentByDoctor() {
         try {
             axios.get('http://localhost:8080/appointment/get-date?doctorId=' + doctorId).then((response) => {
                 setDate(response.data);
+                getAppointmentList(response.data[0]);
             });
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const handleChoice = (id) => {
+        navigate('/booking-schedule?idAPM=' + id);
     };
 
     return (
@@ -76,10 +82,20 @@ export default function AppointmentByDoctor() {
                 <div>
                     <div className="col-6 d-flex">
                         {appointmentList.map((app) => (
-                            <div key={app.idAPM} className="col-3 text-center bg-info m-1">
-                                <Link to={`/booking-schedule?idAPM=${app.idAPM}`} className="text-decoration-none">
+                            <div
+                                key={app.idAPM}
+                                className={`col-3 text-center m-1 ${
+                                    app.statusAPM === 2 ? 'selected' : 'not-selected'
+                                } `}
+                            >
+                                <button
+                                    className={`text-decoration-none ${app.statusAPM === 2 ? 'not-allow' : 'allow'} `}
+                                    title={app.statusAPM === 2 ? 'LỊCH ĐÃ ĐƯỢC ĐẶT' : 'CÓ THỂ CHỌN'}
+                                    disabled={app.statusAPM === 2}
+                                    onClick={app.statusAPM === 2 ? null : () => handleChoice(app.idAPM)}
+                                >
                                     {app.shifts.shiftsName}
-                                </Link>
+                                </button>
                             </div>
                         ))}
                     </div>
