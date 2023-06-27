@@ -1,124 +1,112 @@
-import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import Tippy from '@tippyjs/react/headless';
+
+import NavMobile from '../NavMobile';
+import { navPaths, paths } from '@/routes';
 
 function Header() {
+    const [visibleNavMobile, setVisibleNavMobile] = useState(false);
+    const hide = () => setVisibleNavMobile(false);
+    const toggleNavMobile = () => {
+        setVisibleNavMobile(!visibleNavMobile);
+    };
+
+    const location = useLocation();
+    const currentPath = location.pathname;
+    const navRef = useRef(navPaths);
     return (
-        <div>
-            {' '}
-            <div id="topbar" className="d-flex align-items-center fixed-top">
-                <div className="container d-flex justify-content-between">
-                    <div className="contact-info d-flex align-items-center">
-                        <i className="bi bi-envelope"></i> <a href="mailto:contact@example.com">contact@example.com</a>
-                        <i className="bi bi-phone"></i> +1 5589 55488 55
+        <header className="bg-white shadow-sm border-b-2 fixed top-0 w-full h-[64px] z-50">
+            <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                    <div className="flex-1 md:flex md:items-center md:gap-12">
+                        <Link to={paths.home}>
+                            <img src="/logo.png" alt="logo" width={120} height={120} />
+                        </Link>
                     </div>
-                    <div class="d-none d-lg-flex social-links align-items-center">
-                        <a href="#" className="twitter">
-                            <i class="bi bi-twitter"></i>
-                        </a>
-                        <a href="#" className="facebook">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="#" className="instagram">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="#" className="linkedin">
-                            <i class="bi bi-linkedin"></i>
-                        </a>
+
+                    <div className="md:flex md:items-center md:gap-12">
+                        <nav aria-label="Global" className=" hidden md:flex items-center justify-center">
+                            <ul className="flex items-center gap-6 text-sm my-0">
+                                {navRef.current.map((item, index) => {
+                                    return (
+                                        <li key={index}>
+                                            <Link
+                                                className={`text-gray-500 transition hover:text-gray-500/75 ${
+                                                    currentPath === item.path ? 'text-primary' : ''
+                                                }`}
+                                                to={item.path}
+                                            >
+                                                {item.name}
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </nav>
+
+                        <div className="flex items-center gap-4">
+                            <div className="hidden md:flex sm:gap-4">
+                                <Link
+                                    className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white shadow"
+                                    to={'/login'}
+                                >
+                                    Login
+                                </Link>
+
+                                <div className="hidden md:flex">
+                                    <Link
+                                        className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-primary"
+                                        to={'/register'}
+                                    >
+                                        Register
+                                    </Link>
+                                </div>
+                            </div>
+                            <Tippy
+                                visible={visibleNavMobile}
+                                onClickOutside={hide}
+                                interactive
+                                placement="bottom-end"
+                                render={(attrs) => (
+                                    <div
+                                        {...attrs}
+                                        tabIndex={-1}
+                                        className=" w-[calc(100vw-50vw)] z-[1000] shadow rounded-sm mt-1"
+                                    >
+                                        <div className="w-full bg-white">
+                                            <NavMobile />
+                                        </div>
+                                    </div>
+                                )}
+                            >
+                                <div className="block md:hidden">
+                                    <button
+                                        className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75"
+                                        onClick={toggleNavMobile}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M4 6h16M4 12h16M4 18h16"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </Tippy>
+                        </div>
                     </div>
                 </div>
             </div>
-            <header id="header" className="fixed-top">
-                <div className="container d-flex align-items-center">
-                    <h1 className="logo me-auto">
-                        <a href="index.html">Medilab</a>
-                    </h1>
-
-                    <nav id="navbar" className="navbar order-last order-lg-0">
-                        <ul>
-                            <li>
-                                <Link as={Link} to="/" className="nav-link scrollto active">
-                                    Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link as={Link} to="/about" className="nav-link scrollto">
-                                    about
-                                </Link>
-                            </li>
-                            <li>
-                                <Link as={Link} to="/services" className="nav-link scrollto">
-                                    Services
-                                </Link>
-                            </li>
-                            <li>
-                                <a className="nav-link scrollto" href="#departments">
-                                    Departments
-                                </a>
-                            </li>
-                            <li>
-                                <Link as={Link} to="/doctors" className="nav-link scrollto">
-                                    Doctors
-                                </Link>
-                            </li>
-                            <li className="dropdown">
-                                <a href="#">
-                                    <span>Drop Down</span> <i class="bi bi-chevron-down"></i>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="#">Drop Down 1</a>
-                                    </li>
-                                    <li className="dropdown">
-                                        <a href="#">
-                                            <span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i>
-                                        </a>
-                                        <ul>
-                                            <li>
-                                                <a href="#">Deep Drop Down 1</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Deep Drop Down 2</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Deep Drop Down 3</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Deep Drop Down 4</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Deep Drop Down 5</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Drop Down 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Drop Down 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Drop Down 4</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a className="nav-link scrollto" href="#contact">
-                                    Contact
-                                </a>
-                            </li>
-                        </ul>
-                        <i className="bi bi-list mobile-nav-toggle"></i>
-                    </nav>
-
-                    <a href="#appointment" className="appointment-btn scrollto">
-                        <Link as={Link} to="/appointments" className="nav-link scrollto">
-                            <span className="d-none d-md-inline">Make an</span> Appointment
-                        </Link>
-                    </a>
-                </div>
-            </header>
-            \
-        </div>
+        </header>
     );
 }
 

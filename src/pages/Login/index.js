@@ -1,16 +1,46 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { paths } from '@/routes';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginSchema } from '@/commonFC/formSchema';
+
 function Login() {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(loginSchema),
+    });
+
+    const handleToggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const formSubmitHandler = (data) => {
+        console.log(data);
+    };
+
     return (
         <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-lg text-center">
+                <div className="flex justify-center">
+                    <Link to={paths.home}>
+                        <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                    </Link>
+                </div>
                 <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
 
                 <p className="mt-4 text-gray-500">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque ipsa
-                    culpa autem, at itaque nostrum!
+                    culpa autem, at itaque nostrum
                 </p>
             </div>
 
-            <form action="" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
+            <form onSubmit={handleSubmit(formSubmitHandler)} action="" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
                 <div>
                     <label htmlFor="email" className="sr-only">
                         Email
@@ -18,9 +48,11 @@ function Login() {
 
                     <div className="relative">
                         <input
+                            {...register('email')}
                             type="email"
                             className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
                             placeholder="Enter email"
+                            name="email"
                         />
 
                         <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -40,6 +72,7 @@ function Login() {
                             </svg>
                         </span>
                     </div>
+                    {errors.email ? <span className="text-red-900">{errors.email.message}</span> : <></>}
                 </div>
 
                 <div>
@@ -49,12 +82,17 @@ function Login() {
 
                     <div className="relative">
                         <input
-                            type="password"
+                            {...register('password')}
+                            type={showPassword ? 'text' : 'password'}
                             className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
                             placeholder="Enter password"
+                            name="password"
                         />
 
-                        <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
+                        <span
+                            className="absolute inset-y-0 end-0 grid place-content-center px-4"
+                            onClick={handleToggleShowPassword}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-4 w-4 text-gray-400"
@@ -77,14 +115,13 @@ function Login() {
                             </svg>
                         </span>
                     </div>
+                    {errors.password ? <span className="text-red-900">{errors.password.message}</span> : <></>}
                 </div>
 
                 <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-500">
                         No account?
-                        <a className="underline" href="">
-                            Sign up
-                        </a>
+                        <Link to={paths.register}>Sign up</Link>
                     </p>
 
                     <button

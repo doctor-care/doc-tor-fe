@@ -23,9 +23,9 @@ export default function Home() {
                                     necessitatibus optio ad corporis.
                                 </p>
                                 <div className="text-center">
-                                    <a href="#" className="more-btn">
-                                        Learn More <i class="bx bx-chevron-right"></i>
-                                    </a>
+                                    {/* <a href="#" className="more-btn">
+                                        Learn More
+                                    </a> */}
                                 </div>
                             </div>
                         </div>
