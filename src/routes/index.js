@@ -17,7 +17,9 @@ import EditDoctor from '@/pages/Doctors/EditDoctor';
 import Specialist from '@/pages/Doctors/Specialist';
 import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
 import AppointmentByDoctor from '@/pages/Appointments/AppointmentByDoctor';
-import BookingSchedule from '@/pages/Schedule/BookingSchedule';
+import ScheduleList from '@/pages/Schedule/schedule_list/ScheduleList';
+import BookingSchedule from '@/pages/Schedule/booking_schedule/BookingSchedule';
+import ScheduleDetail from '@/pages/Schedule/schedule_detail/ScheduleDetail';
 
 // Public routes
 const publicRoutes = [
@@ -39,6 +41,8 @@ const publicRoutes = [
     { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
     { path: '/appointment-list', component: AppointmentByDoctor, layout: null },
     { path: '/booking-schedule', component: BookingSchedule, layout: null },
+    { path: '/schedule-list', component: ScheduleList, layout: null },
+    { path: '/schedule/:id', component: ScheduleDetail, layout: null },
 ];
 
 const privateRoutes = [];
