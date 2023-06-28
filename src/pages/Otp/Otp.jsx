@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios, { HttpStatusCode } from 'axios';
 import ErrorMessage from '@/components/common/NotFound/ErrorMessage';
 export default function Otp() {
-
     const navigate = useNavigate();
     const location = useLocation();
     const [wrongOTP, setWrongOTP] = useState("");
@@ -22,7 +21,6 @@ export default function Otp() {
             const fileName = `${timestamp}_${location.state.data.avatarUrl.name}`;
             const fileRef = ref(folderRef, fileName);
             const uploadTask = uploadBytesResumable(fileRef, location.state.data.avatarUrl);
-            console.log(location.state.data)
             uploadTask.on("state_changed",
                 (snapshot) => {
                     console.log(snapshot);
