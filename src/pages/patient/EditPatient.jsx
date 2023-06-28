@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import axios from 'axios';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { set, useForm } from "react-hook-form";
@@ -7,19 +7,22 @@ import './style.css';
 import ErrorMessage from "@/components/common/NotFound/ErrorMessage";
 import Option from '@/components/common/SelectOption/Option';
 import { useNavigate } from 'react-router-dom';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '@/utils/firebase';
 
 export default function EditPatient(props) {
     const { patient } = props;
+    const yup = require("yup");
     const [city, setCity] = useState([]);
-    const [renderDistrict, setRenderDistrict] = useState(true);
     const [district, setDistrict] = useState([]);
-    const [messageAddress, setMessageAddress] = useState("");
     const [files, setFiles] = useState("");
     const [previewUrls, setPreviewUrls] = useState("");
-    const form = useRef();
     const [messageFile, setMessageFiles] = useState("");
     const navigate = useNavigate();
-    const yup = require("yup");
+    const [checkEnable, setCheckEnable] = useState({
+        city: ""
+    });
+
     const schema = yup.object().shape({
         phone: yup.string().required()
             .matches(/^([(0|(+84)])([79])([012])[0-9]{7,8}$/, "phone sai định dạng"),
@@ -33,6 +36,7 @@ export default function EditPatient(props) {
                 return !valid ? ctx.createError() : valid;
             }),
         address: yup.string().required(),
+        idAddress: yup.string().required(),
         avatarUrl: yup.string().required(),
         idPatient: yup.string().required(),
         name: yup.string().required(),
@@ -58,11 +62,48 @@ export default function EditPatient(props) {
 
     }, []);
 
-
+    useEffect(() => {
+        if (checkEnable.city === "") return;
+        axios.get(
+            `https://vapi.vnappmob.com/api/province/district/${checkEnable.city}`
+        ).then(resp => {
+            setDistrict(resp.data.results);
+        });
+    }, [checkEnable.city]);
 
     const onSubmit = data => {
-        console.log(data);
+        if (previewUrls !== "") {
+            const storageRef = ref(storage, `image`)
+            const timestamp = Date.now();
+            const fileName = `${timestamp}_${files.name}`;
+            const fileRef = ref(storageRef, fileName);
+            const uploadTask = uploadBytesResumable(fileRef, files);
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => { },
+                (err) => { },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                        data.avatarUrl = url;
+                        axios.post("http://localhost:8080/patient/edit", data)
+                            .then(resp => navigate("/"));
+                    });
+                }
+            );
+        }
+        axios.post("http://localhost:8080/patient/edit", data)
+            .then(resp => navigate("/"))
     }
+
+    const handleChangeCity = (e) => {
+        setValue("city", e.target.value);
+        setCheckEnable({ "city": e.target.value });
+    };
+
+    const handleChangeDistrict = (e) => {
+        setValue("district", e.target.value);
+    };
+
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         let imageFiles = [];
@@ -105,8 +146,10 @@ export default function EditPatient(props) {
     return (
         <div>
             <h1>Form edit Patient</h1>
-            <form onSubmit={handleSubmit(onSubmit)} ref={form}>
-                <input hidden name='idPatient' />
+            <form onSubmit={handleSubmit(onSubmit)} >
+                <input hidden name='idPatient' {...register.idPatient} />
+                <input hidden name='idAddress' {...register.idAddress} />
+
                 <InputInForm
                     label={"Name"}
                     properties={"name"}
@@ -224,24 +267,18 @@ export default function EditPatient(props) {
                             <div className="form-outline datepicker">
                                 <select
                                     name="city"
-                                    {...register("city")}
+                                    onChange={handleChangeCity}
                                 >
                                     {city.map((item) => (item.province_id === patient.city ?
                                         <option value={item.province_id}
                                             key={item.province_id}
-                                            onChange={() => {
-                                                setValue("city", item.province_id);
-                                                setRenderDistrict(!renderDistrict)
-                                            }}
+
                                             selected>
                                             {item.province_name}
                                         </option> :
                                         <option value={item.province_id}
                                             key={item.province_id}
-                                            onChange={() => {
-                                                setValue("city", item.province_id);
-                                                setRenderDistrict(!renderDistrict)
-                                            }}>
+                                        >
                                             {item.province_name}
                                         </option>
                                     ))}
@@ -254,19 +291,19 @@ export default function EditPatient(props) {
                             <div className="col-md-6 mr-4" style={{ paddingLeft: "0.em" }}>
                                 <select
                                     name="district"
+                                    onChange={handleChangeDistrict}
                                     {...register("district")}
                                 >
                                     {district.map((item) => (item.district_id === patient.district ?
                                         <option value={item.district_id}
                                             key={item.district_id}
-                                            onChange={() => setValue("district", item.district_id)}
                                             selected>
                                             {item.district_name}
                                         </option> :
                                         <option
                                             value={item.district_id}
                                             key={item.district_id}
-                                            onChange={() => setValue("district", item.district_id)}>
+                                        >
                                             {item.district_name}
                                         </option>
                                     ))}
@@ -276,13 +313,14 @@ export default function EditPatient(props) {
 
                     </div>
                     <div>
-                        {messageAddress !== '' && (
+                        {errors?.district && (
                             <ErrorMessage
-                                messageId={messageAddress}
+                                messageId={errors.district.message}
                             />
                         )}
                     </div>
                 </div>
+
                 <div className="formData">
                     <div>
                         <button className="btn btn-secondary" type="button" onClick={() => navigate("/")}>
@@ -295,7 +333,7 @@ export default function EditPatient(props) {
                         </button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     )
 }
