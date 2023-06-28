@@ -8,7 +8,7 @@ import ErrorMessage from "@/components/common/NotFound/ErrorMessage";
 import axios, { HttpStatusCode } from "axios";
 import { useNavigate } from "react-router-dom";
 import Option from "@/components/common/SelectOption/Option";
-import UploadFirebase from "@/utils/upload/UploadFirebase";
+// import UploadFirebase from "@/utils/upload/UploadFirebase";
 
 export default function Patient() {
     const yup = require("yup");
@@ -89,7 +89,7 @@ export default function Patient() {
                     })
             }
         }else{
-            setMessage("address khong de trong");
+            setMessageAddress("address khong de trong");
         }
     };
 
