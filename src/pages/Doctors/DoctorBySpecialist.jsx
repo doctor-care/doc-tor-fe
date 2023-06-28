@@ -24,7 +24,6 @@ export default function DoctorBySpecialist() {
         console.log('page', page);
         console.log('size', size);
         fetchDoctorList();
-        getAppointmentDateList('DT001');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, size, idAddress, idSPL]);
 
@@ -46,20 +45,6 @@ export default function DoctorBySpecialist() {
         }
     };
 
-    const getAppointmentDateList = (doctorId) => {
-        try {
-            axios.get('http://localhost:8080/appointment/getdate?doctorId=' + doctorId).then((response) => {
-                console.log('return response.data', response);
-                setDate(response.data);
-                console.log('date', date);
-                // console.log('date', date)
-            });
-        } catch (error) {
-            console.log(error);
-            console.log('ERROR HERE');
-        }
-    };
-
     console.log('doctors', doctors);
     return (
         <div className="container-fluid">
@@ -78,16 +63,10 @@ export default function DoctorBySpecialist() {
                     <div key={item.idDoctor} className="doctor-content mb-3">
                         <div className="col-md-12 row">
                             <div className="col-md-6">
-                                <div>{item.name}</div>
+                                <Link to={`/appointment-list?doctorId=${item.idDoctor}`}>
+                                    <div>{item.name}</div>
+                                </Link>
                                 <div>THÔNG TIN THÊM</div>
-                            </div>
-                            <div className="col-md-6">
-                                {/* <div>
-                                    {getAppointmentDateList(item.doctorId).map((date) => (
-                                        <span>date</span>
-                                    ))}
-                                </div> */}
-                                <div>LIST APPOINTMENT</div>
                             </div>
                         </div>
                     </div>

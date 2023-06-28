@@ -19,6 +19,10 @@ import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
 import AsyncDataEditPatient from '@/pages/patient/AsyncDataEditPatient';
 import AsyncDataEditDoctor from '@/pages/Doctors/AsyncDataEditDoctor';
 
+import AppointmentByDoctor from '@/pages/Appointments/AppointmentByDoctor';
+import ScheduleList from '@/pages/Schedule/schedule_list/ScheduleList';
+import BookingSchedule from '@/pages/Schedule/booking_schedule/BookingSchedule';
+import ScheduleDetail from '@/pages/Schedule/schedule_detail/ScheduleDetail';
 
 // Public routes
 const publicRoutes = [
@@ -28,6 +32,8 @@ const publicRoutes = [
     { path: '/editDoc', component: AsyncDataEditDoctor, layout: null },
     { path: '/patient', component: Patient, layout: null },
     { path: '/editPatient', component: AsyncDataEditPatient, layout: null },
+    { path: '/service/:id', component: Services, layout: OnlyHeader },
+    { path: '/editPatient', component: EditPatient, layout: null },
     { path: '/services', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/login', component: Login, layout: null },
@@ -37,6 +43,10 @@ const publicRoutes = [
 
     { path: '/specialist', component: Specialist, layout: null },
     { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
+    { path: '/appointment-list', component: AppointmentByDoctor, layout: null },
+    { path: '/booking-schedule', component: BookingSchedule, layout: null },
+    { path: '/schedule-list', component: ScheduleList, layout: null },
+    { path: '/schedule/:id', component: ScheduleDetail, layout: null },
 ];
 
 const privateRoutes = [];
