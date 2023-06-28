@@ -8,7 +8,7 @@ import Doctors from '@/pages/Doctors';
 import Appointment from '@/pages/Appointments';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import ChatBox from '@/pages/Chat/Chat';
+import ChatBox from '@/pages/Chat/ChatBox';
 import Patient from '@/pages/patient/Patient';
 import Otp from '@/pages/Otp/Otp';
 import EditPatient from '@/pages/patient/EditPatient';
@@ -16,6 +16,10 @@ import CreateDoctor from '@/pages/Doctors/CreateDoctor';
 import EditDoctor from '@/pages/Doctors/EditDoctor';
 import Specialist from '@/pages/Doctors/Specialist';
 import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
+import AsyncDataEditPatient from '@/pages/patient/AsyncDataEditPatient';
+import Review from '@/pages/patient/Review';
+import AsyncDataEditDoctor from '@/pages/Doctors/AsyncDataEditDoctor';
+
 import AppointmentByDoctor from '@/pages/Appointments/AppointmentByDoctor';
 import ScheduleList from '@/pages/Schedule/schedule_list/ScheduleList';
 import BookingSchedule from '@/pages/Schedule/booking_schedule/BookingSchedule';
@@ -26,8 +30,9 @@ const publicRoutes = [
     { path: '/', component: Home },
     { path: '/doctors', component: Doctors },
     { path: '/createDoc', component: CreateDoctor, layout: null },
-    { path: '/editDoc', component: EditDoctor, layout: null },
+    { path: '/editDoc', component: AsyncDataEditDoctor, layout: null },
     { path: '/patient', component: Patient, layout: null },
+    { path: '/editPatient', component: AsyncDataEditPatient, layout: null },
     { path: '/service/:id', component: Services, layout: OnlyHeader },
     { path: '/editPatient', component: EditPatient, layout: null },
     { path: '/services', component: Services, layout: OnlyHeader },
@@ -43,6 +48,7 @@ const publicRoutes = [
     { path: '/booking-schedule', component: BookingSchedule, layout: null },
     { path: '/schedule-list', component: ScheduleList, layout: null },
     { path: '/schedule/:id', component: ScheduleDetail, layout: null },
+    { path: '/review/:id', component: Review, layout: null },
 ];
 
 const privateRoutes = [];
