@@ -1,10 +1,11 @@
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { publicRoutes } from '@/routes';
+import { publicRoutes, privateRoutes } from '@/routes';
 import { DefaultLayout } from '@/layouts';
 
 import { OnlyHeader } from '@/layouts';
 import NotFound from './components/common/NotFound';
+import PrivateRouteWrapper from './components/common/PrivateRouteWrapper';
 
 function App() {
     return (
@@ -33,6 +34,33 @@ function App() {
                             />
                         );
                     })}
+
+                    {/* Private routers */}
+                    {privateRoutes.map((route, index) => {
+                        const Page = route.component;
+                        let Layout = DefaultLayout;
+
+                        if (route.layout) {
+                            Layout = route.layout;
+                        } else if (route.layout === null) {
+                            Layout = Fragment;
+                        }
+
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <PrivateRouteWrapper>
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    </PrivateRouteWrapper>
+                                }
+                            />
+                        );
+                    })}
+                    {/* NotFound */}
                     <Route
                         path="*"
                         element={

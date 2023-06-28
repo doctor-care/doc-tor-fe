@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import Tippy from '@tippyjs/react/headless';
+import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import NavMobile from '../NavMobile';
 import { navPaths, paths } from '@/routes';
@@ -31,14 +32,42 @@ function Header() {
                                 {navRef.current.map((item, index) => {
                                     return (
                                         <li key={index}>
-                                            <Link
-                                                className={`text-gray-500 transition hover:text-gray-500/75 ${
-                                                    currentPath === item.path ? 'text-primary' : ''
-                                                }`}
-                                                to={item.path}
-                                            >
-                                                {item.name}
-                                            </Link>
+                                            <details className="group relative">
+                                                <summary
+                                                    className={`text-gray-500 flex  transition hover:text-gray-500/75 hover:bg-slate-100 rounded-md  px-2 py-1 ${
+                                                        currentPath === item.path ? 'text-primary' : ''
+                                                    }`}
+                                                    style={{ listStyleType: 'none' }}
+                                                >
+                                                    <Link to={item.path} className="h-[23px] no-underline text-inherit">
+                                                        {item.name}
+                                                    </Link>
+                                                    {item?.subMenu && (
+                                                        <MdKeyboardArrowRight
+                                                            size={20}
+                                                            className=" mt-[3px] transition duration-300 group-open:rotate-90"
+                                                        />
+                                                    )}
+                                                </summary>
+                                                {item?.subMenu && (
+                                                    <ul className="absolute mt-3 space-y-1 px-0 left-0 w-48 bg-white rounded-sm shadow-lg">
+                                                        {item.subMenu.map((subMenuItem, subIndex) => (
+                                                            <li key={subIndex}>
+                                                                <Link
+                                                                    className={`block no-underline  px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 ${
+                                                                        currentPath === subMenuItem.path
+                                                                            ? 'text-primary'
+                                                                            : ''
+                                                                    }`}
+                                                                    to={subMenuItem.path}
+                                                                >
+                                                                    {subMenuItem.name}
+                                                                </Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </details>
                                         </li>
                                     );
                                 })}
