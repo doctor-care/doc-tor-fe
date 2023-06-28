@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '@/routes';
 import { DefaultLayout } from '@/layouts';
@@ -7,7 +7,6 @@ import { OnlyHeader } from '@/layouts';
 import NotFound from './components/common/NotFound';
 
 function App() {
-
     return (
 
         <Router>
@@ -29,7 +28,7 @@ function App() {
                                 key={index}
                                 path={route.path}
                                 element={
-                                    <Layout>
+                                    <Layout >
                                         <Page />
                                     </Layout>
                                 }

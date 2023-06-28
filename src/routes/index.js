@@ -17,6 +17,7 @@ import EditDoctor from '@/pages/Doctors/EditDoctor';
 import Specialist from '@/pages/Doctors/Specialist';
 import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
 import AsyncDataEditPatient from '@/pages/patient/AsyncDataEditPatient';
+import Review from '@/pages/patient/Review';
 import AsyncDataEditDoctor from '@/pages/Doctors/AsyncDataEditDoctor';
 
 import AppointmentByDoctor from '@/pages/Appointments/AppointmentByDoctor';
@@ -47,6 +48,7 @@ const publicRoutes = [
     { path: '/booking-schedule', component: BookingSchedule, layout: null },
     { path: '/schedule-list', component: ScheduleList, layout: null },
     { path: '/schedule/:id', component: ScheduleDetail, layout: null },
+    { path: '/review/:id', component: Review, layout: null },
 ];
 
 const privateRoutes = [];

@@ -9,7 +9,7 @@ export default function AsyncDataEditPatient() {
     const [patient, setPatient] = useState({});
     const navigate = useNavigate();
     useEffect(() => {
-        if (data?.sub) {
+        if (data?.aud !== "PATIENT") {
             navigate("/");
             return;
         };
