@@ -24,7 +24,7 @@ export default function Home() {
                                 </p>
                                 <div className="text-center">
                                     <a href="#" className="more-btn">
-                                        Learn More <i class="bx bx-chevron-right"></i>
+                                        Learn More <i className="bx bx-chevron-right"></i>
                                     </a>
                                 </div>
                             </div>

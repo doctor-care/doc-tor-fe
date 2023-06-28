@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import './style.css';
 import ErrorMessage from "@/components/common/NotFound/ErrorMessage";
 import axios from "axios";
@@ -11,21 +10,22 @@ import emailjs from '@emailjs/browser';
 import randomOTP from "@/utils/randomOTP";
 import InputInForm from "@/components/common/SelectOption/InputInForm";
 
-
-export default function Patient() {
+export default function CreateDoctor() {
     const yup = require("yup");
     const navigate = useNavigate();
     const [city, setCity] = useState([]);
-    const [district, setDistrict] = useState([]);
     const [messageAddress, setMessageAddress] = useState("");
     const [messageFile, setMessageFiles] = useState("");
     const [files, setFiles] = useState("");
     const [previewUrls, setPreviewUrls] = useState("");
+    const [district, setDistrict] = useState([]);
+    const [specialist, setSpecialist] = useState([]);
     const form = useRef();
     const [checkEnable, setCheckEnable] = useState({
         city: "0",
         district: "0",
     });
+
 
     const schema = yup.object().shape({
         userName: yup
@@ -48,6 +48,7 @@ export default function Patient() {
                     })
                 }),
         password: yup.string().required().min(6).max(25),
+        idSPL: yup.string().required(),
         email: yup
             .string()
             .required()
@@ -81,8 +82,8 @@ export default function Patient() {
         address: yup.string().required(),
         otp: yup.string().required(),
         name: yup.string().required(),
-        healthHistory: yup.string().required(),
-        bloodType: yup.string().required(),
+        degree: yup.string().required(),
+        description: yup.string().required(),
         sex: yup.string().required(),
     });
 
@@ -97,12 +98,13 @@ export default function Patient() {
     });
 
     const onSubmit = data => {
+        console.log(data);
         if (checkEnable.city === '0' && checkEnable.district === "0") { setMessageAddress("dia chi khong duoc de trong"); return }
         if (checkEnable.city !== '0' && checkEnable.district !== "0") {
             data.city = checkEnable.city;
             data.district = checkEnable.district;
             data.avatarUrl = files;
-            data.url = "http://localhost:8080/patient/signup";
+            data.url = "http://localhost:8080/doctor/signup";
             emailjs.sendForm('service_gu18tah', 'template_eomflh8', form.current, 'nGzNvmaDuhf2VKbq8')
                 .then((result) => {
                     navigate("/otp", {
@@ -116,7 +118,11 @@ export default function Patient() {
         }
     };
 
-
+    useEffect(() => {
+        axios.get("https://vapi.vnappmob.com/api/province/").then((resp) => {
+            setCity(resp.data.results);
+        });
+    }, [messageAddress]);
 
     const handleChangeCity = (e) => {
         setCheckEnable({ ...checkEnable, city: e.target.value });
@@ -127,18 +133,15 @@ export default function Patient() {
     };
 
     useEffect(() => {
-        axios.get("https://vapi.vnappmob.com/api/province/").then((resp) => {
-            setCity(resp.data.results);
-        });
-    }, [messageAddress]);
-
-    useEffect(() => {
         axios.get(
             `https://vapi.vnappmob.com/api/province/district/${checkEnable.city}`
         ).then(resp => setDistrict(resp.data.results))
 
     }, [checkEnable.city]);
 
+    useEffect(() => {
+        axios.get("http://localhost:8080/specialist/get-all").then(resp => setSpecialist(resp.data))
+    }, [])
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
@@ -237,6 +240,26 @@ export default function Patient() {
                     error={errors?.birthday?.message}
                     type={"date"} />
 
+
+                <div className="formData">
+                    <div>
+                        <label>Specialist</label>
+                    </div>
+                    <div>
+                        <select className="form-control"  {...register("idSPL")} defaultValue="" name="idSPL">
+                            <option defaultValue="">--Choice Specialist--</option>
+                            {specialist.map(item => <option value={item.idSPL}>{item.name}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        {errors?.sex && (
+                            <ErrorMessage
+                                messageId={errors.sex.message}
+                            />
+                        )}
+                    </div>
+                </div>
+
                 <InputInForm
                     label={"Address"}
                     properties={"address"}
@@ -284,6 +307,7 @@ export default function Patient() {
                                 </div>
                             </React.Fragment>
                         )}
+
                     </div>
                     <div>
                         {messageAddress !== '' && (
@@ -293,6 +317,7 @@ export default function Patient() {
                         )}
                     </div>
                 </div>
+
                 <InputInForm
                     label={"Name"}
                     properties={"name"}
@@ -301,29 +326,12 @@ export default function Patient() {
                     type={"text"} />
 
                 <InputInForm
-                    label={"Health History"}
-                    properties={"healthHistory"}
-                    register={register("healthHistory")}
-                    error={errors?.healthHistory?.message}
+                    label={"Degree"}
+                    properties={"degree"}
+                    register={register("degree")}
+                    error={errors?.degree?.message}
                     type={"text"} />
 
-                <div className="formData">
-                    <div>
-                        <label>Blood Type</label>
-                    </div>
-                    <div>
-                        <select className="form-control"  {...register("bloodType")} defaultValue="" name="bloodType">
-                            <Option label={"Blood Type"} list={["A", "B", "AB", "O", "Other"]} />
-                        </select>
-                    </div>
-                    <div>
-                        {errors?.bloodType && (
-                            <ErrorMessage
-                                messageId={errors.bloodType.message}
-                            />
-                        )}
-                    </div>
-                </div>
                 <div className="formData">
                     <div>
                         <label>Gender</label>
@@ -341,6 +349,27 @@ export default function Patient() {
                         )}
                     </div>
                 </div>
+
+                <div className="formData">
+                    <div>
+                        <label>Description</label>
+                    </div>
+                    <div>
+                        <textarea {...register("description")} className="form-control">
+                        </textarea>
+
+                    </div>
+                    <div>
+                        {errors?.description && (
+                            <ErrorMessage
+                                messageId={errors.description.message}
+                            />
+                        )}
+                    </div>
+                </div>
+
+
+
                 <div className="formData">
                     <div>
                         <button className="btn btn-secondary" type="button" onClick={() => navigate("/")}>

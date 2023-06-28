@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
@@ -8,8 +8,8 @@ import axios from 'axios';
 
 var stompClient = null;
 const ChatBox = () => {
-    
-    const [user, setUser]=useState(localStorage.getItem('userName')?localStorage.getItem('userName'):'user1');
+
+    const [user, setUser] = useState(localStorage.getItem('userName') ? localStorage.getItem('userName') : 'user1');
     const [listUserNew, setListUserNew] = useState([]);
     const chatMessagesRef = useRef(null);
     const [listUser, setListUser] = useState([]);
@@ -58,23 +58,23 @@ const ChatBox = () => {
         const Sock = new SockJS("http://localhost:8080/chat");
         stompClient = over(Sock);
         stompClient.connect({}, onConnected);
-      };
+    };
 
 
-      const onConnected = () => {
+    const onConnected = () => {
         stompClient.subscribe("/user/" + user + "/queue/messages", (message) => {
-          //  if(reciptientnamecurrent!==""&&reciptientnamecurrent===message.body.sender){
-          setListMessage((listMessage) => [
-            ...listMessage,
-            JSON.parse(message.body),
-          ]);
-          console.log('userData.content:', userData.content);
-          console.log('stompClient:', stompClient);
-          console.log('stompClient.connected:', stompClient.connected);
-          console.log(listMessage, "Day la list message sau khi nhan dc message");
+            //  if(reciptientnamecurrent!==""&&reciptientnamecurrent===message.body.sender){
+            setListMessage((listMessage) => [
+                ...listMessage,
+                JSON.parse(message.body),
+            ]);
+            console.log('userData.content:', userData.content);
+            console.log('stompClient:', stompClient);
+            console.log('stompClient.connected:', stompClient.connected);
+            console.log(listMessage, "Day la list message sau khi nhan dc message");
         });
         console.log("WebSocket connected"); // Thêm log để kiểm tra kết nối WebSocket
-      };
+    };
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && userData.content !== '') {
             sendPrivateValue(); // Gọi hàm xử lý khi người dùng nhấn phím Enter
@@ -83,22 +83,22 @@ const ChatBox = () => {
 
     const sendPrivateValue = () => {
         if (stompClient && stompClient.connected && stompClient.ws.readyState === 1) {
-          if (userData.content !== "") {
-            setUserData({ ...userData, reciptient: reciptientname });
-            setUserData({ ...userData, sender: user });
-            const message = userData;
-            message.sender = user;
-            message.reciptient = reciptientname;
-            console.log(message, "day la message truoc khi gui");
-            stompClient.send(`/app/message`, {}, JSON.stringify(message));
-            setUserData({ ...userData, content: "" });
-          } else {
-            alert("Hãy nhập nội dung cho tin nhắn!!");
-          }
+            if (userData.content !== "") {
+                setUserData({ ...userData, reciptient: reciptientname });
+                setUserData({ ...userData, sender: user });
+                const message = userData;
+                message.sender = user;
+                message.reciptient = reciptientname;
+                console.log(message, "day la message truoc khi gui");
+                stompClient.send(`/app/message`, {}, JSON.stringify(message));
+                setUserData({ ...userData, content: "" });
+            } else {
+                alert("Hãy nhập nội dung cho tin nhắn!!");
+            }
         } else {
-          alert("Kết nối WebSocket chưa được thiết lập.");
+            alert("Kết nối WebSocket chưa được thiết lập.");
         }
-      };
+    };
 
     function getChat(name) {
         console.log('name', name);
@@ -184,10 +184,10 @@ const ChatBox = () => {
         getChat('');
         setEditable(false);
         console.log(user);
-        if(localStorage.getItem('userName') !==''){
+        if (localStorage.getItem('userName') !== '') {
             setUser(localStorage.getItem('userName'))
         }
-       
+
     }, []);
 
     useEffect(() => {
@@ -270,11 +270,10 @@ const ChatBox = () => {
                                 {Array.isArray(listMessage) &&
                                     listMessage.map(
                                         (chat, index) =>
-                                            (chat.sender === reciptientnamecurrent || chat.sender === (user !== '' ? user : '') ) && (
+                                            (chat.sender === reciptientnamecurrent || chat.sender === (user !== '' ? user : '')) && (
                                                 <li
-                                                    className={`message ${
-                                                        chat.sender === (user !== '' ? user : '') ? 'self' : 'client'
-                                                    }`}
+                                                    className={`message ${chat.sender === (user !== '' ? user : '') ? 'self' : 'client'
+                                                        }`}
                                                     key={index}
                                                 >
                                                     <div className="message-data">{chat.content}</div>
@@ -301,7 +300,7 @@ const ChatBox = () => {
                             onClick={sendPrivateValue}
                             disabled={buttonDisabled}
                         >
-                            <i class="fa-regular fa-paper-plane"></i>
+                            <i className="fa-regular fa-paper-plane"></i>
                         </button>
                     </div>
                 </div>
