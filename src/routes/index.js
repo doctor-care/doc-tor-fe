@@ -20,24 +20,30 @@ const paths = {
     services: '/services',
     login: '/login',
     register: '/register',
+    appointments: '/appointments',
 };
 
 //nav path
 const navPaths = [
     { name: 'Trang chủ', path: paths.home, icon: <AiOutlineHome /> },
-    { name: 'Dịch vụ', path: paths.services, icon: <RiServiceLine /> },
+    {
+        name: 'Dịch vụ',
+        path: paths.services,
+        icon: <RiServiceLine />,
+        subMenu: [{ name: 'Đặt lịch', path: paths.appointments, icon: <RiServiceLine /> }],
+    },
+    { name: 'Bác sĩ', path: paths.doctors, icon: <RiServiceLine /> },
 ];
 
 // Public routes
 const publicRoutes = [
     { path: paths.home, component: Home },
-    { path: paths.doctors, component: Doctors, layout: null },
     { path: paths.services, component: Services, layout: OnlyHeader },
-    { path: '/appointments', component: Appointment, layout: OnlyHeader },
+    { path: paths.appointments, component: Appointment, layout: OnlyHeader },
     { path: paths.login, component: Login, layout: null },
     { path: paths.register, component: Register, layout: null },
 ];
 
-const privateRoutes = [];
+const privateRoutes = [{ path: paths.doctors, component: Doctors, layout: null }];
 
 export { publicRoutes, privateRoutes, paths, navPaths };
