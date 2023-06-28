@@ -6,17 +6,58 @@ import FormService from './FormRegister';
 export default function Service() {
     const { id } = useParams();
     console.log('id', id);
-    const [isOpen, setIsOpen] = useState(false);
     const [listDoctorService, setListDoctorService] = useState([]);
     const [service, setService] = useState('');
-    const [idDoctor, setIdDoctor] = useState('');
-
-    const handleOpenModal = () => {
-        setIsOpen(true);
+    const [nameDoctor, setNameDoctor] = useState('');
+    const [form, setForm] = useState({
+        idPatient: '',
+        idDoctorServiceMedical: '',
+        phone: '',
+        fullname: '',
+        address: '',
+    });
+    const [data, setData] = useState({});
+    const handleInputChange = (event) => {
+        setForm({ ...form, address: event.target.value });
     };
+    useEffect(() => {
+        const username = localStorage.getItem('userName');
+        axios
+            .get(`http://localhost:8080/patient/${username}`)
+            .then((response) => {
+                const data = response.data;
+                setData(data);
+                console.log('data', data);
+                setForm({
+                    ...form,
+                    idPatient: data.idPatient,
+                    phone: data.phone,
+                    fullname: data.name,
+                });
+            })
+            .catch((error) => console.error);
+       
+    }, []);
 
-    const handleCloseModal = () => {
-        setIsOpen(false);
+    const confirm = (id, name) => {
+        
+        setNameDoctor(name);
+        setForm({
+            ...form,
+            idDoctorServiceMedical:id
+        });
+    };
+    const handleConfirm = () => {
+        axios
+            .post(`http://localhost:8080/service/create-register-service`, form, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+            })
+            .catch((error) => console.error);
     };
 
     useEffect(() => {
@@ -63,13 +104,13 @@ export default function Service() {
                                     <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
                                     <div>
                                         <button
-                                            onClick={isOpen ? handleCloseModal : handleOpenModal}
-                                            className="round-button"
-                                            style={{ bottom: '40px', right: '30px' }}
+                                            className="btn btn-success"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop"
+                                            onClick={() => confirm(doctorService.id, doctorService.doctor.name)}
                                         >
-                                            Register
+                                            Xác nhận lịch hẹn
                                         </button>
-                                        <FormService isOpen={isOpen} onClose={handleCloseModal} idDT={doctorService.doctor.idDoctor}></FormService>
                                     </div>
                                     <div className="social">
                                         <a href="">
@@ -90,6 +131,79 @@ export default function Service() {
                             </div>
                         </div>
                     ))}
+                </div>
+                <div
+                    className="modal fade"
+                    id="staticBackdrop"
+                    data-bs-backdrop="static"
+                    data-bs-keyboard="false"
+                    tabIndex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header bg-danger">
+                                <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                    XÁC NHẬN
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close text-white"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <div>
+                                    <span>{nameDoctor}</span>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Enter full name"
+                                        value={data.name}
+                                        readOnly
+                                    />
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Enter phone"
+                                        value={data.phone}
+                                    />
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Enter address"
+                                        value={data.address}
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* <span>
+                                    - Mã vé: <strong>{maVeDelete}</strong>
+                                </span> */}
+                                    <br></br>
+                                    {/* <span>
+                                    - Hành khách: <strong>{tenHanhKhachDelete}</strong>
+                                </span> */}
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                    Hủy bỏ
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-warning"
+                                    onClick={handleConfirm}
+                                    data-bs-dismiss="modal"
+                                >
+                                    Xác nhận
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
