@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function Option(props) {
-    const { label, list } = props;
+    const { label, list, value } = props;
     return (
         <React.Fragment>
             <option disabled value="">-Choice {label}-</option>

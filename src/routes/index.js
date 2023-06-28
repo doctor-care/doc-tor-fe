@@ -16,15 +16,18 @@ import CreateDoctor from '@/pages/Doctors/CreateDoctor';
 import EditDoctor from '@/pages/Doctors/EditDoctor';
 import Specialist from '@/pages/Doctors/Specialist';
 import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
+import AsyncDataEditPatient from '@/pages/patient/AsyncDataEditPatient';
+import AsyncDataEditDoctor from '@/pages/Doctors/AsyncDataEditDoctor';
+
 
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home },
     { path: '/doctors', component: Doctors },
     { path: '/createDoc', component: CreateDoctor, layout: null },
-    { path: '/editDoc', component: EditDoctor, layout: null },
+    { path: '/editDoc', component: AsyncDataEditDoctor, layout: null },
     { path: '/patient', component: Patient, layout: null },
-    { path: '/editPatient', component: EditPatient, layout: null },
+    { path: '/editPatient', component: AsyncDataEditPatient, layout: null },
     { path: '/services', component: Services, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/login', component: Login, layout: null },
