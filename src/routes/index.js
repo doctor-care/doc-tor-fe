@@ -8,7 +8,7 @@ import Doctors from '@/pages/Doctors';
 import Appointment from '@/pages/Appointments';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import ChatBox from '@/pages/Chat/Chat';
+import ChatBox from '@/pages/Chat/ChatBox';
 import Patient from '@/pages/patient/Patient';
 import Otp from '@/pages/Otp/Otp';
 import EditPatient from '@/pages/patient/EditPatient';

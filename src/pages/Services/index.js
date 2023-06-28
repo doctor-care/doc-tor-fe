@@ -1,13 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import FormService from './FormRegister';
 
 export default function Service() {
     const { id } = useParams();
     console.log('id', id);
-
     const [listDoctorService, setListDoctorService] = useState([]);
     const [service, setService] = useState('');
+    const [nameDoctor, setNameDoctor] = useState('');
+    const [form, setForm] = useState({
+        idPatient: '',
+        idDoctorServiceMedical: '',
+        phone: '',
+        fullname: '',
+        address: '',
+    });
+    const [data, setData] = useState({});
+    const handleInputChange = (event) => {
+        setForm({ ...form, address: event.target.value });
+    };
+    useEffect(() => {
+        const username = localStorage.getItem('userName');
+        axios
+            .get(`http://localhost:8080/patient/${username}`)
+            .then((response) => {
+                const data = response.data;
+                setData(data);
+                console.log('data', data);
+                setForm({
+                    ...form,
+                    idPatient: data.idPatient,
+                    phone: data.phone,
+                    fullname: data.name,
+                });
+            })
+            .catch((error) => console.error);
+       
+    }, []);
+
+    const confirm = (id, name) => {
+        
+        setNameDoctor(name);
+        setForm({
+            ...form,
+            idDoctorServiceMedical:id
+        });
+    };
+    const handleConfirm = () => {
+        axios
+            .post(`http://localhost:8080/service/create-register-service`, form, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+            })
+            .catch((error) => console.error);
+    };
 
     useEffect(() => {
         axios
@@ -49,10 +100,16 @@ export default function Service() {
                                 <div className="member-info">
                                     <h4>{doctorService.doctor.name}</h4>
                                     <span>{doctorService.doctor.birthday}</span>
+                                    <span>{doctorService.doctor.idDoctor}</span>
                                     <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
                                     <div>
-                                        <button type="button" className="btn btn-warning">
-                                            Đặt lịch
+                                        <button
+                                            className="btn btn-success"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop"
+                                            onClick={() => confirm(doctorService.id, doctorService.doctor.name)}
+                                        >
+                                            Xác nhận lịch hẹn
                                         </button>
                                     </div>
                                     <div className="social">
@@ -74,66 +131,79 @@ export default function Service() {
                             </div>
                         </div>
                     ))}
-                    {/* <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-                        <div className="icon-box">
-                            <div className="icon">
-                                <i class="fas fa-pills"></i>
+                </div>
+                <div
+                    className="modal fade"
+                    id="staticBackdrop"
+                    data-bs-backdrop="static"
+                    data-bs-keyboard="false"
+                    tabIndex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header bg-danger">
+                                <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                    XÁC NHẬN
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close text-white"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
                             </div>
-                            <h4>
-                                <a className="">Sed ut perspiciatis</a>
-                            </h4>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+                            <div className="modal-body">
+                                <div>
+                                    <span>{nameDoctor}</span>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Enter full name"
+                                        value={data.name}
+                                        readOnly
+                                    />
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Enter phone"
+                                        value={data.phone}
+                                    />
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Enter address"
+                                        value={data.address}
+                                        onChange={handleInputChange}
+                                    />
+                                    {/* <span>
+                                    - Mã vé: <strong>{maVeDelete}</strong>
+                                </span> */}
+                                    <br></br>
+                                    {/* <span>
+                                    - Hành khách: <strong>{tenHanhKhachDelete}</strong>
+                                </span> */}
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                    Hủy bỏ
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-warning"
+                                    onClick={handleConfirm}
+                                    data-bs-dismiss="modal"
+                                >
+                                    Xác nhận
+                                </button>
+                            </div>
                         </div>
                     </div>
-
-                    <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-                        <div className="icon-box">
-                            <div className="icon">
-                                <i class="fas fa-hospital-user"></i>
-                            </div>
-                            <h4>
-                                <a href="">Magni Dolores</a>
-                            </h4>
-                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-                        <div className="icon-box">
-                            <div className="icon">
-                                <i class="fas fa-dna"></i>
-                            </div>
-                            <h4>
-                                <a href="">Nemo Enim</a>
-                            </h4>
-                            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-                        <div className="icon-box">
-                            <div className="icon">
-                                <i class="fas fa-wheelchair"></i>
-                            </div>
-                            <h4>
-                                <a href="">Dele cardo</a>
-                            </h4>
-                            <p>Quis consequatur saepe eligendi voluptatem consequatur dolor consequuntur</p>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
-                        <div className="icon-box">
-                            <div className="icon">
-                                <i class="fas fa-notes-medical"></i>
-                            </div>
-                            <h4>
-                                <a href="">Divera don</a>
-                            </h4>
-                            <p>Modi nostrum vel laborum. Porro fugit error sit minus sapiente sit aspernatur</p>
-                        </div>
-                    </div>
-                */}
                 </div>
             </div>
         </section>

@@ -1,0 +1,34 @@
+.service {
+    background-color: rgb(246, 250, 250);
+    z-index: 3000;
+  
+  }
+
+  .ReactModal__Content {
+    background-color: #5f0404;
+    color: #000;
+  
+  }
+  
+  .ReactModal__Content--after-open {
+    opacity: 1;
+    z-index: 3000;
+  
+  }
+  .my-modal {
+    position: fixed;
+    top: 60%;
+    right: -5%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: rgb(244, 243, 243);
+    border: #5aaeee solid 2px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    height: 450px;
+    width: 400px;
+    /* các CSS khác */
+  }
+  
+  
