@@ -1,48 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
-import './BookingSchedule.css';
-import { toast } from 'react-toastify';
-import * as Yup from 'yup';
-import 'react-toastify/dist/ReactToastify.css';
-export default function BookingSchedule() {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const [userName] = useState(localStorage.getItem('userName'));
-    const [idAPM] = useState(queryParams.get('idAPM'));
+// import './BookingSchedule.css';
+
+export default function CreateHistoryMedical() {
+    const navigate = useNavigate();
+    const [userNameDoctor] = useState(localStorage.getItem('userName'));
+    const [userNamePatient, setUserNamePatient] = useState('');
     const [patient, setPatient] = useState({});
     const [isDisabled, setIsDisabled] = useState(false);
+    const { idScd } = useParams();
 
+    // console.log('idScd', idScd);
     const initalValues = {
-        idAPM: Number(idAPM),
-        createDate: Moment().format('YYYY-MM-DD HH:mm:ss'),
-        statusSCD: 0,
-        scheduleAddress: '',
-        note: '',
+        userNameDoctor: userNameDoctor,
+        createDate: Moment().format('YYYY-MM-DD'),
+        symptom: '',
+        diagnosis: '',
+        result: '',
     };
     const [formData, setFormData] = useState(initalValues);
 
     useEffect(() => {
-        getPatientInfo();
+        getScheduleInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userName]);
+    }, [idScd]);
 
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
-    };
-
-    const getPatientInfo = () => {
-        try {
-            axios.get('http://localhost:8080/patient/username/' + userName).then((response) => {
-                console.log('patient info', response.data);
-                setPatient(response.data);
-                formData.idPatient = response.data.idPatient;
-            });
-        } catch (error) {
-            console.log(error);
-        }
     };
 
     const handleSubmit = (e) => {
@@ -54,15 +41,16 @@ export default function BookingSchedule() {
 
         // if (Object.keys(errors).length === 0) {
         axios
-            .post('http://localhost:8080/schedule/create', formData, {
+            .post('http://localhost:8080/history-medical/create', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             })
             .then((response) => {
-                console.log('response submit', response);
-                if (response.data.idSCD !== undefined) {
-          
+                if (response.data.idHM === undefined) {
+                    alert('Thêm mới thất bại');
+                } else {
+                    alert('thêm mới thành công');
                 }
             })
             .catch((error) => {
@@ -73,26 +61,73 @@ export default function BookingSchedule() {
         // }
     };
 
+    const getScheduleInfo = () => {
+        axios
+            .get('http://localhost:8080/schedule/id/' + idScd)
+            .then((response) => {
+                console.log('getScheduleInfo', response);
+
+                formData.patientId = response.data.patient.idPatient;
+                setPatient(response.data.patient);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const showPatientInfo = (e) => {
+        e.preventDefault();
+        axios
+            .get('http://localhost:8080/patient/' + userNamePatient)
+            .then((response) => {
+                console.log('response', response);
+                if (response.data.name === undefined) {
+                    setPatient({});
+                    alert('không tìm thấy bệnh nhân');
+                } else {
+                    formData.patientId = response.data.idPatient;
+                    setPatient(response.data);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <div className="container">
-            <div className="">
-                <div className="d-flex align-items-center">
-                    <h5 className="text-uppercase">Div này để thông tin bác sĩ</h5>
-                </div>
-            </div>
-
             <div className="container">
                 <div className="d-flex justify-content-center">
                     <div className="schedule-form">
                         <div>
                             <div>
-                                <h2 className="text-center">PHIẾU ĐẶT LỊCH KHÁM</h2>
+                                <h2 className="text-center">THÊM MỚI BỆNH ÁN</h2>
                             </div>
+                            {/* <form className="d-flex justify-content-center" onSubmit={showPatientInfo}>
+                                <div className="form-floating mb-4">
+                                    <input
+                                        type="text"
+                                        className="border"
+                                        id="full-name"
+                                        placeholder="Nhập tài khoản bệnh nhân"
+                                        style={{ paddingTop: '10px' }}
+                                        name="name"
+                                        onChange={(e) => {
+                                            setUserNamePatient(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div className="form-floating  mb-4">
+                                    <button type="submit" className="btn btn-primary">
+                                        Tìm
+                                    </button>
+                                </div>
+                            </form> */}
 
                             <form onSubmit={handleSubmit} className="mt-3">
                                 <div className="row my-2">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
-                                        <div className="form-floating textbox mb-4">
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
@@ -110,7 +145,7 @@ export default function BookingSchedule() {
                                         </div>
                                     </div>
                                     <div className="col-md-6" style={{ paddingRight: '10px' }}>
-                                        <div className="form-floating textbox mb-4">
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
@@ -131,7 +166,7 @@ export default function BookingSchedule() {
                                 </div>
                                 <div className="row my-2">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
-                                        <div className="form-floating textbox mb-4">
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
@@ -149,7 +184,7 @@ export default function BookingSchedule() {
                                         </div>
                                     </div>
                                     <div className="col-md-6" style={{ paddingRight: '10px' }}>
-                                        <div className="form-floating textbox mb-4">
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="date"
                                                 className="form-control input"
@@ -170,7 +205,7 @@ export default function BookingSchedule() {
                                 </div>
                                 <div className="row my-2">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
-                                        <div className="form-floating textbox mb-4">
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
@@ -188,7 +223,7 @@ export default function BookingSchedule() {
                                         </div>
                                     </div>
                                     <div className="col-md-6" style={{ paddingRight: '10px' }}>
-                                        <div className="form-floating textbox mb-4">
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
@@ -207,20 +242,20 @@ export default function BookingSchedule() {
                                     </div>
                                 </div>
                                 <div className="row my-2">
-                                    <div className="col-md-12" style={{ paddingRight: '15px' }} formGroupName="email">
-                                        <div className="form-floating textbox mb-4">
+                                    <div className="col-md-12" style={{ paddingRight: '15px' }}>
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
                                                 style={{ paddingTop: '10px' }}
-                                                name="scheduleAddress"
-                                                value={formData.scheduleAddress}
+                                                name="symptom"
+                                                value={formData.symptom}
                                                 onChange={handleInputChange}
                                             />
                                             <label htmlFor="email">
-                                                Địa chỉ cụ thể
+                                                Triệu chứng
                                                 <span className="text-danger">*</span>
                                             </label>
                                         </div>
@@ -228,31 +263,57 @@ export default function BookingSchedule() {
                                 </div>
 
                                 <div className="row my-2">
-                                    <div className="col-md-12" style={{ paddingRight: '15px' }} formGroupName="email">
-                                        <div className="form-floating textbox mb-4">
+                                    <div className="col-md-12" style={{ paddingRight: '15px' }}>
+                                        <div className="form-floating  mb-4">
                                             <input
                                                 type="text"
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
                                                 style={{ paddingTop: '10px' }}
-                                                name="note"
-                                                value={formData.note}
+                                                name="diagnosis"
+                                                value={formData.diagnosis}
                                                 onChange={handleInputChange}
                                             />
                                             <label htmlFor="email">
-                                                Ghi chú
+                                                Chuẩn đoán
+                                                <span className="text-danger">*</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row my-2">
+                                    <div className="col-md-12" style={{ paddingRight: '15px' }}>
+                                        <div className="form-floating  mb-4">
+                                            <input
+                                                type="text"
+                                                className="form-control input"
+                                                id="email"
+                                                placeholder="Họ và tên"
+                                                style={{ paddingTop: '10px' }}
+                                                name="result"
+                                                value={formData.result}
+                                                onChange={handleInputChange}
+                                            />
+                                            <label htmlFor="email">
+                                                Kết quả
                                                 <span className="text-danger">*</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form-group text-center mt-2">
-                                    {/* <button type="submit" className="btn btn-success bg" onClick={handleSubmitBack}>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-success bg"
+                                        onClick={() => {
+                                            navigate('/');
+                                        }}
+                                    >
                                         Trở Về
-                                    </button> */}
-                                    <button disabled={isDisabled} type="submit" className="btn btn-success bg">
-                                        ĐẶT LỊCH
+                                    </button>
+                                    <button disabled={false} type="submit" className="btn btn-success bg">
+                                        THÊM MỚI
                                     </button>
                                 </div>
                             </form>

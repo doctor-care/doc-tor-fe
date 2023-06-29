@@ -17,33 +17,35 @@ export default function Review() {
     const handleReview = (event) => {
         console.log(event.target.value);
         setReview({ ...review, review: event.target.value });
-        setErr("");
+        setErr('');
     };
 
     const submitReview = () => {
-       if(review.review == undefined || review.review.trim() == "" ) {
-        setErr("Vui lòng nhập đánh giá")
-       } else {
-        
-        axios.post('http://localhost:8080/review/create', review, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(res => {
-            console.log(res)
-        }).catch(err =>{
-            console.log(err)
-        })
-       }
-       
+        if (review.review == undefined || review.review.trim() == '') {
+            setErr('Vui lòng nhập đánh giá');
+        } else {
+            axios
+                .post('http://localhost:8080/review/create', review, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     };
-console.log(review);
+    console.log(review);
     useEffect(() => {
         axios
             .get(`http://localhost:8080/schedule/id/${id}`)
             .then((res) => {
-                console.log(res.data);
+                console.log('res.data', res.data);
                 setDataSchedule(res.data);
+                // review.
             })
             .catch((err) => {
                 console.log(err);
@@ -51,7 +53,7 @@ console.log(review);
     }, []);
     return (
         <div>
-            <h1 className='text-center'>ĐÁNH GIÁ CUỘC HẸN</h1>
+            <h1 className="text-center">ĐÁNH GIÁ CUỘC HẸN</h1>
             <table className="table table-hover">
                 <tbody>
                     <tr>
@@ -85,7 +87,7 @@ console.log(review);
                         color2={'#ffd700'}
                         half={false}
                     />
-                    {err && <div style={{color:"red"}}>{err}</div>}
+                    {err && <div style={{ color: 'red' }}>{err}</div>}
                     <textarea
                         name=""
                         id=""
@@ -97,7 +99,7 @@ console.log(review);
                 <div className="col-2">
                     {' '}
                     <button className="btn btn-success" onClick={submitReview}>
-                       Gửi đánh giá
+                        Gửi đánh giá
                     </button>
                 </div>
             </div>

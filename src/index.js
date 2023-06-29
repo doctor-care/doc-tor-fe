@@ -14,14 +14,19 @@ import "./assets/vendor/boxicons/css/boxicons.min.css";
 import "./assets/vendor/glightbox/css/glightbox.min.css";
 import "./assets/vendor/remixicon/remixicon.css";
 import "./assets/vendor/swiper/swiper-bundle.min.css";
-
+import { ToastContainer, toast } from "react-toastify";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const toastConfig = {
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 3000,
+};
 const title = process.env.REACT_APP_TITLE;
 root.render(
     <React.StrictMode>
         <GlobalStyles>
             <App />
+            <ToastContainer {...toastConfig} />
         </GlobalStyles>
     </React.StrictMode>,
 );

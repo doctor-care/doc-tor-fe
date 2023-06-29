@@ -4,6 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import 'react-toastify/dist/ReactToastify.css';
 // import './BookingSchedule.css';
 
 export default function ScheduleDetail() {
@@ -41,7 +44,8 @@ export default function ScheduleDetail() {
                 if (response.data === 'FAIL') {
                     //   toast.error("VÉ KHÔNG TỒN TẠI!")
                 } else {
-                    alert('cái này sau dùng toastr');
+                    toast.success('XÁC NHẬN THÀNH CÔNG');
+                    navigate('/doctor/schedule-list');
                     //   const cancelEmailDTO = {
                     //     emailNguoiDung: response.data.hoaDon.nguoiDung.email,
                     //     maVe: response.data.maVe,

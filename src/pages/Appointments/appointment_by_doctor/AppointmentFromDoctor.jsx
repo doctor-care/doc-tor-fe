@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './AppointmentByDoctor.css';
+import './AppointmentFromDoctor.css';
 
-export default function AppointmentByDoctor() {
+export default function AppointmentFromDoctor() {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -84,7 +84,7 @@ export default function AppointmentByDoctor() {
                         {appointmentList.map((app) => (
                             <div
                                 key={app.idAPM}
-                                className={`col-3 text-center m-1 ${
+                                className={`col-3 text-center m-1 shift ${
                                     app.statusAPM === 2 ? 'selected' : 'not-selected'
                                 } `}
                             >

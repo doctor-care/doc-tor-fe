@@ -19,19 +19,22 @@ import DoctorBySpecialist from '@/pages/Doctors/DoctorBySpecialist';
 import AsyncDataEditPatient from '@/pages/patient/AsyncDataEditPatient';
 import Review from '@/pages/patient/Review';
 import AsyncDataEditDoctor from '@/pages/Doctors/AsyncDataEditDoctor';
-
-import AppointmentByDoctor from '@/pages/Appointments/AppointmentByDoctor';
-import ScheduleList from '@/pages/Schedule/schedule_list/ScheduleList';
 import BookingSchedule from '@/pages/Schedule/booking_schedule/BookingSchedule';
 import ScheduleDetail from '@/pages/Schedule/schedule_detail/ScheduleDetail';
-
+import ScheduleListForDoctor from '@/pages/Schedule/schedule_list/ScheduleListForDoctor';
+import ScheduleListForPatient from '@/pages/Schedule/schedule_list/ScheduleListForPatient';
+import CreateHistoryMedical from '@/pages/HistoryMedical/CreateHistoryMedical';
+import AppointmentFromDoctor from '@/pages/Appointments/appointment_by_doctor/AppointmentFromDoctor';
+import CreateAppointment from '@/pages/Appointments/create_appointment/CreateAppointment';
+import jwtDecode from 'jwt-decode';
+import Logout from '@/pages/Login/Logout';
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home },
     { path: '/doctors', component: Doctors },
     { path: '/createDoc', component: CreateDoctor, layout: null },
     { path: '/editDoc', component: AsyncDataEditDoctor, layout: null },
-    { path: '/patient', component: Patient, layout: null },
+    { path: '/user/register', component: Patient, layout: null },
     { path: '/editPatient', component: AsyncDataEditPatient, layout: null },
     { path: '/service/:id', component: Services, layout: OnlyHeader },
     { path: '/editPatient', component: EditPatient, layout: null },
@@ -44,11 +47,20 @@ const publicRoutes = [
 
     { path: '/specialist', component: Specialist, layout: null },
     { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
-    { path: '/appointment-list', component: AppointmentByDoctor, layout: null },
+    { path: '/appointment-list', component: AppointmentFromDoctor, layout: null },
     { path: '/booking-schedule', component: BookingSchedule, layout: null },
-    { path: '/schedule-list', component: ScheduleList, layout: null },
+    { path: '/doctor/schedule-list', component: ScheduleListForDoctor, layout: null },
+    { path: '/user/schedule-list', component: ScheduleListForPatient, layout: null },
     { path: '/schedule/:id', component: ScheduleDetail, layout: null },
+
+    { path: '/history-medical/create/:idScd', component: CreateHistoryMedical, layout: null },
+    { path: '/appointment/create', component: CreateAppointment, layout: null },
+
     { path: '/review/:id', component: Review, layout: null },
+
+    //Đăng xuấst
+    { path: '/logout', component: Logout, layout: null },
+
 ];
 
 const privateRoutes = [];

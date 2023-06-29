@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../utils/firebase";
-import UploadFirebase from "@/utils/upload/UploadFirebase";
+import React, { useEffect, useState } from 'react';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '../../utils/firebase';
+import UploadFirebase from '@/utils/upload/UploadFirebase';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios, { HttpStatusCode } from 'axios';
 import ErrorMessage from '@/components/common/NotFound/ErrorMessage';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Otp() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [wrongOTP, setWrongOTP] = useState("");
+    const [wrongOTP, setWrongOTP] = useState('');
     const onSubmit = (e) => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.target));
@@ -16,12 +19,13 @@ export default function Otp() {
             const url = location.state.data.url;
             delete location.state.data.url;
             delete location.state.data.otp;
-            const folderRef = ref(storage, "image");
+            const folderRef = ref(storage, 'image');
             const timestamp = Date.now();
             const fileName = `${timestamp}_${location.state.data.avatarUrl.name}`;
             const fileRef = ref(folderRef, fileName);
             const uploadTask = uploadBytesResumable(fileRef, location.state.data.avatarUrl);
-            uploadTask.on("state_changed",
+            uploadTask.on(
+                'state_changed',
                 (snapshot) => {
                     console.log(snapshot);
                 },
@@ -31,18 +35,20 @@ export default function Otp() {
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                         location.state.data.avatarUrl = downloadURL;
-                        axios.post(url, location.state.data).then(resp => {
+                        axios.post(url, location.state.data).then((resp) => {
                             if (resp.status === HttpStatusCode.Created) {
-                                navigate("/");
+                                toast.success('ĐĂNG KÝ THÀNH CÔNG');
+                                navigate('/');
                             }
-                        })
+                        });
                         return;
                     });
-                })
+                },
+            );
             return;
         }
-        setWrongOTP("Wrong OTP");
-    }
+        setWrongOTP('Wrong OTP');
+    };
 
     useEffect(() => {
         console.log(location.state);
@@ -50,11 +56,11 @@ export default function Otp() {
 
     return (
         <div>
-            <form onSubmit={onSubmit} >
-                <input name="otp" placeholder='otp' />
+            <form onSubmit={onSubmit}>
+                <input name="otp" placeholder="otp" />
                 <button>submit</button>
             </form>
             {wrongOTP && <ErrorMessage messageId={wrongOTP} />}
         </div>
-    )
+    );
 }

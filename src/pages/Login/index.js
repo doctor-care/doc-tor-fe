@@ -1,9 +1,8 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import * as Yup from 'yup';
-import {  useFormik } from 'formik';
+import { useFormik } from 'formik';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import jwt from 'jwt-decode';
 import jwtDecode from 'jwt-decode';
 function Login() {
     const [error, setErr] = useState();
@@ -13,6 +12,8 @@ function Login() {
         username: Yup.string().required('Username is required'),
         password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     });
+
+    // console.log("TEST ROLE", localStorage.getItem('test') === '');
 
     const formik = useFormik({
         initialValues: {

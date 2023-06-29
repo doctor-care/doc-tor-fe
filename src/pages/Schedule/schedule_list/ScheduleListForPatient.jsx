@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
-import './ScheduleList.css';
+import './ScheduleListForDoctor.css';
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // import { toast } from 'react-toastify';
 
-function ScheduleList() {
+function ScheduleListForPatient() {
     const navigate = useNavigate();
     const [userName] = useState(localStorage.getItem('userName'));
     const [idShift, setIdShift] = useState();
@@ -24,8 +24,6 @@ function ScheduleList() {
     const [formData, setFormData] = useState({});
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(5);
-    const emailNguoiDung = localStorage.getItem('email');
-    const role = localStorage.getItem('login');
 
     //CHỨC NĂNG TÌM KIẾM
     const [pageNumber, setPageNumber] = useState(0);
@@ -118,19 +116,16 @@ function ScheduleList() {
             });
     };
 
-    useEffect(() => {
-        getDoctorId();
-        getShiftList();
-    }, []);
+    // useEffect(() => {
+    //     getDoctorId();
+    // }, []);
 
     useEffect(() => {
         try {
             axios
-                .get('http://localhost:8080/schedule/page/doctor', {
+                .get('http://localhost:8080/schedule/page/patient', {
                     params: {
                         userName,
-                        idShift,
-                        appDate,
                         statusscd,
                         page,
                         size,
@@ -145,43 +140,19 @@ function ScheduleList() {
         } catch (error) {
             console.log(error);
         }
-    }, [userName, idShift, appDate, statusscd, page, size]);
+    }, [userName, statusscd, page, size]);
 
-    const getAppointmentDateList = (id) => {
-        try {
-            axios.get('http://localhost:8080/appointment/get-date?doctorId=' + id).then((response) => {
-                console.log('setAppointmentDate(response.data);', response);
-                setAppointmentDate(response.data);
-                // getAppointmentList(response.data[0]);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const getShiftList = () => {
-        try {
-            axios.get('http://localhost:8080/shift/get-all').then((response) => {
-                console.log('setShiftList', response);
-                setShiftList(response.data);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const getDoctorId = () => {
-        try {
-            //get doctor id from user which doctor login in localstorage
-            axios.get('http://localhost:8080/doctor/username/' + userName).then((response) => {
-                setDoctorId(response.data);
-                //get date list from doctor id
-                getAppointmentDateList(response.data);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const getDoctorId = () => {
+    //     try {
+    //         //get doctor id from user which doctor login in localstorage
+    //         axios.get('http://localhost:8080/doctor/username/' + userName).then((response) => {
+    //             setDoctorId(response.data);
+    //             //get date list from doctor id
+    //         });
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     //DuyNT58 load lại danh sách vé máy bay khi có thay đổi
     // useEffect(() => {
@@ -270,40 +241,7 @@ function ScheduleList() {
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
                         <h5>Tìm Kiếm Theo</h5>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            onChange={(e) => {
-                                setAppDate(e.target.value);
-                            }}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Chọn ngày --</option>
-                            {appointmentDate.map((date) => (
-                                <option key={date} value={date}>
-                                    {date}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            onChange={(e) => {
-                                setIdShift(e.target.value);
-                            }}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Chọn ca làm --</option>
-                            {shiftList.map((shift) => (
-                                <option key={shift.idShifts} value={shift.idShifts}>
-                                    {shift.shiftsName}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
                         <select
                             name="diemDi"
@@ -347,7 +285,7 @@ function ScheduleList() {
                             <th scope="col">Tên bệnh nhân</th>
                             <th scope="col">Ngày hẹn khám</th>
                             <th scope="col">Ca khám</th>
-                            <th scope="col">Địa chỉ</th>
+                            <th scope="col">Bác sĩ khám</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Thao Tác</th>
                         </tr>
@@ -361,7 +299,7 @@ function ScheduleList() {
                                     <td>{item.patientName}</td>
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
-                                    <td>{item.scheduleAddress}</td>
+                                    <td>{item.doctorName}</td>
                                     <td>{showStatusCSD(item.statusScd)}</td>
                                     <td>
                                         <Link className="text-decoration-none" to={`/schedule/${item.idScd}`}>
@@ -371,114 +309,6 @@ function ScheduleList() {
                                 </tr>
                             );
                         })}
-                        {/* {scheduleList.map((item, index) => {
-                                  return (
-                                      <tr className="align-middle text-nowrap" key={item.maVe}>
-                                          <td> {index + 1 + page * size}</td>
-                                          <th scope="row">{item.maVe}</th>
-                                          <td>{item.tenHanhKhach}</td>
-                                          <td>{item.ngayKhoiHanh}</td>
-                                          <td>{item.diemDi}</td>
-                                          <td>{item.diemDen}</td>
-                                          <td>{item.hangVe}</td>
-                                          <td>
-                                              {item.hangVe === 'Phổ Thông'
-                                                  ? item.giaVe.toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })
-                                                  : (item.giaVe * 1.5).toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })}
-                                          </td>
-                                          <td>
-                                              {role === 'user' ? (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-                                                  </>
-                                              ) : (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-
-                                                      <button
-                                                          className="btn btn-danger"
-                                                          data-bs-toggle="modal"
-                                                          data-bs-target="#staticBackdrop"
-                                                          onClick={() => confirmDelete(item)}
-                                                      >
-                                                          Hủy
-                                                      </button>
-                                                  </>
-                                              )}
-                                          </td>
-                                      </tr>
-                                  );
-                              })
-                            : tickets.map((item, index) => {
-                                  return (
-                                      <tr className="align-middle" key={item.maVe}>
-                                          <td> {index + 1 + page * size}</td>
-                                          <th scope="row">{item.maVe}</th>
-                                          <td>{item.tenHanhKhach}</td>
-                                          <td>{item.ngayKhoiHanh}</td>
-                                          <td>{item.diemDi}</td>
-                                          <td>{item.diemDen}</td>
-                                          <td>{item.hangVe}</td>
-                                          <td>
-                                              {item.hangVe === 'Phổ Thông'
-                                                  ? item.giaVe.toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })
-                                                  : (item.giaVe * 1.5).toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })}
-                                          </td>
-                                          <td>
-                                              {role === 'user' ? (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-                                                  </>
-                                              ) : (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-
-                                                      <button
-                                                          className="btn btn-danger"
-                                                          data-bs-toggle="modal"
-                                                          data-bs-target="#staticBackdrop"
-                                                          onClick={() => confirmDelete(item)}
-                                                      >
-                                                          Hủy
-                                                      </button>
-                                                  </>
-                                              )}
-                                          </td>
-                                      </tr>
-                                  );
-                              })} */}
                     </tbody>
                 </table>
 
@@ -610,4 +440,4 @@ function ScheduleList() {
         </div>
     );
 }
-export default ScheduleList;
+export default ScheduleListForPatient;
