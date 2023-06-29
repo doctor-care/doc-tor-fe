@@ -1,3 +1,4 @@
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 export default function Home() {
     return (
         <div>
@@ -5,9 +6,9 @@ export default function Home() {
                 <div className="container">
                     <h1>Welcome to Medilab</h1>
                     <h2>We are team of talented designers making websites with Bootstrap</h2>
-                    <a href="#about" className="btn-get-started scrollto">
-                        Get Started
-                    </a>
+                    <Link to={"/specialist"} className="btn-get-started scrollto text-decoration-none">
+                        ĐẶT LỊCH HẸN
+                    </Link>
                 </div>
             </section>
             <section id="why-us" className="why-us">

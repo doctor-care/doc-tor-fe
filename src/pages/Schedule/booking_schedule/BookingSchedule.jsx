@@ -4,7 +4,9 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
 import './BookingSchedule.css';
-
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import 'react-toastify/dist/ReactToastify.css';
 export default function BookingSchedule() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -33,7 +35,7 @@ export default function BookingSchedule() {
 
     const getPatientInfo = () => {
         try {
-            axios.get('http://localhost:8080/patient/' + userName).then((response) => {
+            axios.get('http://localhost:8080/patient/username/' + userName).then((response) => {
                 console.log('patient info', response.data);
                 setPatient(response.data);
                 formData.idPatient = response.data.idPatient;
@@ -60,7 +62,7 @@ export default function BookingSchedule() {
             .then((response) => {
                 console.log('response submit', response);
                 if (response.data.idSCD !== undefined) {
-                    alert('Đăng ký thành công');
+          
                 }
             })
             .catch((error) => {

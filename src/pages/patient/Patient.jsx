@@ -16,11 +16,11 @@ export default function Patient() {
     const yup = require("yup");
     const navigate = useNavigate();
     const [city, setCity] = useState([]);
+    const [district, setDistrict] = useState([]);
     const [messageAddress, setMessageAddress] = useState("");
     const [messageFile, setMessageFiles] = useState("");
     const [files, setFiles] = useState("");
     const [previewUrls, setPreviewUrls] = useState("");
-    const [district, setDistrict] = useState([]);
     const form = useRef();
     const [checkEnable, setCheckEnable] = useState({
         city: "0",
@@ -47,7 +47,7 @@ export default function Patient() {
                             })
                     })
                 }),
-        password: yup.string().required(),
+        password: yup.string().required().min(6).max(25),
         email: yup
             .string()
             .required()
@@ -68,7 +68,7 @@ export default function Patient() {
                     })
                 }),
         phone: yup.string().required()
-            .matches(/^([(0|(+84)])(9)([012])[0-9]{7,8}$/, "phone sai định dạng"),
+            .matches(/^([(0|(+84)])([79])([012])[0-9]{7,8}$/, "phone sai định dạng"),
         birthday: yup
             .string()
             .required()
@@ -96,12 +96,13 @@ export default function Patient() {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = data => {
         if (checkEnable.city === '0' && checkEnable.district === "0") { setMessageAddress("dia chi khong duoc de trong"); return }
         if (checkEnable.city !== '0' && checkEnable.district !== "0") {
             data.city = checkEnable.city;
             data.district = checkEnable.district;
             data.avatarUrl = files;
+            data.url = "http://localhost:8080/patient/signup";
             emailjs.sendForm('service_gu18tah', 'template_eomflh8', form.current, 'nGzNvmaDuhf2VKbq8')
                 .then((result) => {
                     navigate("/otp", {
@@ -115,11 +116,7 @@ export default function Patient() {
         }
     };
 
-    useEffect(() => {
-        axios.get("https://vapi.vnappmob.com/api/province/").then((resp) => {
-            setCity(resp.data.results);
-        });
-    }, [messageAddress]);
+
 
     const handleChangeCity = (e) => {
         setCheckEnable({ ...checkEnable, city: e.target.value });
@@ -128,6 +125,12 @@ export default function Patient() {
     const handleChangeDistrict = (e) => {
         setCheckEnable({ ...checkEnable, district: e.target.value });
     };
+
+    useEffect(() => {
+        axios.get("https://vapi.vnappmob.com/api/province/").then((resp) => {
+            setCity(resp.data.results);
+        });
+    }, [messageAddress]);
 
     useEffect(() => {
         axios.get(
@@ -281,7 +284,6 @@ export default function Patient() {
                                 </div>
                             </React.Fragment>
                         )}
-
                     </div>
                     <div>
                         {messageAddress !== '' && (

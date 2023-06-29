@@ -285,7 +285,7 @@ function ScheduleListForPatient() {
                             <th scope="col">Tên bệnh nhân</th>
                             <th scope="col">Ngày hẹn khám</th>
                             <th scope="col">Ca khám</th>
-                            <th scope="col">Địa chỉ</th>
+                            <th scope="col">Bác sĩ khám</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Thao Tác</th>
                         </tr>
@@ -299,7 +299,7 @@ function ScheduleListForPatient() {
                                     <td>{item.patientName}</td>
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
-                                    <td>{item.scheduleAddress}</td>
+                                    <td>{item.doctorName}</td>
                                     <td>{showStatusCSD(item.statusScd)}</td>
                                     <td>
                                         <Link className="text-decoration-none" to={`/schedule/${item.idScd}`}>

@@ -179,9 +179,10 @@ function ScheduleListForDoctor() {
         try {
             //get doctor id from user which doctor login in localstorage
             axios.get('http://localhost:8080/doctor/username/' + userName).then((response) => {
-                setDoctorId(response.data);
+                console.log('response.data', response.data);
+                setDoctorId(response.data.idDoctor);
                 //get date list from doctor id
-                getAppointmentDateList(response.data);
+                getAppointmentDateList(response.data.idDoctor);
             });
         } catch (error) {
             console.log(error);
@@ -399,7 +400,7 @@ function ScheduleListForDoctor() {
                                                 <li>
                                                     <Link
                                                         className="text-decoration-none dropdown-item"
-                                                        to={`/history-medical/create?idScd=${item.idScd}`}
+                                                        to={`/history-medical/create/${item.idScd}`}
                                                     >
                                                         ĐÃ KHÁM XONG
                                                     </Link>

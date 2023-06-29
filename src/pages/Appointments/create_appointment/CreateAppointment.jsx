@@ -43,10 +43,12 @@ export default function CreateAppointment() {
         const index = selectedDayList.indexOf(weekday);
         if (index === -1) {
             setSelectedDayList([...selectedDayList, weekday]);
+            console.log('selectedDayList', selectedDayList);
         } else {
             const updatedSeats = [...selectedDayList];
             updatedSeats.splice(index, 1);
             setSelectedDayList(updatedSeats);
+            console.log('selectedDayList', selectedDayList);
         }
     };
 
@@ -88,13 +90,14 @@ export default function CreateAppointment() {
     const getExistDateList = () => {
         try {
             axios.get('http://localhost:8080/doctor/username/' + userNameDoctor).then((response) => {
-                axios.get('http://localhost:8080/appointment/get-date?doctorId=' + response.data).then((response) => {
-                    console.log('date list: ', response.data);
-                    if (response.data.length > 0) {
-                        setExistDayList(response.data);
-                        setMin(0);
-                    }
-                });
+                axios
+                    .get('http://localhost:8080/appointment/get-date?doctorId=' + response.data.idDoctor)
+                    .then((response) => {
+                        if (response.data.length > 0) {
+                            setExistDayList(response.data);
+                            setMin(0);
+                        }
+                    });
             });
         } catch (error) {
             console.log(error);
@@ -122,6 +125,7 @@ export default function CreateAppointment() {
                 .then((response) => {
                     if (response.status === 201) {
                         setDisabled(true);
+                        getExistDateList();
                         alert('thêm mới thành công');
                     } else {
                         alert('Thêm mới thất bại');
@@ -175,9 +179,66 @@ export default function CreateAppointment() {
                 </div>
             </div>
             <div className="container d-flex justify-content-center">
-                <button className="btn btn-success" disabled={disabled} onClick={createAppointment}>
+                <button
+                    className="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    disabled={selectedDayList.length === 0}
+                    // onClick={createAppointment}
+                >
                     ĐĂNG KÝ LỊCH
                 </button>
+            </div>
+
+            <div
+                className="modal fade"
+                id="staticBackdrop"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger">
+                            <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                XÁC NHẬN
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <div>
+                                <h5>Bạn thực sự muốn xác nhận lịch hẹn này?</h5>
+                                {/* <span>
+                                    - Mã vé: <strong>{maVeDelete}</strong>
+                                </span> */}
+                                <br></br>
+                                {/* <span>
+                                    - Hành khách: <strong>{tenHanhKhachDelete}</strong>
+                                </span> */}
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Hủy bỏ
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={createAppointment}
+                                data-bs-dismiss="modal"
+                            >
+                                Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

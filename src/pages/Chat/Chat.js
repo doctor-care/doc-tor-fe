@@ -7,9 +7,9 @@ import axios from 'axios';
 
 
 var stompClient = null;
-const ChatBox = () => {
+const Chat = ({user}) => {
 
-    const [user, setUser] = useState(localStorage.getItem('userName') ? localStorage.getItem('userName') : 'user1');
+    
     const [listUserNew, setListUserNew] = useState([]);
     const chatMessagesRef = useRef(null);
     const [listUser, setListUser] = useState([]);
@@ -184,9 +184,7 @@ const ChatBox = () => {
         getChat('');
         setEditable(false);
         console.log(user);
-        if (localStorage.getItem('userName') !== '') {
-            setUser(localStorage.getItem('userName'))
-        }
+      
 
     }, []);
 
@@ -309,4 +307,4 @@ const ChatBox = () => {
     );
 };
 
-export default ChatBox;
+export default Chat;
