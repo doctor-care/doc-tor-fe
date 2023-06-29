@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
-import './ScheduleList.css';
+import './ScheduleListForDoctor.css';
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // import { toast } from 'react-toastify';
 
-function ScheduleList() {
+function ScheduleListForDoctor() {
     const navigate = useNavigate();
     const [userName] = useState(localStorage.getItem('userName'));
     const [idShift, setIdShift] = useState();
@@ -24,8 +24,14 @@ function ScheduleList() {
     const [formData, setFormData] = useState({});
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(5);
-    const emailNguoiDung = localStorage.getItem('email');
-    const role = localStorage.getItem('login');
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleToggleDropdown = () => {
+        console.log('DROP down');
+        setIsOpen(!isOpen);
+        console.log('isOpen', isOpen);
+    };
 
     //CHỨC NĂNG TÌM KIẾM
     const [pageNumber, setPageNumber] = useState(0);
@@ -49,7 +55,6 @@ function ScheduleList() {
         switch (status) {
             case 0:
                 return 'Chưa xác nhận';
-
             case 1:
                 return 'Đã xác nhận';
             case 4:
@@ -364,10 +369,68 @@ function ScheduleList() {
                                     <td>{item.scheduleAddress}</td>
                                     <td>{showStatusCSD(item.statusScd)}</td>
                                     <td>
+                                        <div className="dropdown">
+                                            <button
+                                                className="btn btn-primary dropdown-toggle"
+                                                type="button"
+                                                id="dropdownMenuButton1"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                Chọn
+                                            </button>
+                                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link
+                                                        className="text-decoration-none dropdown-item"
+                                                        to={`/schedule/${item.idScd}`}
+                                                    >
+                                                        XEM CHI TIẾT
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        className="text-decoration-none dropdown-item"
+                                                        to={`/schedule/${item.idScd}`}
+                                                    >
+                                                        XÁC NHẬN
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        className="text-decoration-none dropdown-item"
+                                                        to={`/history-medical/create?idScd=${item.idScd}`}
+                                                    >
+                                                        ĐÃ KHÁM XONG
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {/* <div className="dropdown">
+                                            <button
+                                                className="btn btn-secondary dropdown-toggle"
+                                                type="button"
+                                                id="dropdownMenuButton1"
+                                                onClick={handleToggleDropdown}
+                                            >
+                                                Dropdown
+                                            </button>
+                                            {isOpen && (
+                                                <div>
+                                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li className="dropdown-item">Option 1</li>
+                                                        <li className="dropdown-item">Option 2</li>
+                                                        <li className="dropdown-item">Option 3</li>
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div> */}
+                                    </td>
+                                    {/* <td>
                                         <Link className="text-decoration-none" to={`/schedule/${item.idScd}`}>
                                             Chi tiết
                                         </Link>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             );
                         })}
@@ -610,4 +673,4 @@ function ScheduleList() {
         </div>
     );
 }
-export default ScheduleList;
+export default ScheduleListForDoctor;
