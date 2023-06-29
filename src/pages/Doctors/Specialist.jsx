@@ -28,8 +28,8 @@ export default function Specialist() {
             <div>
                 <ul>
                     {specialists.length > 0 &&
-                        specialists.map((item) => (
-                            <Link to={`/doctor-list?idSPL=${item.idSPL}`}>
+                        specialists.map((item, index) => (
+                            <Link key={index} to={`/doctor-list?idSPL=${item.idSPL}`}>
                                 <li>
                                     <img src={item.imageUrl} alt="okay" />
                                     <h3>{item.name}</h3>

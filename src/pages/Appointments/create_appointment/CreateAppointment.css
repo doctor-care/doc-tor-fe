@@ -1,0 +1,26 @@
+.day-selected {
+    background-color: greenyellow;
+    color: black;
+}
+
+.day-not-selected {
+    background-color: antiquewhite;
+}
+
+@media (min-width: 900px) {
+    /* .date {
+        min-width: 22%;
+    } */
+}
+
+@media (min-width: 760px) {
+    .date {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding: 5px 10px;
+    }
+}
+
+.mw-115 {
+    min-width: 115px;
+}

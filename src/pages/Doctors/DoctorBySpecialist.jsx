@@ -14,32 +14,32 @@ export default function DoctorBySpecialist() {
     const [size, setSize] = useState(5);
     const [totalElement, setTotalElement] = useState(0);
     const [idAddress, SetIdAddress] = useState('');
-    const [idSPL, setIdSPL] = useState(queryParams.get('idSPL'));
+    const [idSpl, setIdSpl] = useState(queryParams.get('idSPL'));
     const [doctors, setDoctors] = useState([]);
     const [date, setDate] = useState([]);
 
     useEffect(() => {
         console.log('idAddress', idAddress);
-        console.log('idSPL', idSPL);
+        console.log('idSPL', idSpl);
         console.log('page', page);
         console.log('size', size);
         fetchDoctorList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, size, idAddress, idSPL]);
+    }, [page, size, idAddress, idSpl]);
 
     const fetchDoctorList = async () => {
         try {
             const response = await axios.get('http://localhost:8080/doctor/page-search', {
                 params: {
-                    idAddress,
-                    idSPL,
-                    page,
-                    size,
+                    // idAddress,
+                    idSpl,
+                    // page,
+                    // size,
                 },
             });
             console.log('RESPONSE LIST DATAA', response);
-            setDoctors(response.data.content);
-            setTotalElement(response.data.totalElements);
+            setDoctors(response.data);
+            // setTotalElement(response.data.totalElements);
         } catch (error) {
             console.log(error);
         }
@@ -59,18 +59,19 @@ export default function DoctorBySpecialist() {
                 </div>
             </div>
             <div className="container">
-                {doctors.map((item) => (
-                    <div key={item.idDoctor} className="doctor-content mb-3">
-                        <div className="col-md-12 row">
-                            <div className="col-md-6">
-                                <Link to={`/appointment-list?doctorId=${item.idDoctor}`}>
-                                    <div>{item.name}</div>
-                                </Link>
-                                <div>THÔNG TIN THÊM</div>
+                {doctors.length !== 0 &&
+                    doctors.map((item) => (
+                        <div key={item.idDoctor} className="doctor-content mb-3">
+                            <div className="col-md-12 row">
+                                <div className="col-md-6">
+                                    <Link to={`/appointment-list?doctorId=${item.idDoctor}`}>
+                                        <div>{item.name}</div>
+                                    </Link>
+                                    <div>THÔNG TIN THÊM</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
         </div>
     );
