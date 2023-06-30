@@ -23,7 +23,7 @@ export default function Service() {
     useEffect(() => {
         const username = localStorage.getItem('userName');
         axios
-            .get(`http://localhost:8080/patient/${username}`)
+            .get(`http://localhost:8080/patient/username/${username}`)
             .then((response) => {
                 const data = response.data;
                 setData(data);
@@ -180,13 +180,6 @@ export default function Service() {
                                         value={data.address}
                                         onChange={handleInputChange}
                                     />
-                                    {/* <span>
-                                    - Mã vé: <strong>{maVeDelete}</strong>
-                                </span> */}
-                                    <br></br>
-                                    {/* <span>
-                                    - Hành khách: <strong>{tenHanhKhachDelete}</strong>
-                                </span> */}
                                 </div>
                             </div>
                             <div className="modal-footer">
