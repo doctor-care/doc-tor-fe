@@ -35,9 +35,9 @@ export default function Otp() {
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                         location.state.data.avatarUrl = downloadURL;
+                        toast.success('ĐĂNG KÝ THÀNH CÔNG');
                         axios.post(url, location.state.data).then((resp) => {
                             if (resp.status === HttpStatusCode.Created) {
-                                toast.success('ĐĂNG KÝ THÀNH CÔNG');
                                 navigate('/');
                             }
                         });

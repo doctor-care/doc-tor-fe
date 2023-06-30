@@ -126,6 +126,9 @@ export default function CreateAppointment() {
                     if (response.status === 201) {
                         setDisabled(true);
                         getExistDateList();
+                        console.log("userNameDoctor:", userNameDoctor,
+                            "dateList:" ,selectedDayList,
+                            "statusapm:", 0);
                         alert('thêm mới thành công');
                     } else {
                         alert('Thêm mới thất bại');

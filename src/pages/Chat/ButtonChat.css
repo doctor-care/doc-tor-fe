@@ -1,0 +1,13 @@
+.round-button {
+    border-radius: 4%;
+    height: 50px;
+    width: 100px;
+    margin-top: 5px;
+    color: rgb(168, 44, 44);
+    background: var(--gradientColor);
+            &:hover{
+              background: var(--gradientColor1);
+            }
+    border: rgb(252, 251, 251) solid 3px;
+    box-shadow:-8px 8px 8px -4px rgb(183, 184, 185), 0 8px 8px -4px rgb(183, 184, 185);
+}
