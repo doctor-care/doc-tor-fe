@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -14,6 +14,8 @@ export default function BookingSchedule() {
     const [idAPM] = useState(queryParams.get('idAPM'));
     const [patient, setPatient] = useState({});
     const [isDisabled, setIsDisabled] = useState(false);
+    const [city, setCity] = useState([]);
+    const [district, setDistrict] = useState([]);
 
     const initalValues = {
         idAPM: Number(idAPM),
@@ -32,6 +34,17 @@ export default function BookingSchedule() {
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
+
+    useMemo(() => {
+        axios.get('https://vapi.vnappmob.com/api/province/').then((resp) => {
+            console.log('here is ', resp.data.results);
+            setCity(resp.data.results);
+        });
+
+        // axios.get(`https://vapi.vnappmob.com/api/province/district/${patient.city}`).then((resp) => {
+        //     setDistrict(resp.data.results);
+        // });
+    }, []);
 
     const getPatientInfo = () => {
         try {
@@ -62,7 +75,6 @@ export default function BookingSchedule() {
             .then((response) => {
                 console.log('response submit', response);
                 if (response.data.idSCD !== undefined) {
-          
                 }
             })
             .catch((error) => {
@@ -71,6 +83,11 @@ export default function BookingSchedule() {
         // setFormErrors({});
         // setFormvalues(initalValues);
         // }
+    };
+
+    const handleChangeCity = (e) => {
+        // setValue('city', e.target.value);
+        // setCheckEnable({ city: e.target.value });
     };
 
     return (
@@ -171,7 +188,24 @@ export default function BookingSchedule() {
                                 <div className="row my-2">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating textbox mb-4">
-                                            <input
+                                            {/* <select name="city" onChange={handleChangeCity}>
+                                                {city.map((item) =>
+                                                    item.province_id === doctor.city ? (
+                                                        <option
+                                                            value={item.province_id}
+                                                            key={item.province_id}
+                                                            selected
+                                                        >
+                                                            {item.province_name}
+                                                        </option>
+                                                    ) : (
+                                                        <option value={item.province_id} key={item.province_id}>
+                                                            {item.province_name}
+                                                        </option>
+                                                    ),
+                                                )}
+                                            </select> */}
+                                            {/* <input
                                                 type="text"
                                                 className="form-control input"
                                                 id="email"
@@ -184,7 +218,7 @@ export default function BookingSchedule() {
                                             <label htmlFor="full-name">
                                                 Thành phố
                                                 <span className="text-danger">*</span>
-                                            </label>
+                                            </label> */}
                                         </div>
                                     </div>
                                     <div className="col-md-6" style={{ paddingRight: '10px' }}>
