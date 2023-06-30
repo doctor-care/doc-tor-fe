@@ -4,8 +4,8 @@ export default function Home() {
         <div>
             <section id="hero" className="d-flex align-items-center">
                 <div className="container">
-                    <h1>Welcome to Medilab</h1>
-                    <h2>We are team of talented designers making websites with Bootstrap</h2>
+                    <h1>Chào mừng bạn đến với DOCTOR_CARE</h1>
+                    <h3>Bạn thấy không khỏe? Hãy để Doctor-care chăm sóc cho bạn!</h3>
                     <Link to={"/specialist"} className="btn-get-started scrollto text-decoration-none">
                         ĐẶT LỊCH HẸN
                     </Link>
@@ -16,16 +16,13 @@ export default function Home() {
                     <div className="row">
                         <div className="col-lg-4 d-flex align-items-stretch">
                             <div className="content">
-                                <h3>Why Choose Medilab?</h3>
+                                <h3>Tại sao là <br></br> Doctor-care?</h3>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
-                                    Asperiores dolores sed et. Tenetur quia eos. Autem tempore quibusdam vel
-                                    necessitatibus optio ad corporis.
+                                    Chúng tôi có đội ngũ bác sĩ hàng đầu Việt Nam, luôn sẵn sàng phục vụ, chăm sóc cho sức khỏe của bạn và gia đình bạn.
                                 </p>
                                 <div className="text-center">
                                     <a href="#" className="more-btn">
-                                        Learn More <i className="bx bx-chevron-right"></i>
+                                        Tìm hiểu thêm <i className="bx bx-chevron-right"></i>
                                     </a>
                                 </div>
                             </div>
@@ -36,30 +33,27 @@ export default function Home() {
                                     <div className="col-xl-4 d-flex align-items-stretch">
                                         <div className="icon-box mt-4 mt-xl-0">
                                             <i className="bx bx-receipt"></i>
-                                            <h4>Corporis voluptates sit</h4>
+                                            <h4>Hơn 300.000 khách hàng</h4>
                                             <p>
-                                                Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris
-                                                nisi ut aliquip
+                                                Trong suốt 2 năm thành lập, đã có hơn 300.000 khách hàng đến với doctor-care.
                                             </p>
                                         </div>
                                     </div>
                                     <div className="col-xl-4 d-flex align-items-stretch">
                                         <div className="icon-box mt-4 mt-xl-0">
                                             <i className="bx bx-cube-alt"></i>
-                                            <h4>Ullamco laboris ladore pan</h4>
+                                            <h4>Thu hút hơn 500 bác sĩ xuất sắc</h4>
                                             <p>
-                                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                                officia deserunt
+                                                Với sự hấp dẫn của cơ hội làm việc, doctor-care đã thu hút hơn 500 bác sĩ xuất sắc trên khắp cả nước
                                             </p>
                                         </div>
                                     </div>
                                     <div className="col-xl-4 d-flex align-items-stretch">
                                         <div className="icon-box mt-4 mt-xl-0">
                                             <i className="bx bx-images"></i>
-                                            <h4>Labore consequatur</h4>
+                                            <h4>Dịch vụ y tế tại nhà</h4>
                                             <p>
-                                                Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis
-                                                facere
+                                               Hàng loạt phiếu đăng kí sử dụng dịch vụ y tế tại nhà với 3 tiêu chí An toàn - Tiết kiệm - Hữu ích.
                                             </p>
                                         </div>
                                     </div>
