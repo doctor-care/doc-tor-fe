@@ -37,6 +37,13 @@ function ScheduleListForPatient() {
         return formattedDate;
     };
 
+    const convertTime = (bookingDate) => {
+        var datePart = bookingDate.split('T')[1];
+        var parts = datePart.split(':');
+        var formattedTime = parts[0] + ':' + parts[1];
+        return formattedTime;
+    };
+
     const convertAppointmentDate = (appDate) => {
         var parts = appDate.split('-');
         var formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
@@ -281,7 +288,8 @@ function ScheduleListForPatient() {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Ngày Booking</th>
+                            <th scope="col">Ngày Đặt Lịch</th>
+                            <th scope="col">Giờ Đặt Lịch</th>
                             <th scope="col">Tên bệnh nhân</th>
                             <th scope="col">Ngày hẹn khám</th>
                             <th scope="col">Ca khám</th>
@@ -296,6 +304,7 @@ function ScheduleListForPatient() {
                                 <tr className="align-middle text-nowrap" key={item.idScd}>
                                     <th> {index + 1 + page * size}</th>
                                     <td>{convertBookingDate(item.createDate)}</td>
+                                    <td>{convertTime(item.createDate)}</td>
                                     <td>{item.patientName}</td>
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>

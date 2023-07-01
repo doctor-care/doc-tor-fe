@@ -101,7 +101,11 @@ export default function Doctor() {
                                         {/* <img src={Doctors1} className="img-fluid" alt=""></img> */}
                                     </div>
                                     <div className="member-info">
-                                        <h4>
+                                        <h4
+                                            onClick={() => {
+                                                navigate(`/appointment-list?doctorId=${item.idDoctor}`);
+                                            }}
+                                        >
                                             {item.degree}.{item.name}
                                         </h4>
                                         <span>{item.specialist.name}</span>
