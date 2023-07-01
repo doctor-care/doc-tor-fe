@@ -28,6 +28,7 @@ import AppointmentFromDoctor from '@/pages/Appointments/appointment_by_doctor/Ap
 import CreateAppointment from '@/pages/Appointments/create_appointment/CreateAppointment';
 import jwtDecode from 'jwt-decode';
 import Logout from '@/pages/Login/Logout';
+import CreatePrescription from '@/pages/Prescription/CreatePrescription';
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home },
@@ -60,6 +61,7 @@ const publicRoutes = [
 
     //Đăng xuấst
     { path: '/logout', component: Logout, layout: null },
+    { path: '/prescription/create/:idHM', component: CreatePrescription, layout: null },
 
 ];
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
 import './BookingSchedule.css';
@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
 export default function BookingSchedule() {
     const location = useLocation();
+    const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const [userName] = useState(localStorage.getItem('userName'));
     const [idAPM] = useState(queryParams.get('idAPM'));
@@ -73,8 +74,9 @@ export default function BookingSchedule() {
                 },
             })
             .then((response) => {
-                console.log('response submit', response);
                 if (response.data.idSCD !== undefined) {
+                    toast.success('ĐĂNG KÝ THÀNH CÔNG!');
+                    navigate('/user/schedule-list');
                 }
             })
             .catch((error) => {
@@ -241,7 +243,7 @@ export default function BookingSchedule() {
                                     </div>
                                 </div>
                                 <div className="row my-2">
-                                    <div className="col-md-12" style={{ paddingRight: '15px' }} formGroupName="email">
+                                    <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating textbox mb-4">
                                             <input
                                                 type="text"
@@ -262,7 +264,7 @@ export default function BookingSchedule() {
                                 </div>
 
                                 <div className="row my-2">
-                                    <div className="col-md-12" style={{ paddingRight: '15px' }} formGroupName="email">
+                                    <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating textbox mb-4">
                                             <input
                                                 type="text"
