@@ -11,6 +11,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function ScheduleListForDoctor() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const [status] = useState(localStorage.getItem('status'));
     const [userName] = useState(localStorage.getItem('userName'));
     const [idShift, setIdShift] = useState();
     const [doctorId, setDoctorId] = useState('');
@@ -318,6 +321,7 @@ function ScheduleListForDoctor() {
                                 setStatusscd(e.target.value);
                             }}
                             className="form-control text-center"
+                            // selected={ === 1}
                         >
                             <option value="0"> Chưa xác nhận </option>
                             <option value="1"> Đã xác nhận </option>
@@ -367,7 +371,7 @@ function ScheduleListForDoctor() {
                                     <td>{item.patientName}</td>
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
-                                    <td>{item.scheduleAddress}</td>
+                                    <td className="address-cell">{item.scheduleAddress}</td>
                                     <td>{showStatusCSD(item.statusScd)}</td>
                                     <td>
                                         <div className="dropdown">

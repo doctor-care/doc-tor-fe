@@ -4,6 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { startOfWeek, addDays, addWeeks, format } from 'date-fns';
 import './CreateAppointment.css';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function CreateAppointment() {
     const [dayList, setDayList] = useState([]);
     const [existDayList, setExistDayList] = useState([]);
@@ -24,7 +27,7 @@ export default function CreateAppointment() {
         const today = new Date(); // Ngày hiện tại
         const startOfNextWeek = addWeeks(startOfWeek(today), 1); // Ngày đầu tiên của tuần kế tiếp
         const nextMonday = addDays(startOfNextWeek, 1); // Ngày thứ 2 của tuần kế tiếp
-        return format(nextMonday, 'yyyy-MM-'); // Định dạng ngày thành 'dd/MM/yyyy'
+        return format(nextMonday, 'yyyy-MM-dd'); // Định dạng ngày thành 'dd/MM/yyyy'
     };
     const showDayOfWeek = () => {
         const startDate = new Date(getNextMonday()); // Ngày bắt đầu
@@ -33,7 +36,6 @@ export default function CreateAppointment() {
         // Tạo danh sách ngày làm việc từ thứ 2 đến chủ nhật
         for (let i = 0; i < 7; i++) {
             const currentDate = addDays(startDate, i);
-            console.log('currentDate', currentDate);
             weekdays.push(format(currentDate, 'yyyy-MM-dd')); // Định dạng ngày theo 'EEEE' (Monday, Tuesday, ...)
             setDayList(weekdays);
         }
@@ -106,7 +108,7 @@ export default function CreateAppointment() {
 
     const createAppointment = () => {
         if (selectedDayList.length < min) {
-            alert('tối thiểu 5 ngày làm việc trong 1 tuần');
+            toast.error('TỐI THIỂU 5 NGÀY LÀM VIỆC TRONG 1 TUẦN');
         } else {
             axios
                 .post(
@@ -126,12 +128,10 @@ export default function CreateAppointment() {
                     if (response.status === 201) {
                         setDisabled(true);
                         getExistDateList();
-                        console.log("userNameDoctor:", userNameDoctor,
-                            "dateList:" ,selectedDayList,
-                            "statusapm:", 0);
-                        alert('thêm mới thành công');
+                        console.log('userNameDoctor:', userNameDoctor, 'dateList:', selectedDayList, 'statusapm:', 0);
+                        toast.success('ĐĂNG KÝ THÀNH CÔNG');
                     } else {
-                        alert('Thêm mới thất bại');
+                        toast.error('ĐĂNG KÝ THẤT BẠI');
                     }
                 })
                 .catch((error) => {
@@ -246,103 +246,5 @@ export default function CreateAppointment() {
         </div>
     );
 
-    // const navigate = useNavigate();
-    // const location = useLocation();
-    // const queryParams = new URLSearchParams(location.search);
-
-    // //search doctor from attribute
-    // const [doctorId] = useState(queryParams.get('doctorId'));
-    // const [date, setDate] = useState([]);
-    // const [dateSearch, setDateSearch] = useState('');
-    // const [appointmentList, setAppointmentList] = useState([]);
-
-    // const handleInputChange = (event) => {
-    //     setDateSearch(event.target.value);
-    // };
-
-    // // useEffect(() => {
-    // //     getAppointmentDateList();
-    // //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // // }, [doctorId]);
-
-    // // useEffect(() => {
-    // //     getAppointmentList(dateSearch);
-    // //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // // }, [dateSearch]);
-
-    // const getAppointmentList = (date) => {
-    //     try {
-    //         axios
-    //             .get('http://localhost:8080/appointment/get-list?doctorId=' + doctorId + '&dateSearch=' + date)
-    //             .then((response) => {
-    //                 setAppointmentList(response.data);
-    //             });
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
-    // const getAppointmentDateList = () => {
-    //     try {
-    //         axios.get('http://localhost:8080/appointment/get-date?doctorId=' + doctorId).then((response) => {
-    //             setDate(response.data);
-    //             getAppointmentList(response.data[0]);
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
-    // const handleChoice = (id) => {
-    //     navigate('/booking-schedule?idAPM=' + id);
-    // };
-
-    // return (
-    //     <div className="container">
-    //         <div className="">
-    //             <div className="d-flex align-items-center">
-    //                 <h5 className="text-uppercase">Div này để thông tin bác sĩ</h5>
-    //             </div>
-    //         </div>
-
-    //         <div className="container">
-    //             <div className="col-12 d-flex row">
-    //                 <div className="col-2 text-uppercase fw-bold">
-    //                     <p>Chọn ngày khám:</p>
-    //                 </div>
-    //                 <div className="col-2">
-    //                     <select name="date" id="date" onChange={handleInputChange} className="form-control text-center">
-    //                         {date.length === 0 && <option value="">-- Chọn ngày --</option>}
-    //                         {date.map((date) => (
-    //                             <option key={date} value={date}>
-    //                                 {date}
-    //                             </option>
-    //                         ))}
-    //                     </select>
-    //                 </div>
-    //             </div>
-    //             <div>
-    //                 <div className="col-6 d-flex">
-    //                     {appointmentList.map((app) => (
-    //                         <div
-    //                             key={app.idAPM}
-    //                             className={`col-3 text-center m-1 ${
-    //                                 app.statusAPM === 2 ? 'selected' : 'not-selected'
-    //                             } `}
-    //                         >
-    //                             <button
-    //                                 className={`text-decoration-none ${app.statusAPM === 2 ? 'not-allow' : 'allow'} `}
-    //                                 title={app.statusAPM === 2 ? 'LỊCH ĐÃ ĐƯỢC ĐẶT' : 'CÓ THỂ CHỌN'}
-    //                                 disabled={app.statusAPM === 2}
-    //                                 onClick={app.statusAPM === 2 ? null : () => handleChoice(app.idAPM)}
-    //                             >
-    //                                 {app.shifts.shiftsName}
-    //                             </button>
-    //                         </div>
-    //                     ))}
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div>
-    // );
+   
 }
