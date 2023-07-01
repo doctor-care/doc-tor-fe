@@ -110,6 +110,7 @@ export default function Doctor() {
                                         >
                                             {item.degree}.{item.name}
                                         </h4>
+                                        <span>{item.specialist.name}</span>
                                         <span>
                                             <ReactStars
                                                 count={5}
@@ -124,10 +125,20 @@ export default function Doctor() {
                                             onOpen={handleOpenModal}
                                             isOpen={isOpen}
                                             onClose={handleCloseModal}
-                                            onClick={() => handleDt(item.username)}
+                                            onClick={(e) => {
+                                                e.nativeEvent.stopImmediatePropagation();
+                                                handleDt(item.username);
+                                            }}
                                         >
                                             Open Modal
-                                        </ButtonChat>
+                                        </ButtonChat>{' '}
+                                        <button
+                                            onClick={(e) => {
+                                                navigate(`/appointment-list?doctorId=${item.idDoctor}`);
+                                            }}
+                                        >
+                                            Xem chi tiết
+                                        </button>
                                         <WinChat
                                             isOpen={isOpen}
                                             onClose={handleCloseModal}
