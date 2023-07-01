@@ -42,27 +42,10 @@ export default function ScheduleDetail() {
             .then((response) => {
                 console.log('update response', response);
                 if (response.data === 'FAIL') {
-                    //   toast.error("VÉ KHÔNG TỒN TẠI!")
                 } else {
                     toast.success('XÁC NHẬN THÀNH CÔNG');
-                    navigate('/doctor/schedule-list');
-                    //   const cancelEmailDTO = {
-                    //     emailNguoiDung: response.data.hoaDon.nguoiDung.email,
-                    //     maVe: response.data.maVe,
-                    //     hangVe: response.data.hangVe,
-                    //     giaVe: CurrencyFormat(response.data.giaVe),
-                    //     tenHanhKhach: response.data.hanhKhach.tenHanhKhach,
-                    //     ngayKhoiHanh: response.data.datCho.chuyenBay.ngayKhoiHanh,
-                    //     diemDi: response.data.datCho.chuyenBay.diemDi,
-                    //     diemDen: response.data.datCho.chuyenBay.diemDen,
-                    //   }
-                    //   fetchTicketList();
-                    //   axios
-                    //     .post(`http://localhost:8080/Email/cancel`, cancelEmailDTO)
-                    //     .catch((err) => console.error);
-                    //   toast.success("HỦY VÉ THÀNH CÔNG!")
+                    navigate('/doctor/schedule-list?status=1');
                 }
-                // setIsModalOpen(false);
             })
             .catch((error) => {
                 console.error(error);
@@ -98,28 +81,7 @@ export default function ScheduleDetail() {
         }
     };
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log('formValues', formData);
-    //     setIsDisabled(true);
-    //     // setFormErrors(validate(formValues));
-    //     // const errors = validate(formValues);
-
-    //     // if (Object.keys(errors).length === 0) {
-    //     axios
-    //         .post('http://localhost:8080/schedule/create', formData, {
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         })
-    //         .then((response) => {})
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    //     // setFormErrors({});
-    //     // setFormvalues(initalValues);
-    //     // }
-    // };
+   
 
     return (
         <div className="container">
@@ -306,7 +268,6 @@ export default function ScheduleDetail() {
                                             className="btn btn-success"
                                             data-bs-toggle="modal"
                                             data-bs-target="#staticBackdrop"
-                                            // onClick={() => confirm(schedule.idScd)}
                                         >
                                             Xác nhận lịch hẹn
                                         </button>

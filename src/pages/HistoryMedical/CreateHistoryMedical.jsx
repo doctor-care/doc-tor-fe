@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import './BookingSchedule.css';
 
 export default function CreateHistoryMedical() {
@@ -48,9 +50,10 @@ export default function CreateHistoryMedical() {
             })
             .then((response) => {
                 if (response.data.idHM === undefined) {
-                    alert('Thêm mới thất bại');
+                    toast.error('THÊM MỚI THẤT BẠI');
                 } else {
-                    alert('thêm mới thành công');
+                    toast.success('THÊM MỚI THÀNH CÔNG');
+                    navigate('/prescription/create/' + response.data.idHM);
                 }
             })
             .catch((error) => {
@@ -69,25 +72,6 @@ export default function CreateHistoryMedical() {
 
                 formData.patientId = response.data.patient.idPatient;
                 setPatient(response.data.patient);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-
-    const showPatientInfo = (e) => {
-        e.preventDefault();
-        axios
-            .get('http://localhost:8080/patient/' + userNamePatient)
-            .then((response) => {
-                console.log('response', response);
-                if (response.data.name === undefined) {
-                    setPatient({});
-                    alert('không tìm thấy bệnh nhân');
-                } else {
-                    formData.patientId = response.data.idPatient;
-                    setPatient(response.data);
-                }
             })
             .catch((error) => {
                 console.log(error);
@@ -312,7 +296,7 @@ export default function CreateHistoryMedical() {
                                     >
                                         Trở Về
                                     </button>
-                                    <button disabled={false} type="submit" className="btn btn-success bg">
+                                    <button disabled={isDisabled} type="submit" className="btn btn-success bg">
                                         THÊM MỚI
                                     </button>
                                 </div>

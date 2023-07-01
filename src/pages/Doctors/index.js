@@ -91,9 +91,7 @@ export default function Doctor() {
                         listDT.map((item, index) => (
                             <div
                                 className="col-lg-6"
-                                // onClick={() => {
-                                //     navigate(`/appointment-list?doctorId=${item.idDoctor}`);
-                                // }}
+
                             >
                                 <div className="member d-flex align-items-start">
                                     <div className="img-fluid">
@@ -103,7 +101,11 @@ export default function Doctor() {
                                         {/* <img src={Doctors1} className="img-fluid" alt=""></img> */}
                                     </div>
                                     <div className="member-info">
-                                        <h4>
+                                        <h4
+                                            onClick={() => {
+                                                navigate(`/appointment-list?doctorId=${item.idDoctor}`);
+                                            }}
+                                        >
                                             {item.degree}.{item.name}
                                         </h4>
                                         <span>
