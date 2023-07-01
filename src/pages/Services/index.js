@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import FormService from './FormRegister';
+import './FormRegister.css';
+import ReactStars from 'react-stars';
 
 export default function Service() {
     const { id } = useParams();
@@ -36,15 +37,13 @@ export default function Service() {
                 });
             })
             .catch((error) => console.error);
-       
     }, []);
 
     const confirm = (id, name) => {
-        
         setNameDoctor(name);
         setForm({
             ...form,
-            idDoctorServiceMedical:id
+            idDoctorServiceMedical: id,
         });
     };
     const handleConfirm = () => {
@@ -95,13 +94,27 @@ export default function Service() {
                         <div className="col-lg-6 mt-4 mt-lg-0">
                             <div className="member d-flex align-items-start">
                                 <div className="pic">
-                                    <img src={doctorService.doctor.avatarUrl} class="img-fluid" alt=""></img>
+                                    <img
+                                        src={doctorService.doctor.avatarUrl}
+                                        class="img-fluid avatar-doctor"
+                                        alt=""
+                                    ></img>
                                 </div>
                                 <div className="member-info">
                                     <h4>{doctorService.doctor.name}</h4>
-                                    <span>{doctorService.doctor.birthday}</span>
-                                    <span>{doctorService.doctor.idDoctor}</span>
-                                    <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
+                                    <h5>{doctorService.doctor.specialist?.name}</h5>
+                                    <div>{doctorService.doctor.birthday}</div>
+                                    
+                                    <span>
+                                        <ReactStars
+                                            count={5}
+                                            value={doctorService.doctor.averageRate}
+                                            size={24}
+                                            color2={'#ffd700'}
+                                            half={false}
+                                        />
+                                    </span>
+                                    <p>{doctorService.doctor.description}</p>
                                     <div>
                                         <button
                                             className="btn btn-success"

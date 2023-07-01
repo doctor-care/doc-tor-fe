@@ -41,7 +41,12 @@ function Login() {
                     // const decodedPayload = JSON.parse(atob(encodedPayload));
                     console.log('encodedPayload', encodedPayload);
                     // const username = decodedPayload.username; const userrole = decodedPayload.userrole;
-                    navigate('/');
+                    if("ROLE_ADMIN" === jwtDecode(res.data.jwt).aud){
+                        navigate('/listDoc')
+                    }else{
+                        navigate('/');
+                    }
+                    
                 })
                 .catch((err) => {
                     console.log(err);

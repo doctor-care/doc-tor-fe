@@ -11,7 +11,7 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
   const [listMessage, setListMessage] = useState([]);
   const [userData, setUserData] = useState({
       sender: user,
-      reciptient: '',
+      reciptient: doctor,
       content: '',
       timestamp: '',
   });
@@ -46,7 +46,17 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
   const handleComponentClose = () => {
     setComponentOpened(false);
   };
-
+  useEffect(() => {
+    axios
+            .get(`http://localhost:8080/chat-box/getchat?sender=${doctor}&reciptient=${user}`)
+            .then((response) => {
+                const data = response.data;
+                setListMessage(data);
+            })
+    if (user !== '') {
+        connect();
+    }
+}, [user]);
   const connect = () => {
       const Sock = new SockJS("http://localhost:8080/chat");
       stompClient = over(Sock);
@@ -75,7 +85,7 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
   };
 
   const sendPrivateValue = () => {
-      if (stompClient && stompClient.connected && stompClient.ws.readyState === 1) {
+      if (stompClient && stompClient.connected) {
           if (userData.content !== "") {
               setUserData({ ...userData, reciptient: doctor });
               setUserData({ ...userData, sender: user });
@@ -111,6 +121,8 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
 
   
 
+  
+
 
   return (
     <div className="chat">
@@ -128,10 +140,7 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
           {children}
           <div className="user-info">
             <div className="user-name">
-              Xin chào <span className="user">{user}</span> !!!
-            </div>
-            <div className="user-name">
-              Xin chào <span className="user">{doctor}</span> !!!
+              <span className="user">{doctor}</span> 
             </div>
             <button onClick={onClose} className="btn-x">
               X

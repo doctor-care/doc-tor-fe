@@ -471,6 +471,10 @@ h6 {
   position: relative;
 }
 
+#header .container {
+  height: 80px;
+}
+
 #hero h1 {
   margin: 0;
   font-size: 48px;
@@ -1192,6 +1196,13 @@ section {
   margin-bottom: 5px;
   font-size: 20px;
   color: #2c4964;
+
+}
+
+.doctors .member h4:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .doctors .member span {
