@@ -46,7 +46,7 @@ const publicRoutes = [
     { path: '/register', component: Register, layout: null },
     { path: '/chat', component: ChatBox, layout: OnlyHeader },
 
-    { path: '/specialist', component: Specialist, layout: null },
+    { path: '/specialist', component: Specialist },
     { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
     { path: '/appointment-list', component: AppointmentFromDoctor, layout: null },
     { path: '/booking-schedule', component: BookingSchedule, layout: null },
@@ -62,7 +62,6 @@ const publicRoutes = [
     //Đăng xuấst
     { path: '/logout', component: Logout, layout: null },
     { path: '/prescription/create/:idHM', component: CreatePrescription, layout: null },
-
 ];
 
 const privateRoutes = [];

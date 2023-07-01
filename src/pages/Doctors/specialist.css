@@ -6,11 +6,15 @@
     top: 0;
     left: 0;
     padding-left: 50px;
-    box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
 
+.mt-16 {
+    margin-top: 68px;
+}
+
 a {
-    color: var(--mau-bc-16);
-    text-decoration: none;
+    text-decoration: none !important;
+    color: inherit !important;
 }

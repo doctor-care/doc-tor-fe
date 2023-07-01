@@ -18,24 +18,18 @@ export default function Specialist() {
     }, []);
 
     return (
-        <div className="container-fluid">
-            <div className="">
-                <div className="specialist d-flex align-items-center">
-                    <h5 className="text-uppercase">Vui lòng chọn dịch vụ khám</h5>
-                </div>
-            </div>
-            <div>
-                <ul>
-                    {specialists.length > 0 &&
-                        specialists.map((item, index) => (
-                            <Link key={index} to={`/doctor-list?idSPL=${item.idSPL}`}>
-                                <li>
-                                    <img src={item.imageUrl} alt="okay" />
-                                    <h3>{item.name}</h3>
-                                </li>
-                            </Link>
-                        ))}
-                </ul>
+        <div className="container mt-16">
+            <div className="row">
+                {specialists.map((item, index) => (
+                    <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
+                        <Link to={`/doctor-list?idSPL=${item.idSPL}`} className="card mt-2">
+                            <img src={item.imageUrl} className="card-img-top" alt="Doctor" />
+                            <div className="card-body">
+                                <h3 className="card-title">{item.name}</h3>
+                            </div>
+                        </Link>
+                    </div>
+                ))}
             </div>
         </div>
     );
