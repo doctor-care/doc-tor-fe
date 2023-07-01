@@ -4,3 +4,33 @@
     margin-top: 10px;
     grid-gap: 20px;
 }
+.flex-end {
+    justify-content: flex-end;
+}
+
+.mr-2 {
+    margin-right: 8px;
+}
+
+.w-56 {
+    width: 224px;
+}
+
+.h-20 {
+    height: 80px;
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.md-screen {
+    width: 60%;
+}
+
+@media only screen and (max-width: 600px) {
+    .md-screen {
+        width: 100%;
+    }
+}
+

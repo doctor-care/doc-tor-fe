@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import InputInForm from '@/components/common/SelectOption/InputInForm';
 import Option from '@/components/common/SelectOption/Option';
 import ErrorMessage from '@/components/common/NotFound/ErrorMessage';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/utils/firebase';
 
@@ -142,8 +142,13 @@ export default function EditDoctor(props) {
     }, []);
 
     return (
-        <div>
-            <h1>Form Edit Doctor</h1>
+        <div className="d-flex justify-content-center align-items-center w-screen mt-6">
+        <div className="sm:px-0 px-4 md-screen">
+            <div className="flex justify-center py-4">
+                <Link to={'/'}>
+                    <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                </Link>
+            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <input hidden name="idDoctor" {...register.idDoctor} />
                 <input hidden name="idAddress" {...register.idAddress} />
@@ -291,19 +296,15 @@ export default function EditDoctor(props) {
                     <div>{errors?.district && <ErrorMessage messageId={errors.district.message} />}</div>
                 </div>
 
-                <div className="formData">
-                    <div>
-                        <button className="btn btn-secondary" type="button" onClick={() => navigate('/')}>
-                            Back List
-                        </button>
+                <div className="flex flex-end my-4">
+                        <div>
+                            <button className="btn btn-success px-4" type="submit">
+                               Cập nhật
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <button className="btn btn-success" type="submit">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     );
 }
