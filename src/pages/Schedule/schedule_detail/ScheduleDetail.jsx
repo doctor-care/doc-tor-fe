@@ -38,7 +38,7 @@ export default function ScheduleDetail() {
 
     const handleConfirm = () => {
         axios
-            .post(`http://localhost:8080/schedule/update/${schedule.idSCD}`)
+            .post(`http://localhost:8080/schedule/update/${schedule.idSCD}/1`)
             .then((response) => {
                 console.log('update response', response);
                 if (response.data === 'FAIL') {

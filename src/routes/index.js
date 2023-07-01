@@ -23,12 +23,13 @@ import BookingSchedule from '@/pages/Schedule/booking_schedule/BookingSchedule';
 import ScheduleDetail from '@/pages/Schedule/schedule_detail/ScheduleDetail';
 import ScheduleListForDoctor from '@/pages/Schedule/schedule_list/ScheduleListForDoctor';
 import ScheduleListForPatient from '@/pages/Schedule/schedule_list/ScheduleListForPatient';
-import CreateHistoryMedical from '@/pages/HistoryMedical/CreateHistoryMedical';
+import CreateHistoryMedical from '@/pages/HistoryMedical/create_history_medical/CreateHistoryMedical';
 import AppointmentFromDoctor from '@/pages/Appointments/appointment_by_doctor/AppointmentFromDoctor';
 import CreateAppointment from '@/pages/Appointments/create_appointment/CreateAppointment';
 import jwtDecode from 'jwt-decode';
 import Logout from '@/pages/Login/Logout';
 import CreatePrescription from '@/pages/Prescription/CreatePrescription';
+import HistoryMedicalListByPatient from '@/pages/HistoryMedical/histoty_medical_list/HistoryMedicalListByPatient';
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home },
@@ -62,6 +63,7 @@ const publicRoutes = [
     //Đăng xuấst
     { path: '/logout', component: Logout, layout: null },
     { path: '/prescription/create/:idHM', component: CreatePrescription, layout: null },
+    { path: '/history-medical-list', component: HistoryMedicalListByPatient, layout: null },
 
 ];
 

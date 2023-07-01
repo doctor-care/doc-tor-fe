@@ -249,7 +249,7 @@ export default function CreatePrescription() {
             >
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <div className="modal-header bg-danger">
+                        <div className="modal-header bg-primary">
                             <h5 className="modal-title text-white" id="staticBackdropLabel">
                                 XÁC NHẬN
                             </h5>
@@ -262,7 +262,7 @@ export default function CreatePrescription() {
                         </div>
                         <div className="modal-body">
                             <div>
-                                <h5>Bạn thực sự muốn xác nhận lịch hẹn này?</h5>
+                                <h5>XÁC NHẬN THÊM ĐƠN THUỐC NÀY?</h5>
                                 {/* <span>
                                     - Mã vé: <strong>{maVeDelete}</strong>
                                 </span> */}

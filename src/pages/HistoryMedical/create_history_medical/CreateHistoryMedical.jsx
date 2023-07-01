@@ -10,7 +10,6 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function CreateHistoryMedical() {
     const navigate = useNavigate();
     const [userNameDoctor] = useState(localStorage.getItem('userName'));
-    const [userNamePatient, setUserNamePatient] = useState('');
     const [patient, setPatient] = useState({});
     const [isDisabled, setIsDisabled] = useState(false);
     const { idScd } = useParams();
@@ -52,8 +51,18 @@ export default function CreateHistoryMedical() {
                 if (response.data.idHM === undefined) {
                     toast.error('THÊM MỚI THẤT BẠI');
                 } else {
-                    toast.success('THÊM MỚI THÀNH CÔNG');
-                    navigate('/prescription/create/' + response.data.idHM);
+                    axios
+                        .post(`http://localhost:8080/schedule/update/${idScd}/4`)
+                        .then((schedule) => {
+                            console.log('update response', schedule);
+                            if (response.data === 'FAIL') {
+                            } else {
+                                navigate('/prescription/create/' + response.data.idHM);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
                 }
             })
             .catch((error) => {

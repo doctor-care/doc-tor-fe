@@ -73,7 +73,7 @@ function Header() {
                                     <li>
                                         <Link
                                             className="text-decoration-none dropdown-item"
-                                             to={`/editPatient`}
+                                            to={`/editPatient`}
                                         >
                                             Thông tin cá nhân
                                         </Link>
@@ -153,7 +153,7 @@ function Header() {
                                             </li>
                                         </ul>
                                     </li>
-                                    
+
                                 </>
                             )}
                             {role === 'ROLE_DOCTOR' && (
@@ -187,17 +187,17 @@ function Header() {
                                         </ul>
                                     </li>
                                     <li>
-                                <Link as={Link} to="/chat" className="nav-link scrollto">
-                                    <button className="btn btn-warning">Nhắn tin</button>
-                                </Link>
-                            </li>
+                                        <Link as={Link} to="/chat" className="nav-link scrollto">
+                                            <button className="btn btn-warning">Nhắn tin</button>
+                                        </Link>
+                                    </li>
                                 </>
                             )}
 
                             {role === 'ROLE_PATIENT' && (
                                 <>
                                     <li>
-                                        <Link as={Link} to="/user/schedule-list" className="nav-link scrollto">
+                                        <Link as={Link} to="/history-medical-list" className="nav-link scrollto">
                                             Lịch sử khám
                                         </Link>
                                     </li>
@@ -219,14 +219,14 @@ function Header() {
                                         </ul>
                                     </li>
                                     <li>
-                                <Link as={Link} to="/chat" className="nav-link scrollto">
-                                    <button className="btn btn-warning">Nhắn tin</button>
-                                </Link>
-                            </li>
+                                        <Link as={Link} to="/chat" className="nav-link scrollto">
+                                            <button className="btn btn-warning">Nhắn tin</button>
+                                        </Link>
+                                    </li>
                                 </>
                             )}
 
-                            
+
 
                             <li className="dropdown">
                                 <Link>

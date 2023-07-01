@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
-import './ScheduleListForDoctor.css';
+// import './ScheduleListForDoctor.css';
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -9,25 +9,19 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // import { toast } from 'react-toastify';
 
-function ScheduleListForDoctor() {
+function HistoryMedicalListByPatient() {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const [status] = useState(localStorage.getItem('status'));
+
     const [userName] = useState(localStorage.getItem('userName'));
-    const [idShift, setIdShift] = useState();
-    const [doctorId, setDoctorId] = useState('');
-    const [appDate, setAppDate] = useState('');
-    const [appointmentDate, setAppointmentDate] = useState([]);
-    const [statusscd, setStatusscd] = useState(0);
-    const [shiftList, setShiftList] = useState([]);
-    const [scheduleList, setScheduleList] = useState([]);
+    const [patientId] = useState(queryParams.get('patientId'));
+    const [historyMedicalList, setHistoryMedicalList] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [formData, setFormData] = useState({});
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(5);
-
     const [isOpen, setIsOpen] = useState(false);
 
     const handleToggleDropdown = () => {
@@ -54,19 +48,6 @@ function ScheduleListForDoctor() {
         return formattedDate;
     };
 
-    const showStatusCSD = (status) => {
-        switch (status) {
-            case 0:
-                return 'Chưa xác nhận';
-            case 1:
-                return 'Đã xác nhận';
-            case 4:
-                return 'Đã hoàn tất';
-            default:
-                return 'Không xác định';
-        }
-    };
-
     //CHỨC NĂNG XÓA
     const [selectedObject, setSelectedObject] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,19 +63,12 @@ function ScheduleListForDoctor() {
     };
 
     useEffect(() => {
-        getDoctorId();
-        getShiftList();
-    }, []);
-
-    useEffect(() => {
         try {
             axios
-                .get('http://localhost:8080/schedule/page/doctor', {
+                .get('http://localhost:8080/history-medical/page/patient', {
                     params: {
                         userName,
-                        idShift,
-                        appDate,
-                        statusscd,
+                        patientId,
                         page,
                         size,
                     },
@@ -102,70 +76,13 @@ function ScheduleListForDoctor() {
                 .then((response) => {
                     console.log('RESPONSE LIST DATAA', response);
                     console.log('length', response.data.content.length);
-                    setScheduleList(response.data.content);
+                    setHistoryMedicalList(response.data.content);
                     setTotalPages(response.data.totalPages);
                 });
         } catch (error) {
             console.log(error);
         }
-    }, [userName, idShift, appDate, statusscd, page, size]);
-
-    const getAppointmentDateList = (id) => {
-        try {
-            axios.get('http://localhost:8080/appointment/get-date?doctorId=' + id).then((response) => {
-                console.log('setAppointmentDate(response.data);', response);
-                setAppointmentDate(response.data);
-                // getAppointmentList(response.data[0]);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const getShiftList = () => {
-        try {
-            axios.get('http://localhost:8080/shift/get-all').then((response) => {
-                console.log('setShiftList', response);
-                setShiftList(response.data);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const getDoctorId = () => {
-        try {
-            //get doctor id from user which doctor login in localstorage
-            axios.get('http://localhost:8080/doctor/username/' + userName).then((response) => {
-                console.log('response.data', response.data);
-                setDoctorId(response.data.idDoctor);
-                //get date list from doctor id
-                getAppointmentDateList(response.data.idDoctor);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    //DuyNT58 lấy danh sách vé máy bay
-    const fetchScheduleList = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/schedule/page/doctor', {
-                params: {
-                    userName,
-                    idShift,
-                    appDate,
-                    statusscd,
-                    page,
-                    size,
-                },
-            });
-            console.log('RESPONSE LIST DATAA', response);
-            setTotalPages(response.data.totalPages);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    }, [userName, patientId, page, size]);
 
     //DuyNT58 nhập thông tin tìm kiếm
     const handleInputChange = (event) => {
@@ -205,11 +122,11 @@ function ScheduleListForDoctor() {
         <div className="container ticket-container bg-body shadow mg-top-60">
             <div className="pt-5 pb-2">
                 <div className="text-center pb-2">
-                    <h1>DANH SÁCH LỊCH HẸN</h1>
+                    <h1>LỊCH SỬ KHÁM BỆNH</h1>
                 </div>
 
                 {/* form search */}
-                <form className="row justify-content-center">
+                {/* <form className="row justify-content-center">
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
                         <h5>Tìm Kiếm Theo</h5>
                     </div>
@@ -280,43 +197,37 @@ function ScheduleListForDoctor() {
                             <option value="">-- Cũ nhất --</option>
                         </select>
                     </div>
-                </form>
+                </form> */}
             </div>
             <div className="mh-300">
                 <table className="table table-striped border text-nowrap">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Ngày Booking</th>
-                            <th scope="col">Tên bệnh nhân</th>
-                            <th scope="col">Ngày hẹn khám</th>
-                            <th scope="col">Ca khám</th>
-                            <th scope="col">Địa chỉ</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Thao Tác</th>
+                            <th scope="col">Ngày Khám</th>
+                            <th scope="col">Khoa khám</th>
+                            <th scope="col">Triệu chứng</th>
+                            <th scope="col">Chuẩn đoán</th>
+                            <th scope="col">Giải pháp</th>
+                            <th scope="col">Bác sĩ khám</th>
+                            <th scope="col">Đơn thuốc</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {scheduleList.map((item, index) => {
+                        {historyMedicalList.map((item, index) => {
                             return (
                                 <tr className="align-middle text-nowrap" key={item.idScd}>
                                     <th> {index + 1 + page * size}</th>
                                     <td>{convertBookingDate(item.createDate)}</td>
+                                    <td className="address-cell">{item.specialistName}</td>
+                                    <td>{item.symptom}</td>
+                                    <td>{item.diagnosis}</td>
+                                    <td className="address-cell">{item.result}</td>
+                                    <td>{item.doctorName}</td>
                                     <td>
-                                        <Link
-                                            as={Link}
-                                            to={`/history-medical-list?patientId=${item.patientId}`}
-                                            className="nav-link scrollto text-primary"
-                                            title={'XEM LỊCH SỬ BỆNH ÁN'}
-                                        >
-                                            {item.patientName}
-                                        </Link>
+                                        <button className="btn btn-primary">Xem đơn thuốc</button>
                                     </td>
-                                    <td>{convertAppointmentDate(item.apmDate)}</td>
-                                    <td>{item.shiftName}</td>
-                                    <td className="address-cell">{item.scheduleAddress}</td>
-                                    <td>{showStatusCSD(item.statusScd)}</td>
-                                    <td>
+                                    {/* <td>
                                         <div className="dropdown">
                                             <button
                                                 className="btn btn-primary dropdown-toggle"
@@ -354,14 +265,14 @@ function ScheduleListForDoctor() {
                                                 </li>
                                             </ul>
                                         </div>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             );
                         })}
                     </tbody>
                 </table>
 
-                {scheduleList.length === 0 && (
+                {historyMedicalList.length === 0 && (
                     <div className="row justify-content-center">
                         <div className="col-6 justify-content-center" style={{ minHeight: '328px' }}>
                             <img
@@ -377,7 +288,7 @@ function ScheduleListForDoctor() {
                 )}
             </div>
 
-            {scheduleList.length >= 5 && (
+            {historyMedicalList.length >= 5 && (
                 <div className="pagination">
                     <nav aria-label="...">
                         <ul className="pagination">
@@ -489,4 +400,4 @@ function ScheduleListForDoctor() {
         </div>
     );
 }
-export default ScheduleListForDoctor;
+export default HistoryMedicalListByPatient;
