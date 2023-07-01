@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ReactStars from 'react-stars';
 import ButtonChat from '../Chat/ButtonChat';
@@ -13,34 +13,6 @@ export default function Doctor() {
     const [pageSize, setPageSize] = useState(4);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState('');
-    const [dt, setDt] = useState('');
-
-    const handleOpenModal = () => {
-        setIsOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsOpen(false);
-    };
-    const handleDt = (username) => {
-        setDt(username);
-        console.log('bác sĩ', dt);
-    };
-    function generateRandomString() {
-        const currentTime = new Date().getTime();
-        const randomValue = Math.random().toString(36).substring(2);
-        return `${currentTime}-${randomValue}`;
-    }
-    useEffect(() => {
-        const userLogin = localStorage.getItem('userName');
-        if (userLogin) {
-            setUser(userLogin);
-        } else {
-            setUser(generateRandomString());
-        }
-    }, []);
 
     useEffect(() => {
         axios
@@ -84,8 +56,8 @@ export default function Doctor() {
         <section id="doctors" className="doctors">
             <div className="container">
                 <div className="section-title">
-                    <h2>Doctors</h2>
-                    <p>Đội ngũ Bác sĩ ưu tú từ các Bệnh viện hàng đầu</p>
+                    <h1>Doctors</h1>
+                    <h2>Đội ngũ Bác sĩ ưu tú từ các Bệnh viện hàng đầu</h2>
                 </div>
                 <div className="row">
                     {listDT.length > 0 &&
@@ -105,12 +77,12 @@ export default function Doctor() {
                                     <div className="member-info">
                                         <h4
                                             onClick={() => {
-                                                navigate(`/appointment-list?doctorId=${item.idDoctor}`);
+                                                navigate(`/doctor-detail/${item.idDoctor}`);
                                             }}
                                         >
                                             {item.degree}.{item.name}
                                         </h4>
-                                        <span>{item.specialist.name}</span>
+                                        <span>{item.specialist?.name}</span>
                                         <span>
                                             <ReactStars
                                                 count={5}
@@ -120,31 +92,7 @@ export default function Doctor() {
                                                 half={false}
                                             />
                                         </span>
-                                        <ButtonChat
-                                            className="btn-modal"
-                                            onOpen={handleOpenModal}
-                                            isOpen={isOpen}
-                                            onClose={handleCloseModal}
-                                            onClick={(e) => {
-                                                e.nativeEvent.stopImmediatePropagation();
-                                                handleDt(item.username);
-                                            }}
-                                        >
-                                            Open Modal
-                                        </ButtonChat>{' '}
-                                        <button
-                                            onClick={(e) => {
-                                                navigate(`/appointment-list?doctorId=${item.idDoctor}`);
-                                            }}
-                                        >
-                                            Xem chi tiết
-                                        </button>
-                                        <WinChat
-                                            isOpen={isOpen}
-                                            onClose={handleCloseModal}
-                                            user={user}
-                                            doctor={dt}
-                                        ></WinChat>
+
                                         <p>{item.description}</p>
                                     </div>
                                 </div>

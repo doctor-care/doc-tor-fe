@@ -39,6 +39,8 @@ export default function Otp() {
                         axios.post(url, location.state.data).then((resp) => {
                             if (resp.status === HttpStatusCode.Created) {
                                 navigate('/');
+                            }else{  
+                                    return <div>Loading...</div>;
                             }
                         });
                         return;
