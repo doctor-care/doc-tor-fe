@@ -4,3 +4,9 @@
     margin-top: 10px;
     grid-gap: 20px;
 }
+
+.avatar-doctor {
+    width: 210px;
+    height: 297px;
+    object-fit: cover;
+}

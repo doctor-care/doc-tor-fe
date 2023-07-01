@@ -4,6 +4,7 @@ import axios from 'axios';
 import ReactStars from 'react-stars';
 import ButtonChat from '../Chat/ButtonChat';
 import WinChat from '../Chat/WinChat';
+import './style.css';
 
 export default function Doctor() {
     const navigate = useNavigate();
@@ -89,17 +90,18 @@ export default function Doctor() {
                 <div className="row">
                     {listDT.length > 0 &&
                         listDT.map((item, index) => (
-                            <div
-                                className="col-lg-6"
-
-                            >
+                            <div className="col-lg-6" key={index}>
                                 <div className="member d-flex align-items-start">
-                                    <div className="img-fluid">
-                                        {item.avatarUrl && (
-                                            <img key={item.avatarUrl} src={item.avatarUrl} alt="Preview" />
-                                        )}
-                                        {/* <img src={Doctors1} className="img-fluid" alt=""></img> */}
-                                    </div>
+                                    {item.avatarUrl && (
+                                        <img
+                                            className="avatar-doctor"
+                                            key={item.avatarUrl}
+                                            src={item.avatarUrl}
+                                            alt="Preview"
+                                        />
+                                    )}
+                                    {/* <img src={Doctors1} className="img-fluid" alt=""></img> */}
+
                                     <div className="member-info">
                                         <h4
                                             onClick={() => {
@@ -141,15 +143,15 @@ export default function Doctor() {
 
                 <div>
                     {listDT.length > 0 && (
-                        <div className="pagination justify-content-center">
+                        <div className="pagination justify-content-center mt-6">
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination">
-                                    <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                                        <button className="page-link bg" onClick={handleBeginPageClick}>
-                                            <i class="fa-solid fa-angles-left"></i>
+                                <ul className="pagination space-x-1">
+                                    <li className={` flex page-item ${currentPage === 0 ? 'disabled' : ''} `}>
+                                        <button className="page-link bg mr-1" onClick={handleBeginPageClick}>
+                                            <i className="fa-solid fa-angles-left"></i>
                                         </button>
-                                        <button className="page-link bg" onClick={handlePreviousPageClick}>
-                                            <i class="fa-solid fa-angle-left"></i>
+                                        <button className="page-link bg rounded-none" onClick={handlePreviousPageClick}>
+                                            <i className="fa-solid fa-angle-left"></i>
                                         </button>
                                     </li>
                                     {pageNumbers.slice(currentPage, currentPage + 3).map((pageNumber) => (
@@ -170,12 +172,16 @@ export default function Doctor() {
                                             <span className="page-link">...</span>
                                         </li>
                                     )}
-                                    <li className={`page-item ${currentPage === totalPage - 1 ? 'disabled' : ''}`}>
-                                        <button className="page-link bg" onClick={handleNextPageClick}>
-                                            <i class="fa-solid fa-chevron-right"></i>
+                                    <li
+                                        className={` flex  page-item ${
+                                            currentPage === totalPage - 1 ? 'disabled' : ''
+                                        }`}
+                                    >
+                                        <button className="page-link bg mr-1" onClick={handleNextPageClick}>
+                                            <i className="fa-solid fa-chevron-right"></i>
                                         </button>
                                         <button className="page-link bg" onClick={handleEndPageClick}>
-                                            <i class="fa-solid fa-angles-right"></i>
+                                            <i className="fa-solid fa-angles-right"></i>
                                         </button>
                                     </li>
                                 </ul>
