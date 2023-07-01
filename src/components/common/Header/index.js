@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import './styles.css';
 
 function Header() {
     const [listService, setListService] = useState([]);
@@ -39,11 +40,11 @@ function Header() {
     return (
         <div>
             <header id="header" className="fixed-top">
-                <div className="container d-flex align-items-center">
+                <div className="container d-flex align-items-center p-2">
                     <h1 className="logo me-auto">
-                        <div className="flex justify-center py-4">
+                        <div className="flex justify-center">
                             <Link to={'/'}>
-                                <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                                <img src="/logo.png" alt="logo" className="w-32 h-12 object-cover" />
                             </Link>
                         </div>
                     </h1>
