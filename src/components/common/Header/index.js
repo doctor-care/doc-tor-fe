@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import './styles.css';
 
 function Header() {
     const [listService, setListService] = useState([]);
@@ -39,14 +40,13 @@ function Header() {
     return (
         <div>
             <header id="header" className="fixed-top">
-                
-                <div className="container d-flex align-items-center">
+                <div className="container d-flex align-items-center p-2">
                     <h1 className="logo me-auto">
-                    <div className="flex justify-center py-4">
-                <Link to={'/'}>
-                    <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
-                </Link>
-            </div>
+                        <div className="flex justify-center">
+                            <Link to={'/'}>
+                                <img src="/logo.png" alt="logo" className="w-32 h-12 object-cover" />
+                            </Link>
+                        </div>
                     </h1>
 
                     <nav id="navbar" className="navbar order-last order-lg-0">
@@ -114,7 +114,6 @@ function Header() {
                                             </li>
                                         </ul>
                                     </li>
-                                    
                                 </>
                             )}
                             {role === 'ROLE_DOCTOR' && (
@@ -148,10 +147,10 @@ function Header() {
                                         </ul>
                                     </li>
                                     <li>
-                                <Link as={Link} to="/chat" className="nav-link scrollto">
-                                    <button className="btn btn-warning">Nhắn tin</button>
-                                </Link>
-                            </li>
+                                        <Link as={Link} to="/chat" className="nav-link scrollto">
+                                            <button className="btn btn-warning">Nhắn tin</button>
+                                        </Link>
+                                    </li>
                                 </>
                             )}
 
@@ -180,14 +179,12 @@ function Header() {
                                         </ul>
                                     </li>
                                     <li>
-                                <Link as={Link} to="/chat" className="nav-link scrollto">
-                                    <button className="btn btn-warning">Nhắn tin</button>
-                                </Link>
-                            </li>
+                                        <Link as={Link} to="/chat" className="nav-link scrollto">
+                                            <button className="btn btn-warning">Nhắn tin</button>
+                                        </Link>
+                                    </li>
                                 </>
                             )}
-
-                            
 
                             <li className="dropdown">
                                 <Link>
@@ -235,47 +232,48 @@ function Header() {
                         </ul>
                         <i className="bi bi-list mobile-nav-toggle"></i>
                         {role === '' ? (
-                        <>
-                            <div className="appointment-btn scrollto d-flex">
-                                <Link as={Link} to="/user/register" className="nav-link scrollto">
-                                    <span className="d-none d-md-inline " style={{color: "white"}}>Đăng Ký</span>
-                                </Link>
-                                <span>/</span>
-                                <Link as={Link} to="/login" className="nav-link scrollto">
-                                    <span className="d-none d-md-inline" style={{color: "white"}}>Đăng Nhập</span>
-                                </Link>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="dropdown">
-                                <button
-                                    className="btn btn-primary dropdown-toggle"
-                                    type="button"
-                                    id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <span>{userName}</span>
-                                </button>
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li>
-                                        <Link className="text-decoration-none dropdown-item" to={`/logout`}>
-                                            Đăng xuất
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            className="text-decoration-none dropdown-item"
-                                             to={`/editPatient`}
-                                        >
-                                            Thông tin cá nhân
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </>
-                    )}
+                            <>
+                                <div className="appointment-btn scrollto d-flex">
+                                    <Link as={Link} to="/user/register" className="nav-link scrollto">
+                                        <span className="d-none d-md-inline " style={{ color: 'white' }}>
+                                            Đăng Ký
+                                        </span>
+                                    </Link>
+                                    <span>/</span>
+                                    <Link as={Link} to="/login" className="nav-link scrollto">
+                                        <span className="d-none d-md-inline" style={{ color: 'white' }}>
+                                            Đăng Nhập
+                                        </span>
+                                    </Link>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="dropdown">
+                                    <button
+                                        className="btn btn-primary dropdown-toggle"
+                                        type="button"
+                                        id="dropdownMenuButton1"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <span>{userName}</span>
+                                    </button>
+                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <Link className="text-decoration-none dropdown-item" to={`/logout`}>
+                                                Đăng xuất
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link className="text-decoration-none dropdown-item" to={`/editPatient`}>
+                                                Thông tin cá nhân
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </>
+                        )}
                     </nav>
                 </div>
             </header>

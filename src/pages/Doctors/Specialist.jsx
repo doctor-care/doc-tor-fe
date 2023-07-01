@@ -7,8 +7,6 @@ import axios from 'axios';
 export default function Specialist() {
     const [specialists, setSpecialists] = useState([]);
 
-    const [render, setRender] = useState(false);
-
     useEffect(() => {
         try {
             axios.get('http://localhost:8080/specialist/get-all').then((response) => {
@@ -17,7 +15,8 @@ export default function Specialist() {
         } catch (error) {
             console.log(error);
         }
-    }, [render]);
+    }, []);
+
     return (
         <div className="container-fluid">
             <div className="">
