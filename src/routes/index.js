@@ -1,5 +1,5 @@
 // Layouts
-import { OnlyHeader } from '@/layouts';
+import { AdminLayout, OnlyHeader } from '@/layouts';
 
 // Pages
 import Home from '@/pages/Home';
@@ -28,6 +28,9 @@ import AppointmentFromDoctor from '@/pages/Appointments/appointment_by_doctor/Ap
 import CreateAppointment from '@/pages/Appointments/create_appointment/CreateAppointment';
 import jwtDecode from 'jwt-decode';
 import Logout from '@/pages/Login/Logout';
+
+
+
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home },
@@ -60,7 +63,8 @@ const publicRoutes = [
 
     //Đăng xuấst
     { path: '/logout', component: Logout, layout: null },
-
+   
+    
 ];
 
 const privateRoutes = [];
