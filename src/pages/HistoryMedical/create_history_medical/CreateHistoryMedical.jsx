@@ -13,8 +13,6 @@ export default function CreateHistoryMedical() {
     const [patient, setPatient] = useState({});
     const [isDisabled, setIsDisabled] = useState(false);
     const { idScd } = useParams();
-
-    // console.log('idScd', idScd);
     const initalValues = {
         userNameDoctor: userNameDoctor,
         createDate: Moment().format('YYYY-MM-DD'),
@@ -54,7 +52,6 @@ export default function CreateHistoryMedical() {
                     axios
                         .post(`http://localhost:8080/schedule/update/${idScd}/4`)
                         .then((schedule) => {
-                            console.log('update response', schedule);
                             if (response.data === 'FAIL') {
                             } else {
                                 navigate('/prescription/create/' + response.data.idHM);
@@ -77,8 +74,6 @@ export default function CreateHistoryMedical() {
         axios
             .get('http://localhost:8080/schedule/id/' + idScd)
             .then((response) => {
-                console.log('getScheduleInfo', response);
-
                 formData.patientId = response.data.patient.idPatient;
                 setPatient(response.data.patient);
             })

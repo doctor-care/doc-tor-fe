@@ -1,5 +1,5 @@
 // Layouts
-import { OnlyHeader } from '@/layouts';
+import { AdminLayout, OnlyHeader } from '@/layouts';
 
 // Pages
 import Home from '@/pages/Home';

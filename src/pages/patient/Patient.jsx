@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import './style.css';
 import ErrorMessage from '@/components/common/NotFound/ErrorMessage';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Option from '@/components/common/SelectOption/Option';
 import emailjs from '@emailjs/browser';
 import randomOTP from '@/utils/randomOTP';
@@ -98,7 +98,6 @@ export default function Patient() {
     });
 
     const onSubmit = (data) => {
-        console.log('data thienduy', data.email.toString().split('@')[0]);
         if (checkEnable.city === '0' && checkEnable.district === '0') {
             setMessageAddress('dia chi khong duoc de trong');
             return;
@@ -120,19 +119,6 @@ export default function Patient() {
                     console.log(error.text);
                 },
             );
-            // axios
-            //     .post('http://localhost:8080/send-otp', data.email.toString().split('@')[0])
-            //     .then((resp) => {
-            //         console.log('mail response', resp);
-            //         navigate('/otp', {
-            //             state: {
-            //                 data: data,
-            //             },
-            //         });
-            //     })
-            //     .catch((error) => {
-            //         console.log('error mail', error);
-            //     });
         }
     };
 
@@ -185,94 +171,106 @@ export default function Patient() {
     };
 
     return (
-        <div>
-            <h1>Form Patient</h1>
-            <form onSubmit={handleSubmit(onSubmit)} ref={form}>
-                <InputInForm
-                    label={'Username'}
-                    properties={'userName'}
-                    register={register('userName')}
-                    error={errors?.userName?.message}
-                    type={'text'}
-                />
-                <InputInForm
-                    label={'Password'}
-                    properties={'password'}
-                    register={register('password')}
-                    error={errors?.password?.message}
-                    type={'password'}
-                />
-                <input name="otp" hidden {...register('otp')} defaultValue={randomOTP()} />
-                <div className="formData">
-                    <div>
-                        <label>avatarUrl</label>
-                    </div>
-                    <div>
-                        <input
-                            type="file"
-                            className="form-control"
-                            onChange={handleFileChange}
-                            accept="image/jpeg, image/png, image/jpg"
-                        />
-                        <div>
-                            {previewUrls && (
-                                <img
-                                    key={previewUrls}
-                                    src={previewUrls}
-                                    alt="Preview"
-                                    style={{
-                                        width: 'auto',
-                                        height: '150px',
-                                        margin: '5px',
-                                    }}
-                                />
-                            )}
-                        </div>
-                    </div>
-                    <div>{messageFile && <ErrorMessage messageId={messageFile} />}</div>
+        <div className="d-flex justify-content-center align-items-center w-screen mt-6">
+            <div className="sm:px-0 px-4 md-screen">
+                <div className="flex justify-center py-4">
+                    <Link to={'/'}>
+                        <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                    </Link>
                 </div>
 
-                <InputInForm
-                    label={'Email'}
-                    properties={'email'}
-                    register={register('email')}
-                    error={errors?.email?.message}
-                    type={'text'}
-                />
+                <p className="text-center font-medium text-lg pb-2">
+                    Vui lòng điền đầy đủ thông tin để chúng tôi có thể hiểu về bạn hơn !!!
+                </p>
 
-                <InputInForm
-                    label={'Phone'}
-                    properties={'phone'}
-                    register={register('phone')}
-                    error={errors?.phone?.message}
-                    type={'text'}
-                />
-
-                <InputInForm
-                    label={'Birthday'}
-                    properties={'birthday'}
-                    register={register('birthday')}
-                    error={errors?.birthday?.message}
-                    type={'date'}
-                />
-
-                <InputInForm
-                    label={'Address'}
-                    properties={'address'}
-                    register={register('address')}
-                    error={errors?.address?.message}
-                    type={'text'}
-                />
-
-                <div className="formData">
-                    <div>
-                        <label>City</label>
+                <form onSubmit={handleSubmit(onSubmit)} ref={form} className="space-y-4">
+                    <InputInForm
+                        label={'Tên tài khoản'}
+                        properties={'userName'}
+                        register={register('userName')}
+                        error={errors?.userName?.message}
+                        type={'text'}
+                    />
+                    <InputInForm
+                        label={'Mật khẩu'}
+                        properties={'password'}
+                        register={register('password')}
+                        error={errors?.password?.message}
+                        type={'password'}
+                    />
+                    <input name="otp" hidden {...register('otp')} defaultValue={randomOTP()} />
+                    <div className="">
+                        <div>
+                            <label>Hình ảnh</label>
+                        </div>
+                        <div>
+                            <input
+                                type="file"
+                                className="form-control"
+                                onChange={handleFileChange}
+                                accept="image/jpeg, image/png, image/jpg"
+                            />
+                            <div>
+                                {previewUrls && (
+                                    <img
+                                        key={previewUrls}
+                                        src={previewUrls}
+                                        alt="Preview"
+                                        style={{
+                                            width: 'auto',
+                                            height: '150px',
+                                            margin: '5px',
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                        <div>{messageFile && <ErrorMessage messageId={messageFile} />}</div>
                     </div>
-                    <div style={{ display: 'flex' }}>
-                        <div className="col-md-6 mr-4 ">
-                            <div className="form-outline datepicker">
-                                <select name="city" defaultValue="0" onChange={handleChangeCity}>
-                                    <option value="0">-Choice something-</option>
+
+                    <InputInForm
+                        label={'Email'}
+                        properties={'email'}
+                        register={register('email')}
+                        error={errors?.email?.message}
+                        type={'text'}
+                    />
+
+                    <InputInForm
+                        label={'Số điện thoại'}
+                        properties={'phone'}
+                        register={register('phone')}
+                        error={errors?.phone?.message}
+                        type={'text'}
+                    />
+
+                    <InputInForm
+                        label={'Ngày sinh'}
+                        properties={'birthday'}
+                        register={register('birthday')}
+                        error={errors?.birthday?.message}
+                        type={'date'}
+                    />
+
+                    <InputInForm
+                        label={'Địa chỉ'}
+                        properties={'address'}
+                        register={register('address')}
+                        error={errors?.address?.message}
+                        type={'text'}
+                    />
+
+                    <div className="">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="mb-3">Tỉnh/Thành Phố</div>
+                                <select
+                                    className="form-control"
+                                    name="city"
+                                    defaultValue="0"
+                                    onChange={handleChangeCity}
+                                >
+                                    <option value="0">Chọn Tỉnh/Thành</option>
                                     {city.map((item) => (
                                         <option value={item.province_id} key={item.province_id}>
                                             {item.province_name}
@@ -280,81 +278,81 @@ export default function Patient() {
                                     ))}
                                 </select>
                             </div>
-                        </div>
-                        {checkEnable.city !== '0' && (
-                            <React.Fragment>
-                                <label>District</label>
-                                <div className="col-md-6 mr-4" style={{ paddingLeft: '0.em' }}>
-                                    <select name="district" defaultValue="0" onChange={handleChangeDistrict}>
-                                        <option value="0">-Choice something-</option>
-                                        {district.map((item) => (
+                            <div className="col-md-6">
+                                <div className="mb-3">Quận/Huyện</div>
+                                <select
+                                    className="form-control"
+                                    name="district"
+                                    defaultValue="0"
+                                    onChange={handleChangeDistrict}
+                                >
+                                    <option value="0">Chọn Quận/Huyện</option>
+                                    {checkEnable.city !== '0' &&
+                                        district.map((item) => (
                                             <option value={item.district_id} key={item.district_id}>
                                                 {item.district_name}
                                             </option>
                                         ))}
-                                    </select>
-                                </div>
-                            </React.Fragment>
-                        )}
+                                </select>
+                            </div>
+                        </div>
+                        <div>{messageAddress !== '' && <ErrorMessage messageId={messageAddress} />}</div>
                     </div>
-                    <div>{messageAddress !== '' && <ErrorMessage messageId={messageAddress} />}</div>
-                </div>
-                <InputInForm
-                    label={'Name'}
-                    properties={'name'}
-                    register={register('name')}
-                    error={errors?.name?.message}
-                    type={'text'}
-                />
 
-                <InputInForm
-                    label={'Health History'}
-                    properties={'healthHistory'}
-                    register={register('healthHistory')}
-                    error={errors?.healthHistory?.message}
-                    type={'text'}
-                />
+                    <InputInForm
+                        label={'Họ và tên'}
+                        properties={'name'}
+                        register={register('name')}
+                        error={errors?.name?.message}
+                        type={'text'}
+                    />
 
-                <div className="formData">
-                    <div>
-                        <label>Blood Type</label>
+                    <InputInForm
+                        label={'Lịch sử khám bệnh'}
+                        properties={'healthHistory'}
+                        register={register('healthHistory')}
+                        error={errors?.healthHistory?.message}
+                        type={'text'}
+                    />
+
+                    <div className="">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="mb-3">Nhóm máu</div>
+                                <select
+                                    className="form-control"
+                                    {...register('bloodType')}
+                                    defaultValue=""
+                                    name="bloodType"
+                                >
+                                    <Option label={'Blood Type'} list={['A', 'B', 'AB', 'O', 'Other']} />
+                                </select>
+                                <div>{errors?.bloodType && <ErrorMessage messageId={errors.bloodType.message} />}</div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="mb-3">Giới tính</div>
+                                <select className="form-control" {...register('sex')} defaultValue="" name="sex">
+                                    <Option label={'sex'} list={['Nam', 'Nu', 'LBGT', 'Other']} />
+                                </select>
+                                <div>{errors?.sex && <ErrorMessage messageId={errors.sex.message} />}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <select className="form-control" {...register('bloodType')} defaultValue="" name="bloodType">
-                            <Option label={'Blood Type'} list={['A', 'B', 'AB', 'O', 'Other']} />
-                        </select>
+
+                    <div className="flex flex-end my-4">
+                        <div className="mr-2">
+                            <button type="button" onClick={() => reset(schema)} className="btn btn-warning px-4">
+                                Làm mới
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn btn-success px-4" type="submit">
+                                Đăng ký
+                            </button>
+                        </div>
                     </div>
-                    <div>{errors?.bloodType && <ErrorMessage messageId={errors.bloodType.message} />}</div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <label>Gender</label>
-                    </div>
-                    <div>
-                        <select className="form-control" {...register('sex')} defaultValue="" name="sex">
-                            <Option label={'sex'} list={['Nam', 'Nu', 'LBGT', 'Other']} />
-                        </select>
-                    </div>
-                    <div>{errors?.sex && <ErrorMessage messageId={errors.sex.message} />}</div>
-                </div>
-                <div className="formData">
-                    <div>
-                        <button className="btn btn-secondary" type="button" onClick={() => navigate('/')}>
-                            Back List
-                        </button>
-                    </div>
-                    <div>
-                        <button className="btn btn-success" type="submit">
-                            Submit
-                        </button>
-                    </div>
-                    <div>
-                        <button type="button" onClick={() => reset(schema)} className="btn btn-warning">
-                            Reset
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     );
 }

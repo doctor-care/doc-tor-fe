@@ -336,22 +336,26 @@ function ScheduleListForDoctor() {
                                                         XEM CHI TIẾT
                                                     </Link>
                                                 </li>
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/schedule/${item.idScd}`}
-                                                    >
-                                                        XÁC NHẬN
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/history-medical/create/${item.idScd}`}
-                                                    >
-                                                        ĐÃ KHÁM XONG
-                                                    </Link>
-                                                </li>
+                                                {statusscd === 0 && (
+                                                    <li>
+                                                        <Link
+                                                            className="text-decoration-none dropdown-item"
+                                                            to={`/schedule/${item.idScd}`}
+                                                        >
+                                                            XÁC NHẬN
+                                                        </Link>
+                                                    </li>
+                                                )}
+                                                {statusscd === 1 && (
+                                                    <li>
+                                                        <Link
+                                                            className="text-decoration-none dropdown-item"
+                                                            to={`/history-medical/create/${item.idScd}`}
+                                                        >
+                                                            ĐÃ KHÁM XONG
+                                                        </Link>
+                                                    </li>
+                                                )}
                                             </ul>
                                         </div>
                                     </td>

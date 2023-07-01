@@ -233,6 +233,18 @@ export default function CreatePrescription() {
                             data-bs-target="#staticBackdrop"
                             disabled={false}
                         >
+                            KHÔNG TẠO ĐƠN THUỐC
+                        </button>
+                    </div>
+                )}
+                {prescriptionList.length > 0 && (
+                    <div className="d-flex justify-content-sm-center">
+                        <button
+                            className="btn btn-primary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop"
+                            disabled={false}
+                        >
                             HOÀN TẤT
                         </button>
                     </div>
