@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -6,9 +6,13 @@ import Moment from 'moment';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
+import emailjs from '@emailjs/browser';
+import InputInForm from '@/components/common/SelectOption/InputInForm';
+import { useForm } from 'react-hook-form';
 // import './BookingSchedule.css';
 
 export default function CreateHistoryMedical() {
+    const form = useRef();
     const navigate = useNavigate();
     const [userNameDoctor] = useState(localStorage.getItem('userName'));
     const [patient, setPatient] = useState({});
@@ -16,6 +20,10 @@ export default function CreateHistoryMedical() {
     const [scheduleAddress, setScheduleAddress] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
     const { idScd } = useParams();
+    const [userNamePatient, setUserNamePatient] = useState('');
+    const [emailPatient, setEmailPatient] = useState('');
+    const [link, setLink] = useState('');
+    const [hidden] = useState(false);
 
     const initalValues = {
         userNameDoctor: userNameDoctor,
@@ -34,6 +42,25 @@ export default function CreateHistoryMedical() {
         result: Yup.string().required('Không được để trống!'),
     });
 
+    const onSubmit = (data) => {
+        // data.avatarUrl = files;
+        // data.url = 'http://localhost:8080/patient/signup';
+        emailjs.sendForm('service_3qk9rdh', 'template_sk8664j', form.current, 'gkyCPWWwIvheO7BEy').then(
+            (result) => {
+                console.log('form.current value', form.current);
+                console.log('result value', result);
+                // navigate('/otp', {
+                //     state: {
+                //         data: data,
+                //     },
+                // });
+            },
+            (error) => {
+                console.log(error.text);
+            },
+        );
+    };
+
     useEffect(() => {
         getScheduleInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +70,7 @@ export default function CreateHistoryMedical() {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const createHistoryMedical = (e) => {
         e.preventDefault();
         checkForm
             .validate(formData, { abortEarly: false })
@@ -64,6 +91,7 @@ export default function CreateHistoryMedical() {
                                 .then((schedule) => {
                                     if (schedule.data === 'FAIL') {
                                     } else {
+                                        handleSubmit(onSubmit);
                                         navigate('/prescription/create/' + response.data.idHM);
                                     }
                                 })
@@ -91,6 +119,9 @@ export default function CreateHistoryMedical() {
             .get('http://localhost:8080/schedule/id/' + idScd)
             .then((response) => {
                 formData.patientId = response.data.patient.idPatient;
+                setEmailPatient(response.data.patient.email);
+                setUserNamePatient(response.data.patient.name);
+                setLink(`http://localhost:3000/review/${idScd}`);
                 setPatient(response.data.patient);
                 setScheduleAddress(response.data.scheduleAddress);
             })
@@ -98,6 +129,10 @@ export default function CreateHistoryMedical() {
                 console.log(error);
             });
     };
+
+    const { handleSubmit } = useForm({
+        Mode: 'onBlur',
+    });
 
     return (
         <div className="container">
@@ -109,7 +144,7 @@ export default function CreateHistoryMedical() {
                                 <h2 className="text-center">THÊM MỚI BỆNH ÁN</h2>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="mt-3">
+                            <form onSubmit={createHistoryMedical} className="mt-3">
                                 <div className="row my-2">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
@@ -294,6 +329,21 @@ export default function CreateHistoryMedical() {
                     </div>
                 </div>
             </div>
+            {hidden && (
+                <div>
+                    <form onSubmit={handleSubmit(onSubmit)} ref={form} className="space-y-4">
+                        <div>
+                            <input className="form-control" name="email" value={emailPatient} />
+                        </div>
+                        <div>
+                            <input className="form-control" name="userName" value={userNamePatient} />
+                        </div>
+                        <div>
+                            <input className="form-control" name="link" value={link} />
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }
