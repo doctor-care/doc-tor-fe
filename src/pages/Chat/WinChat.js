@@ -3,6 +3,7 @@ import ReactModal from "react-modal";
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
+import './Chat.css'
 
 var stompClient = null;
 const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
@@ -20,6 +21,8 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
   const [activeIndex, setActiveIndex] = useState('');
   const [componentOpened, setComponentOpened] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [listAvatar, setListAvatar] = useState([]);
+ 
 
   const handleButtonClick = () => {
       setEditable(true); // Cập nhật state của editable là true khi button được click
@@ -47,16 +50,27 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
     setComponentOpened(false);
   };
   useEffect(() => {
-    axios
-            .get(`http://localhost:8080/chat-box/getchat?sender=${doctor}&reciptient=${user}`)
-            .then((response) => {
-                const data = response.data;
-                setListMessage(data);
-            })
     if (user !== '') {
         connect();
     }
 }, [user]);
+useEffect(() => {
+  axios
+          .get(`http://localhost:8080/chat-box/getchat?sender=${doctor}&reciptient=${user}`)
+          .then((response) => {
+              const data = response.data;
+              setListMessage(data);        
+          })
+          axios
+          .get(`http://localhost:8080/doctor/avatar`)
+          .then((response) => {
+              const data = response.data;
+              setListAvatar(data);
+          })
+          .catch((error) => console.error);        
+
+}, [isOpen]);
+
   const connect = () => {
       const Sock = new SockJS("http://localhost:8080/chat");
       stompClient = over(Sock);
@@ -139,9 +153,27 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
         >
           {children}
           <div className="user-info">
-            <div className="user-name">
-              <span className="user">{doctor}</span> 
-            </div>
+          <div className="user-name">
+  {listAvatar.map((avatar) => (
+    avatar.userName === doctor ? (
+      <img
+        className="avatar-chat"
+        key={avatar.urlAvatar}
+        src={avatar.urlAvatar}
+        alt="Preview"
+      />
+    ) : null
+  ))}
+  {!listAvatar.some((avatar) => avatar.userName === doctor) && (
+    <img
+      className="avatar-chat"
+      key="1"
+      src="https://cdn1.iconfinder.com/data/icons/windows-10-1/32/Administrator-512.png"
+      alt="Preview"
+    />
+  )}
+  <span className="user">{doctor}</span>
+</div>
             <button onClick={onClose} className="btn-x">
               X
             </button>
@@ -156,7 +188,7 @@ const WinChat = ({ isOpen, onClose, children, user ,doctor}) => {
                       listMessage.map((chat, index) => (
                         <li
                           className={`message ${
-                            chat.sender !== "admin" ? "self" : "client"
+                            chat.sender === user ? "self" : "client"
                           }`}
                           key={index}
                         >

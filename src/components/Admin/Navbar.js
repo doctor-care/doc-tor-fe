@@ -20,9 +20,9 @@ function Navbar({ toggleSidebar }) {
         <>
             <nav className="navbarAdmin">
                 <div className="navbar-container">
-                    <Link to="/createDoc" className="navbar-logo" onClick={toggleSidebar}>
+                    <button  className="navbar-logo" onClick={toggleSidebar}>
                         ///
-                    </Link>
+                    </button>
                     <div className="flex justify-center py-4">
                 <Link to={'/'}>
                     <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />

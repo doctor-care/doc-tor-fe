@@ -10,11 +10,8 @@ import './DoctorDetail.css';
 function DoctorDetail() {
     const [doctor, setDoctor] = useState({});
     const { id } = useParams();
-    const location = useLocation();
     const navigate = useNavigate();
-    const [checkEnable, setCheckEnable] = useState({
-        city: '',
-    });
+   
     const [city, setCity] = useState([]);
     const [district, setDistrict] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -76,10 +73,10 @@ function DoctorDetail() {
     }
 
     return (
-        <div className="container">
+        <div className="containerDetail">
+            <div className='information'>
+            <div>
             <img src={doctor.avatarUrl} alt={`Avatar of ${doctor.name}`} className="avatar" />
-            <h1>{doctor.name}</h1>
-            <p>Specialist: {doctor.specialist?.name}</p>
             <ButtonChat className="button" onOpen={handleOpenModal} isOpen={isOpen} onClose={handleCloseModal}>
                 Open Modal
             </ButtonChat>
@@ -91,14 +88,19 @@ function DoctorDetail() {
             >
                 Đặt lịch ngay
             </button>
+            </div>
+            <div>
+
+            <h1><span>{doctor.degree}. </span>{doctor.name}</h1>
+            <p>Specialist: {doctor.specialist?.name}</p>
+            
             <WinChat isOpen={isOpen} onClose={handleCloseModal} user={user} doctor={doctor.users?.userName} />
-            <p>{doctor.degree}</p>
             <ReactStars count={5} value={doctor.averageRate} size={24} color2={'#ffd700'} half={false} />
             <p>Phone: {doctor.phone}</p>
             <p>Email: {doctor.email}</p>
             <p>Ngày sinh: {doctor.birthday}</p>
+            <p>Kinh nghiệm: {doctor.description}</p>
             <p>Address: {doctor.address?.address}</p>
-            <p>{doctor.description}</p>
             <div className="city">
                 {city.map(
                     (item) =>
@@ -116,6 +118,9 @@ function DoctorDetail() {
                         ),
                 )}
             </div>
+            </div>
+            </div>
+            <h2>Bình luận</h2>
             <div className="review-container">
                 {review.length > 0 &&
                     review.map((item, index) => (
@@ -139,8 +144,7 @@ function DoctorDetail() {
                                             half={false}
                                         />
                                     </span>
-
-                                    <p>{item.reviewString}</p>
+                                    <h3>{item.reviewString}</h3>
                                 </div>
                             </div>
                         </div>
