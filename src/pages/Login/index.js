@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import { Link } from 'react-router-dom';
 function Login() {
     const [error, setErr] = useState();
     const [view, setView] = useState(false);
@@ -41,12 +42,11 @@ function Login() {
                     // const decodedPayload = JSON.parse(atob(encodedPayload));
                     console.log('encodedPayload', encodedPayload);
                     // const username = decodedPayload.username; const userrole = decodedPayload.userrole;
-                    if("ROLE_ADMIN" === jwtDecode(res.data.jwt).aud){
-                        navigate('/listDoc')
-                    }else{
+                    if ('ROLE_ADMIN' === jwtDecode(res.data.jwt).aud) {
+                        navigate('/listDoc');
+                    } else {
                         navigate('/');
                     }
-                    
                 })
                 .catch((err) => {
                     console.log(err);
@@ -65,7 +65,10 @@ function Login() {
     return (
         <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-lg text-center">
-                <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
+                <div>
+                    <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                </div>
+                <h1 className="text-2xl font-bold sm:text-3xl">Chúc bạn một ngày tốt lành!</h1>
 
                 <p className="mt-4 text-danger" style={{ height: '1.5rem' }}>
                     {error}
@@ -123,10 +126,12 @@ function Login() {
 
                 <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-500">
-                        No account?
-                        <a className="underline" href="">
-                            Sign up
-                        </a>
+                        No account?  
+                        <Link as={Link} to="/user/register" className="">
+                            <span className="d-none d-md-inline " style={{ color: 'grey' }}>
+                                Đăng ký ngay!
+                            </span>
+                        </Link>
                     </p>
 
                     <button
