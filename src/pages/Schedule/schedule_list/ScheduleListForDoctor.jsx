@@ -67,23 +67,6 @@ function ScheduleListForDoctor() {
         }
     };
 
-    //CHỨC NĂNG IN VÉ
-    const handlePrint = (maVe) => {
-        axios
-            .get('http://localhost:8080/VeMayBay/InVe?maVe=' + maVe)
-            .then((response) => {
-                console.log('response.data ', response.data);
-                if (response.data === 'EMPTY') {
-                    // toast.error('VÉ KHÔNG TỒN TẠI!');
-                } else {
-                    window.location.href = `http://localhost:3000/InVe?maVe=${maVe.toString()}`;
-                }
-            })
-            .catch((error) => {
-                console.error('error at function handlePrint', error);
-            });
-    };
-
     //CHỨC NĂNG XÓA
     const [selectedObject, setSelectedObject] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,34 +79,6 @@ function ScheduleListForDoctor() {
         setMaVeDelete(veMayBay.maVe);
         setTenHanhKhachDelete(veMayBay.hanhKhach.tenHanhKhach);
         setIsModalOpen(true);
-    };
-
-    const handleDelete = () => {
-        axios
-            .delete(`http://localhost:8080/VeMayBay/delete/${maVeDelete}`)
-            .then((response) => {
-                if (response.data === 'FAIL') {
-                    // toast.error('VÉ KHÔNG TỒN TẠI!');
-                } else {
-                    const cancelEmailDTO = {
-                        emailNguoiDung: response.data.hoaDon.nguoiDung.email,
-                        maVe: response.data.maVe,
-                        hangVe: response.data.hangVe,
-                        // giaVe: CurrencyFormat(response.data.giaVe),
-                        tenHanhKhach: response.data.hanhKhach.tenHanhKhach,
-                        ngayKhoiHanh: response.data.datCho.chuyenBay.ngayKhoiHanh,
-                        diemDi: response.data.datCho.chuyenBay.diemDi,
-                        diemDen: response.data.datCho.chuyenBay.diemDen,
-                    };
-                    fetchScheduleList();
-                    axios.post(`http://localhost:8080/Email/cancel`, cancelEmailDTO).catch((err) => console.error);
-                    // toast.success('HỦY VÉ THÀNH CÔNG!');
-                }
-                // setIsModalOpen(false);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
     };
 
     useEffect(() => {
@@ -192,12 +147,6 @@ function ScheduleListForDoctor() {
         }
     };
 
-    //DuyNT58 load lại danh sách vé máy bay khi có thay đổi
-    // useEffect(() => {
-    //     fetchTicketList();
-    //     console.log('tickets', tickets);
-    // }, [page, size, maVe, tenHanhKhach, diemDi, diemDen]);
-
     //DuyNT58 lấy danh sách vé máy bay
     const fetchScheduleList = async () => {
         try {
@@ -222,21 +171,6 @@ function ScheduleListForDoctor() {
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
-
-    //DuyNT58 gởi thông tin search/ nếu không nhập gì lấy tìm tất cả
-    // const handleSearch = (event) => {
-    //     event.preventDefault();
-    //     setIsSearching(true);
-    //     setPage(0);
-    //     setMaVe(formData.maVe);
-    //     setTenHanhKhach(formData.tenHanhKhach);
-    //     setDiemDi(formData.diemDi);
-    //     setDiemDen(formData.diemDen);
-    //     if (!maVe && !tenHanhKhach && !diemDi && !diemDen) {
-    //         setIsSearching(false);
-    //         fetchScheduleList();
-    //     }
-    // };
 
     //DuyNT58 chọn trang muốn hiển thị
     const handlePageChange = (newPage) => {
@@ -368,7 +302,16 @@ function ScheduleListForDoctor() {
                                 <tr className="align-middle text-nowrap" key={item.idScd}>
                                     <th> {index + 1 + page * size}</th>
                                     <td>{convertBookingDate(item.createDate)}</td>
-                                    <td>{item.patientName}</td>
+                                    <td>
+                                        <Link
+                                            as={Link}
+                                            to={`/history-medical-list?patientId=${item.patientId}`}
+                                            className="nav-link scrollto text-primary"
+                                            title={'XEM LỊCH SỬ BỆNH ÁN'}
+                                        >
+                                            {item.patientName}
+                                        </Link>
+                                    </td>
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
                                     <td className="address-cell">{item.scheduleAddress}</td>
@@ -385,15 +328,18 @@ function ScheduleListForDoctor() {
                                                 Chọn
                                             </button>
                                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/schedule/${item.idScd}`}
-                                                    >
-                                                        XEM CHI TIẾT
-                                                    </Link>
-                                                </li>
-                                                {statusscd === 0 && (
+                                                {item.statusScd > 1 && (
+                                                    <li>
+                                                        <Link
+                                                            className="text-decoration-none dropdown-item"
+                                                            to={`/schedule/${item.idScd}`}
+                                                        >
+                                                            XEM CHI TIẾT
+                                                        </Link>
+                                                    </li>
+                                                )}
+
+                                                {item.statusScd === 0 && (
                                                     <li>
                                                         <Link
                                                             className="text-decoration-none dropdown-item"
@@ -403,7 +349,7 @@ function ScheduleListForDoctor() {
                                                         </Link>
                                                     </li>
                                                 )}
-                                                {statusscd === 1 && (
+                                                {item.statusScd === 1 && (
                                                     <li>
                                                         <Link
                                                             className="text-decoration-none dropdown-item"
@@ -415,142 +361,10 @@ function ScheduleListForDoctor() {
                                                 )}
                                             </ul>
                                         </div>
-                                        {/* <div className="dropdown">
-                                            <button
-                                                className="btn btn-secondary dropdown-toggle"
-                                                type="button"
-                                                id="dropdownMenuButton1"
-                                                onClick={handleToggleDropdown}
-                                            >
-                                                Dropdown
-                                            </button>
-                                            {isOpen && (
-                                                <div>
-                                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li className="dropdown-item">Option 1</li>
-                                                        <li className="dropdown-item">Option 2</li>
-                                                        <li className="dropdown-item">Option 3</li>
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </div> */}
                                     </td>
-                                    {/* <td>
-                                        <Link className="text-decoration-none" to={`/schedule/${item.idScd}`}>
-                                            Chi tiết
-                                        </Link>
-                                    </td> */}
                                 </tr>
                             );
                         })}
-                        {/* {scheduleList.map((item, index) => {
-                                  return (
-                                      <tr className="align-middle text-nowrap" key={item.maVe}>
-                                          <td> {index + 1 + page * size}</td>
-                                          <th scope="row">{item.maVe}</th>
-                                          <td>{item.tenHanhKhach}</td>
-                                          <td>{item.ngayKhoiHanh}</td>
-                                          <td>{item.diemDi}</td>
-                                          <td>{item.diemDen}</td>
-                                          <td>{item.hangVe}</td>
-                                          <td>
-                                              {item.hangVe === 'Phổ Thông'
-                                                  ? item.giaVe.toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })
-                                                  : (item.giaVe * 1.5).toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })}
-                                          </td>
-                                          <td>
-                                              {role === 'user' ? (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-                                                  </>
-                                              ) : (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-
-                                                      <button
-                                                          className="btn btn-danger"
-                                                          data-bs-toggle="modal"
-                                                          data-bs-target="#staticBackdrop"
-                                                          onClick={() => confirmDelete(item)}
-                                                      >
-                                                          Hủy
-                                                      </button>
-                                                  </>
-                                              )}
-                                          </td>
-                                      </tr>
-                                  );
-                              })
-                            : tickets.map((item, index) => {
-                                  return (
-                                      <tr className="align-middle" key={item.maVe}>
-                                          <td> {index + 1 + page * size}</td>
-                                          <th scope="row">{item.maVe}</th>
-                                          <td>{item.tenHanhKhach}</td>
-                                          <td>{item.ngayKhoiHanh}</td>
-                                          <td>{item.diemDi}</td>
-                                          <td>{item.diemDen}</td>
-                                          <td>{item.hangVe}</td>
-                                          <td>
-                                              {item.hangVe === 'Phổ Thông'
-                                                  ? item.giaVe.toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })
-                                                  : (item.giaVe * 1.5).toLocaleString('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND',
-                                                    })}
-                                          </td>
-                                          <td>
-                                              {role === 'user' ? (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-                                                  </>
-                                              ) : (
-                                                  <>
-                                                      <button
-                                                          onClick={() => handlePrint(item.maVe.toString())}
-                                                          className="btn bg text-white"
-                                                      >
-                                                          Xem
-                                                      </button>
-
-                                                      <button
-                                                          className="btn btn-danger"
-                                                          data-bs-toggle="modal"
-                                                          data-bs-target="#staticBackdrop"
-                                                          onClick={() => confirmDelete(item)}
-                                                      >
-                                                          Hủy
-                                                      </button>
-                                                  </>
-                                              )}
-                                          </td>
-                                      </tr>
-                                  );
-                              })} */}
                     </tbody>
                 </table>
 

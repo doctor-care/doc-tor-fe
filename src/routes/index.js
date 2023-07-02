@@ -23,14 +23,16 @@ import BookingSchedule from '@/pages/Schedule/booking_schedule/BookingSchedule';
 import ScheduleDetail from '@/pages/Schedule/schedule_detail/ScheduleDetail';
 import ScheduleListForDoctor from '@/pages/Schedule/schedule_list/ScheduleListForDoctor';
 import ScheduleListForPatient from '@/pages/Schedule/schedule_list/ScheduleListForPatient';
-import CreateHistoryMedical from '@/pages/HistoryMedical/CreateHistoryMedical';
+import CreateHistoryMedical from '@/pages/HistoryMedical/create_history_medical/CreateHistoryMedical';
 import AppointmentFromDoctor from '@/pages/Appointments/appointment_by_doctor/AppointmentFromDoctor';
 import CreateAppointment from '@/pages/Appointments/create_appointment/CreateAppointment';
 import jwtDecode from 'jwt-decode';
 import Logout from '@/pages/Login/Logout';
 import CreatePrescription from '@/pages/Prescription/CreatePrescription';
+import HistoryMedicalListByPatient from '@/pages/HistoryMedical/histoty_medical_list/HistoryMedicalListByPatient';
 import DoctorDetail from '@/pages/Doctors/DoctorDetail';
 import DoctorAD from '@/pages/Admin/Doctor/Doctor';
+import NotFound from '@/components/common/NotFound';
 // Public routes
 
 
@@ -45,7 +47,7 @@ const publicRoutes = [
     { path: '/otp', component: Otp, layout: null },
     { path: '/login', component: Login, layout: null },
     { path: '/specialist', component: Specialist },
-    { path: '/doctor-list', component: DoctorBySpecialist },
+    { path: '/doctor-list', component: DoctorBySpecialist, layout: null },
     { path: '/logout', component: Logout, layout: null },
     { path: '/doctor-detail/:id', component: DoctorDetail },
     //bác sĩ
@@ -62,6 +64,11 @@ const publicRoutes = [
     { path: '/review/:id', component: Review, layout: null },
     { path: '/user/schedule-list', component: ScheduleListForPatient, layout: null },
 
+
+    //Đăng xuấst
+    { path: '/logout', component: Logout, layout: null },
+    { path: '/prescription/create/:idHM', component: CreatePrescription, layout: null },
+    { path: '/history-medical-list', component: HistoryMedicalListByPatient, layout: null },
     //bệnh nhân và bác sĩ
     { path: '/chat', component: ChatBox, layout: OnlyHeader },
     { path: '/appointment-list', component: AppointmentFromDoctor, layout: null },
@@ -73,6 +80,10 @@ const publicRoutes = [
     { path: '/listDoc', component: DoctorAD, layout: AdminLayout },
     { path: '/detailDoc/:id', component: DoctorDetail, layout: AdminLayout },
     { path: '/chatAD', component: ChatBox, layout: AdminLayout },
+
+
+    //error
+    { path: '/not-found', component: NotFound, layout: null },
 ];
 
 const privateRoutes = [];

@@ -21,3 +21,13 @@
         padding: 10px 15px;
     }
 }
+
+.avatar-img {
+    border-radius: 50%;
+    height: 90%;
+    width: auto;
+}
+
+.bg-img-doctor {
+    /* background: rgb(0, 238, 255); */
+}

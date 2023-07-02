@@ -91,16 +91,21 @@ export default function CreateAppointment() {
 
     const getExistDateList = () => {
         try {
-            axios.get('http://localhost:8080/doctor/username/' + userNameDoctor).then((response) => {
-                axios
-                    .get('http://localhost:8080/appointment/get-date?doctorId=' + response.data.idDoctor)
-                    .then((response) => {
-                        if (response.data.length > 0) {
-                            setExistDayList(response.data);
-                            setMin(0);
-                        }
-                    });
-            });
+            axios
+                .get('http://localhost:8080/doctor/username/' + userNameDoctor)
+                .then((response) => {
+                    axios
+                        .get('http://localhost:8080/appointment/get-date?doctorId=' + response.data.idDoctor)
+                        .then((response) => {
+                            if (response.data.length > 0) {
+                                setExistDayList(response.data);
+                                setMin(0);
+                            }
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         } catch (error) {
             console.log(error);
         }
@@ -186,8 +191,7 @@ export default function CreateAppointment() {
                     className="btn btn-success"
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
-                    disabled={selectedDayList.length === 0}
-                    // onClick={createAppointment}
+                    disabled={selectedDayList.length === 0 || disabled === true}
                 >
                     ĐĂNG KÝ LỊCH
                 </button>
@@ -204,20 +208,20 @@ export default function CreateAppointment() {
             >
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <div className="modal-header bg-danger">
+                        <div className="modal-header bg-primary">
                             <h5 className="modal-title text-white" id="staticBackdropLabel">
-                                XÁC NHẬN
+                                ĐĂNG KÝ
                             </h5>
                             <button
                                 type="button"
-                                className="btn-close text-white"
+                                className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
                             ></button>
                         </div>
                         <div className="modal-body">
                             <div>
-                                <h5>Bạn thực sự muốn xác nhận lịch hẹn này?</h5>
+                                <h5>Xác nhận đăng ký lịch hẹn?</h5>
                                 {/* <span>
                                     - Mã vé: <strong>{maVeDelete}</strong>
                                 </span> */}
@@ -245,6 +249,4 @@ export default function CreateAppointment() {
             </div>
         </div>
     );
-
-   
 }
