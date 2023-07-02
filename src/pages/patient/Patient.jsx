@@ -109,6 +109,8 @@ export default function Patient() {
             data.url = 'http://localhost:8080/patient/signup';
             emailjs.sendForm('service_3qk9rdh', 'template_g7hxijd', form.current, 'gkyCPWWwIvheO7BEy').then(
                 (result) => {
+                    console.log('form.current value', form.current);
+                    console.log('result value', result);
                     navigate('/otp', {
                         state: {
                             data: data,
