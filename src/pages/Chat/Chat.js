@@ -5,11 +5,8 @@ import SockJS from 'sockjs-client';
 import './Chat.css';
 import axios from 'axios';
 
-
 var stompClient = null;
-const Chat = ({user}) => {
-
-    
+const Chat = ({ user }) => {
     const [listUserNew, setListUserNew] = useState([]);
     const chatMessagesRef = useRef(null);
     const [listUser, setListUser] = useState([]);
@@ -28,6 +25,7 @@ const Chat = ({user}) => {
     const [activeIndex, setActiveIndex] = useState('');
     const [componentOpened, setComponentOpened] = useState(false);
     const [searchText, setSearchText] = useState('');
+    const [listAvatar, setListAvatar] = useState([]);
 
     const handleButtonClick = () => {
         setEditable(true); // Cập nhật state của editable là true khi button được click
@@ -55,25 +53,21 @@ const Chat = ({user}) => {
     };
 
     const connect = () => {
-        const Sock = new SockJS("http://localhost:8080/chat");
+        const Sock = new SockJS('http://localhost:8080/chat');
         stompClient = over(Sock);
         stompClient.connect({}, onConnected);
     };
 
-
     const onConnected = () => {
-        stompClient.subscribe("/user/" + user + "/queue/messages", (message) => {
+        stompClient.subscribe('/user/' + user + '/queue/messages', (message) => {
             //  if(reciptientnamecurrent!==""&&reciptientnamecurrent===message.body.sender){
-            setListMessage((listMessage) => [
-                ...listMessage,
-                JSON.parse(message.body),
-            ]);
+            setListMessage((listMessage) => [...listMessage, JSON.parse(message.body)]);
             console.log('userData.content:', userData.content);
             console.log('stompClient:', stompClient);
             console.log('stompClient.connected:', stompClient.connected);
-            console.log(listMessage, "Day la list message sau khi nhan dc message");
+            console.log(listMessage, 'Day la list message sau khi nhan dc message');
         });
-        console.log("WebSocket connected"); // Thêm log để kiểm tra kết nối WebSocket
+        console.log('WebSocket connected'); // Thêm log để kiểm tra kết nối WebSocket
     };
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' && userData.content !== '') {
@@ -83,20 +77,20 @@ const Chat = ({user}) => {
 
     const sendPrivateValue = () => {
         if (stompClient && stompClient.connected && stompClient.ws.readyState === 1) {
-            if (userData.content !== "") {
+            if (userData.content !== '') {
                 setUserData({ ...userData, reciptient: reciptientname });
                 setUserData({ ...userData, sender: user });
                 const message = userData;
                 message.sender = user;
                 message.reciptient = reciptientname;
-                console.log(message, "day la message truoc khi gui");
+                console.log(message, 'day la message truoc khi gui');
                 stompClient.send(`/app/message`, {}, JSON.stringify(message));
-                setUserData({ ...userData, content: "" });
+                setUserData({ ...userData, content: '' });
             } else {
-                alert("Hãy nhập nội dung cho tin nhắn!!");
+                alert('Hãy nhập nội dung cho tin nhắn!!');
             }
         } else {
-            alert("Kết nối WebSocket chưa được thiết lập.");
+            alert('Kết nối WebSocket chưa được thiết lập.');
         }
     };
 
@@ -184,8 +178,6 @@ const Chat = ({user}) => {
         getChat('');
         setEditable(false);
         console.log(user);
-      
-
     }, []);
 
     useEffect(() => {
@@ -220,6 +212,13 @@ const Chat = ({user}) => {
         if (user !== '') {
             connect();
         }
+        axios
+            .get(`http://localhost:8080/doctor/avatar`)
+            .then((response) => {
+                const data = response.data;
+                setListAvatar(data);
+            })
+            .catch((error) => console.error);
     }, [user]);
 
     return (
@@ -238,26 +237,46 @@ const Chat = ({user}) => {
                     />
                     <ul className="list-member">
                         {listUser.length > 0 &&
-                            listUser.map(
-                                (item, index) =>
-                                    item !== (user !== '' ? user : '') && (
+                            listUser.map((item, index) => {
+                                if (item !== (user !== '' ? user : '')) {
+                                    let avatar = null;
+                                    if (Array.isArray(listAvatar)) {
+                                        avatar = listAvatar.find((avatar) => avatar.userName === item);
+                                    }
+                                    return (
                                         <li key={index}>
                                             <button
                                                 className={activeIndex === item ? 'active btn-li' : 'btn-li'}
                                                 onClick={() => getChat(item)}
                                             >
-                                                {item}
+                                            {avatar ? (
+                                                <img
+                                                    className="avatar-chat"
+                                                    key={avatar.urlAvatar}
+                                                    src={avatar.urlAvatar}
+                                                    alt="Preview"
+                                                />
+                                            ) : (
+                                                <img
+                                                    className="avatar-chat"
+                                                    key='1'
+                                                    src={'https://cdn1.iconfinder.com/data/icons/windows-10-1/32/Administrator-512.png'}
+                                                    alt="Preview"
+                                                />
+                                            )}
+                                            <div className='nameUser'>{item}</div>
+                                               
                                             </button>
-                                            {listUserNew.find((newUser) => newUser.user === item) &&
-                                                (() => {
-                                                    let newUserFound = listUserNew.find(
-                                                        (newUser) => newUser.user === item,
-                                                    );
-                                                    return <div className="btn-new">{`${newUserFound.quatity}`}</div>;
-                                                })()}
+                                            {listUserNew.find((newUser) => newUser.user === item) && (
+                                                <div className="btn-new">{`${
+                                                    listUserNew.find((newUser) => newUser.user === item).quatity
+                                                }`}</div>
+                                            )}
                                         </li>
-                                    ),
-                            )}
+                                    );
+                                }
+                                return null;
+                            })}
                     </ul>
                 </div>
                 <div className="chat-content">
@@ -268,10 +287,12 @@ const Chat = ({user}) => {
                                 {Array.isArray(listMessage) &&
                                     listMessage.map(
                                         (chat, index) =>
-                                            (chat.sender === reciptientnamecurrent || chat.sender === (user !== '' ? user : '')) && (
+                                            (chat.sender === reciptientnamecurrent ||
+                                                chat.sender === (user !== '' ? user : '')) && (
                                                 <li
-                                                    className={`message ${chat.sender === (user !== '' ? user : '') ? 'self' : 'client'
-                                                        }`}
+                                                    className={`message ${
+                                                        chat.sender === (user !== '' ? user : '') ? 'self' : 'client'
+                                                    }`}
                                                     key={index}
                                                 >
                                                     <div className="message-data">{chat.content}</div>
