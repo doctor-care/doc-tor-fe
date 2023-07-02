@@ -208,20 +208,20 @@ export default function CreateAppointment() {
             >
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <div className="modal-header bg-danger">
+                        <div className="modal-header bg-primary">
                             <h5 className="modal-title text-white" id="staticBackdropLabel">
-                                XÁC NHẬN
+                                ĐĂNG KÝ
                             </h5>
                             <button
                                 type="button"
-                                className="btn-close text-white"
+                                className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
                             ></button>
                         </div>
                         <div className="modal-body">
                             <div>
-                                <h5>Bạn thực sự muốn xác nhận lịch hẹn này?</h5>
+                                <h5>Xác nhận đăng ký lịch hẹn?</h5>
                                 {/* <span>
                                     - Mã vé: <strong>{maVeDelete}</strong>
                                 </span> */}

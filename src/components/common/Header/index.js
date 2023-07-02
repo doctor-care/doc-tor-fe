@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import './styles.css';
 
 function Header() {
     const [listService, setListService] = useState([]);
@@ -39,12 +40,11 @@ function Header() {
     return (
         <div>
             <header id="header" className="fixed-top">
-
-                <div className="container d-flex align-items-center">
+                <div className="container d-flex align-items-center p-2">
                     <h1 className="logo me-auto">
-                        <div className="flex justify-center py-4">
+                        <div className="flex justify-center">
                             <Link to={'/'}>
-                                <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                                <img src="/logo.png" alt="logo" className="w-32 h-12 object-cover" />
                             </Link>
                         </div>
                     </h1>
@@ -114,7 +114,6 @@ function Header() {
                                             </li>
                                         </ul>
                                     </li>
-
                                 </>
                             )}
                             {role === 'ROLE_DOCTOR' && (
@@ -158,7 +157,7 @@ function Header() {
                             {role === 'ROLE_PATIENT' && (
                                 <>
                                     <li>
-                                        <Link as={Link} to="/user/schedule-list" className="nav-link scrollto">
+                                        <Link as={Link} to="/history-medical-list" className="nav-link scrollto">
                                             Lịch sử khám
                                         </Link>
                                     </li>
@@ -186,8 +185,6 @@ function Header() {
                                     </li>
                                 </>
                             )}
-
-
 
                             <li className="dropdown">
                                 <Link>
@@ -238,11 +235,15 @@ function Header() {
                             <>
                                 <div className="appointment-btn scrollto d-flex">
                                     <Link as={Link} to="/user/register" className="nav-link scrollto">
-                                        <span className="d-none d-md-inline " style={{ color: "white" }}>Đăng Ký</span>
+                                        <span className="d-none d-md-inline " style={{ color: 'white' }}>
+                                            Đăng Ký
+                                        </span>
                                     </Link>
                                     <span>/</span>
                                     <Link as={Link} to="/login" className="nav-link scrollto">
-                                        <span className="d-none d-md-inline" style={{ color: "white" }}>Đăng Nhập</span>
+                                        <span className="d-none d-md-inline" style={{ color: 'white' }}>
+                                            Đăng Nhập
+                                        </span>
                                     </Link>
                                 </div>
                             </>
@@ -265,10 +266,7 @@ function Header() {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link
-                                                className="text-decoration-none dropdown-item"
-                                                to={`/editPatient`}
-                                            >
+                                            <Link className="text-decoration-none dropdown-item" to={`/editPatient`}>
                                                 Thông tin cá nhân
                                             </Link>
                                         </li>

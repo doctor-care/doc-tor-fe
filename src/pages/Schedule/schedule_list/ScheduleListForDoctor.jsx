@@ -328,15 +328,18 @@ function ScheduleListForDoctor() {
                                                 Chọn
                                             </button>
                                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/schedule/${item.idScd}`}
-                                                    >
-                                                        XEM CHI TIẾT
-                                                    </Link>
-                                                </li>
-                                                {statusscd === 0 && (
+                                                {item.statusScd > 1 && (
+                                                    <li>
+                                                        <Link
+                                                            className="text-decoration-none dropdown-item"
+                                                            to={`/schedule/${item.idScd}`}
+                                                        >
+                                                            XEM CHI TIẾT
+                                                        </Link>
+                                                    </li>
+                                                )}
+
+                                                {item.statusScd === 0 && (
                                                     <li>
                                                         <Link
                                                             className="text-decoration-none dropdown-item"
@@ -346,7 +349,7 @@ function ScheduleListForDoctor() {
                                                         </Link>
                                                     </li>
                                                 )}
-                                                {statusscd === 1 && (
+                                                {item.statusScd === 1 && (
                                                     <li>
                                                         <Link
                                                             className="text-decoration-none dropdown-item"

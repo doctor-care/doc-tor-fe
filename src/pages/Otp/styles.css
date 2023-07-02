@@ -1,0 +1,21 @@
+.h-full {
+    height: 100vh;
+}
+
+.btn-otp {
+    border-color: rgb(37 99 235);
+}
+
+.btn-otp:hover {
+    background-color: rgb(37 99 235);
+    color: white;
+}
+.md-screen {
+    width: 30%;
+}
+
+@media only screen and (max-width: 600px) {
+    .md-screen {
+        width: 100%;
+    }
+}

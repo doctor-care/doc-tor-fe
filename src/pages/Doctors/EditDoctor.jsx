@@ -74,6 +74,7 @@ export default function EditDoctor(props) {
     useMemo(() => {
         axios.get('https://vapi.vnappmob.com/api/province/').then((resp) => {
             setCity(resp.data.results);
+            console.log("city",city);
         });
 
         axios.get(`https://vapi.vnappmob.com/api/province/district/${doctor.city}`).then((resp) => {

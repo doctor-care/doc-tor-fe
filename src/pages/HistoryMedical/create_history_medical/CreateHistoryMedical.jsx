@@ -11,6 +11,8 @@ export default function CreateHistoryMedical() {
     const navigate = useNavigate();
     const [userNameDoctor] = useState(localStorage.getItem('userName'));
     const [patient, setPatient] = useState({});
+
+    const [scheduleAddress, setScheduleAddress] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
     const { idScd } = useParams();
     const initalValues = {
@@ -52,7 +54,7 @@ export default function CreateHistoryMedical() {
                     axios
                         .post(`http://localhost:8080/schedule/update/${idScd}/4`)
                         .then((schedule) => {
-                            if (response.data === 'FAIL') {
+                            if (schedule.data === 'FAIL') {
                             } else {
                                 navigate('/prescription/create/' + response.data.idHM);
                             }
@@ -76,6 +78,7 @@ export default function CreateHistoryMedical() {
             .then((response) => {
                 formData.patientId = response.data.patient.idPatient;
                 setPatient(response.data.patient);
+                setScheduleAddress(response.data.scheduleAddress);
             })
             .catch((error) => {
                 console.log(error);
@@ -127,7 +130,7 @@ export default function CreateHistoryMedical() {
                                                 value={patient.name}
                                             />
                                             <label htmlFor="full-name">
-                                                Họ và tên
+                                                Tên người bệnh
                                                 <span className="text-danger">*</span>
                                             </label>
                                         </div>
@@ -191,7 +194,7 @@ export default function CreateHistoryMedical() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row my-2">
+                                {/* <div className="row my-2">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input
@@ -224,6 +227,26 @@ export default function CreateHistoryMedical() {
                                             />
                                             <label htmlFor="date-of-birth">
                                                 Tỉnh
+                                                <span className="text-danger">*</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div> */}
+                                <div className="row my-2">
+                                    <div className="col-md-12" style={{ paddingRight: '15px' }}>
+                                        <div className="form-floating  mb-4">
+                                            <input
+                                                type="text"
+                                                className="form-control input"
+                                                id="email"
+                                                placeholder="Họ và tên"
+                                                style={{ paddingTop: '10px' }}
+                                                name="symptom"
+                                                readOnly={true}
+                                                value={scheduleAddress}
+                                            />
+                                            <label htmlFor="email">
+                                                Địa chỉ khám
                                                 <span className="text-danger">*</span>
                                             </label>
                                         </div>

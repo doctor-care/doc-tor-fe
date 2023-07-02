@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./ButtonChat.css";
 
-function ButtonChat({ onOpen, isOpen, onClose, onClick }) {
+function ButtonChat({ onOpen, isOpen, onClose }) {
   return (
     <button
       onClick={isOpen ? onClose : onOpen}

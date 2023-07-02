@@ -1,0 +1,57 @@
+.avatar {
+    width: 50%;
+    height: auto;
+    border-radius: 50%;
+    margin-top: 20px;
+}
+
+.button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #3e8e41;
+}
+
+.city {
+    margin-top: 20px;
+}
+
+.district {
+    margin-top: 20px;
+}
+
+.review-container {
+    margin-top: 20px;
+}
+
+.review {
+    margin-bottom: 20px;
+}
+
+.member {
+    margin-bottom: 10px;
+}
+
+.member-info {
+    margin-left: 10px;
+}
+
+.review h4 {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.review span {
+    margin-right: 10px;
+}
+
+.review p {
+    margin-top: 10px;
+}

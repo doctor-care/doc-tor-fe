@@ -13,10 +13,11 @@ function HistoryMedicalListByPatient() {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-
+    const [idChoice, setIdChoice] = useState();
     const [userName] = useState(localStorage.getItem('userName'));
     const [patientId] = useState(queryParams.get('patientId'));
     const [historyMedicalList, setHistoryMedicalList] = useState([]);
+    const [prescriptionDetailList, setPrescriptionDetailList] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [formData, setFormData] = useState({});
@@ -24,10 +25,24 @@ function HistoryMedicalListByPatient() {
     const [size, setSize] = useState(5);
     const [isOpen, setIsOpen] = useState(false);
 
+    const [totalPrice, setTotalPrice] = useState();
+
     const handleToggleDropdown = () => {
         console.log('DROP down');
         setIsOpen(!isOpen);
         console.log('isOpen', isOpen);
+    };
+
+    useEffect(() => {
+        getPrescriptionList();
+        console.log(idChoice);
+    }, [idChoice]);
+
+    const getPrescriptionList = () => {
+        axios.get(`http://localhost:8080/prescription/get-list/${idChoice}`).then((response) => {
+            console.log('RESPONSE LIST prescription', response.data[0]);
+            setPrescriptionDetailList(response.data);
+        });
     };
 
     //CHỨC NĂNG TÌM KIẾM
@@ -48,20 +63,6 @@ function HistoryMedicalListByPatient() {
         return formattedDate;
     };
 
-    //CHỨC NĂNG XÓA
-    const [selectedObject, setSelectedObject] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const [maVeDelete, setMaVeDelete] = useState();
-    const [tenHanhKhachDelete, setTenHanhKhachDelete] = useState();
-    const confirmDelete = (veMayBay) => {
-        console.log('vemaybaytostring', veMayBay);
-        setSelectedObject(veMayBay);
-        setMaVeDelete(veMayBay.maVe);
-        setTenHanhKhachDelete(veMayBay.hanhKhach.tenHanhKhach);
-        setIsModalOpen(true);
-    };
-
     useEffect(() => {
         try {
             axios
@@ -74,8 +75,6 @@ function HistoryMedicalListByPatient() {
                     },
                 })
                 .then((response) => {
-                    console.log('RESPONSE LIST DATAA', response);
-                    console.log('length', response.data.content.length);
                     setHistoryMedicalList(response.data.content);
                     setTotalPages(response.data.totalPages);
                 });
@@ -109,8 +108,8 @@ function HistoryMedicalListByPatient() {
     //DuyNT58 hiển thị giao diện số trang
     const renderPageNumbers = () => {
         const pageNumbers = calculatePageNumbers();
-        return pageNumbers.map((pageNumber) => (
-            <li key={pageNumber} className={`page-item ${page === pageNumber ? 'active' : ''}`}>
+        return pageNumbers.map((pageNumber, index) => (
+            <li key={index} className={`page-item ${page === pageNumber ? 'active' : ''}`}>
                 <a className="page-link" href="#" onClick={() => handlePageChange(pageNumber)}>
                     {pageNumber + 1}
                 </a>
@@ -124,80 +123,6 @@ function HistoryMedicalListByPatient() {
                 <div className="text-center pb-2">
                     <h1>LỊCH SỬ KHÁM BỆNH</h1>
                 </div>
-
-                {/* form search */}
-                {/* <form className="row justify-content-center">
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <h5>Tìm Kiếm Theo</h5>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            onChange={(e) => {
-                                setAppDate(e.target.value);
-                            }}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Chọn ngày --</option>
-                            {appointmentDate.map((date) => (
-                                <option key={date} value={date}>
-                                    {date}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            onChange={(e) => {
-                                setIdShift(e.target.value);
-                            }}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Chọn ca làm --</option>
-                            {shiftList.map((shift) => (
-                                <option key={shift.idShifts} value={shift.idShifts}>
-                                    {shift.shiftsName}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            onChange={(e) => {
-                                setStatusscd(e.target.value);
-                            }}
-                            className="form-control text-center"
-                            // selected={ === 1}
-                        >
-                            <option value="0"> Chưa xác nhận </option>
-                            <option value="1"> Đã xác nhận </option>
-                            <option value="4"> Đã hoàn tất </option>
-                        </select>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
-                        <button type="submit" className="btn bg">
-                            {' '}
-                            SẮP XẾP
-                        </button>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDen"
-                            id="diemDen"
-                            // value={formData.diemDen}
-                            // onChange={handleInputChange}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Mới nhất --</option>
-                            <option value="">-- Cũ nhất --</option>
-                        </select>
-                    </div>
-                </form> */}
             </div>
             <div className="mh-300">
                 <table className="table table-striped border text-nowrap">
@@ -216,7 +141,7 @@ function HistoryMedicalListByPatient() {
                     <tbody>
                         {historyMedicalList.map((item, index) => {
                             return (
-                                <tr className="align-middle text-nowrap" key={item.idScd}>
+                                <tr className="align-middle text-nowrap" key={index}>
                                     <th> {index + 1 + page * size}</th>
                                     <td>{convertBookingDate(item.createDate)}</td>
                                     <td className="address-cell">{item.specialistName}</td>
@@ -225,47 +150,17 @@ function HistoryMedicalListByPatient() {
                                     <td className="address-cell">{item.result}</td>
                                     <td>{item.doctorName}</td>
                                     <td>
-                                        <button className="btn btn-primary">Xem đơn thuốc</button>
+                                        <button
+                                            className="btn btn-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#showPrescription"
+                                            onClick={() => {
+                                                setIdChoice(item.idHM);
+                                            }}
+                                        >
+                                            Xem đơn thuốc
+                                        </button>
                                     </td>
-                                    {/* <td>
-                                        <div className="dropdown">
-                                            <button
-                                                className="btn btn-primary dropdown-toggle"
-                                                type="button"
-                                                id="dropdownMenuButton1"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                Chọn
-                                            </button>
-                                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/schedule/${item.idScd}`}
-                                                    >
-                                                        XEM CHI TIẾT
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/schedule/${item.idScd}`}
-                                                    >
-                                                        XÁC NHẬN
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        className="text-decoration-none dropdown-item"
-                                                        to={`/history-medical/create/${item.idScd}`}
-                                                    >
-                                                        ĐÃ KHÁM XONG
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td> */}
                                 </tr>
                             );
                         })}
@@ -397,6 +292,59 @@ function HistoryMedicalListByPatient() {
                     </nav>
                 </div>
             )}
+
+            <div
+                className="modal fade"
+                id="showPrescription"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-primary">
+                            <h5 className="modal-title text-white " id="staticBackdropLabel">
+                                THÔNG TIN ĐƠN THUỐC
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            {prescriptionDetailList.length > 0 && (
+                                <table className="table table-striped border text-center">
+                                    <thead className="">
+                                        <tr>
+                                            <th>TÊN THUỐC</th>
+                                            {/* <td>ĐƠN GIÁ</td> */}
+                                            <th>SỐ LƯỢNG</th>
+                                            {/* <td>THÀNH TIỀN</td> */}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {prescriptionDetailList.map((item, index) => {
+                                            return (
+                                                <tr className="align-middle text-nowrap" key={index}>
+                                                    <td>{item.drugName}</td>
+                                                    {/* <td>{item.drugPrice}</td> */}
+                                                    <td>{item.quantity}</td>
+                                                    {/* <td>{item.drugPrice * item.quantity}</td> */}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            )}
+                            {prescriptionDetailList.length === 0 && <div>BỆNH ÁN NÀY KHÔNG CÓ ĐƠN THUỐC!</div>}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
