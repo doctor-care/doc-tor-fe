@@ -157,7 +157,7 @@ function Header() {
                             {role === 'ROLE_PATIENT' && (
                                 <>
                                     <li>
-                                        <Link as={Link} to="/user/schedule-list" className="nav-link scrollto">
+                                        <Link as={Link} to="/history-medical-list" className="nav-link scrollto">
                                             Lịch sử khám
                                         </Link>
                                     </li>
