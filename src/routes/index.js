@@ -31,9 +31,8 @@ import Logout from '@/pages/Login/Logout';
 import CreatePrescription from '@/pages/Prescription/CreatePrescription';
 import DoctorDetail from '@/pages/Doctors/DoctorDetail';
 import DoctorAD from '@/pages/Admin/Doctor/Doctor';
+import Dashboard from '@/pages/Admin/Dashboard/Dashboard';
 // Public routes
-
-
 
 const publicRoutes = [
     //khách
@@ -73,6 +72,7 @@ const publicRoutes = [
     { path: '/listDoc', component: DoctorAD, layout: AdminLayout },
     { path: '/detailDoc/:id', component: DoctorDetail, layout: AdminLayout },
     { path: '/chatAD', component: ChatBox, layout: AdminLayout },
+    { path: '/dashboard', component: Dashboard, layout: AdminLayout },
 ];
 
 const privateRoutes = [];
