@@ -59,7 +59,7 @@ function DoctorAD() {
         <div className="container ticket-container bg-body shadow mg-top-60">
             <div className="pt-5 pb-2">
                 <div className="text-center pb-2">
-                    <h1>DANH SÁCH LỊCH HẸN</h1>
+                    <h1>DANH SÁCH BÁC SĨ</h1>
                 </div>
 
                 {/* form search */}

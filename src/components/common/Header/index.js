@@ -118,6 +118,11 @@ function Header() {
                             )}
                             {role === 'ROLE_DOCTOR' && (
                                 <>
+                                    <li>
+                                        <Link as={Link} to="/doctors" className="nav-link scrollto">
+                                            Danh sách bác sĩ
+                                        </Link>
+                                    </li>
                                     <li className="dropdown">
                                         <Link className="text-decoration-none">
                                             <span>Lịch Hẹn</span> <i className="bi bi-chevron-down"></i>

@@ -103,7 +103,7 @@ export default function AppointmentFromDoctor() {
     }, []);
 
     return (
-        <div className="container">
+        <div className="containerDT">
             <div>
                 <div className="col-12 d-flex ">
                     <div className="col-3 bg-img-doctor d-flex justify-content-center align-items-center">
