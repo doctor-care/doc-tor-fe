@@ -32,10 +32,9 @@ import CreatePrescription from '@/pages/Prescription/CreatePrescription';
 import HistoryMedicalListByPatient from '@/pages/HistoryMedical/histoty_medical_list/HistoryMedicalListByPatient';
 import DoctorDetail from '@/pages/Doctors/DoctorDetail';
 import DoctorAD from '@/pages/Admin/Doctor/Doctor';
+import Dashboard from '@/pages/Admin/Dashboard/Dashboard';
 import NotFound from '@/components/common/NotFound';
 // Public routes
-
-
 
 const publicRoutes = [
     //khách
@@ -80,6 +79,7 @@ const publicRoutes = [
     { path: '/listDoc', component: DoctorAD, layout: AdminLayout },
     { path: '/detailDoc/:id', component: DoctorDetail, layout: AdminLayout },
     { path: '/chatAD', component: ChatBox, layout: AdminLayout },
+    { path: '/dashboard', component: Dashboard, layout: AdminLayout },
 
 
     //error
