@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
-// import './BookingSchedule.css';
 
 export default function ScheduleDetail() {
     const { id } = useParams();
@@ -21,6 +20,7 @@ export default function ScheduleDetail() {
     const [patient, setPatient] = useState({});
     const [appointment, setAppointment] = useState({});
     const [shifts, setShifts] = useState({});
+    const [role, setRole] = useState(localStorage.getItem('role'));
 
     const initalValues = {
         idAPM: Number(idAPM),
@@ -38,10 +38,11 @@ export default function ScheduleDetail() {
 
     const handleConfirm = () => {
         axios
-            .post(`http://localhost:8080/schedule/update/${schedule.idSCD}`)
+            .post(`http://localhost:8080/schedule/update/${schedule.idSCD}/1`)
             .then((response) => {
                 console.log('update response', response);
                 if (response.data === 'FAIL') {
+                    toast.error('XÁC NHẬN KHÔNG THÀNH CÔNG');
                 } else {
                     toast.success('XÁC NHẬN THÀNH CÔNG');
                     navigate('/doctor/schedule-list?status=1');
@@ -80,8 +81,6 @@ export default function ScheduleDetail() {
             console.log(error);
         }
     };
-
-   
 
     return (
         <div className="container">
@@ -256,14 +255,14 @@ export default function ScheduleDetail() {
                                 <div className="form-group text-center mt-2">
                                     <button
                                         type="submit"
-                                        className="btn btn-primary bg"
+                                        className="btn btn-warning bg"
                                         onClick={() => {
                                             navigate(-1);
                                         }}
                                     >
                                         Trở Về
                                     </button>
-                                    {schedule.statusSCD !== 1 && (
+                                    {schedule.statusSCD === 0 && (
                                         <button
                                             className="btn btn-success"
                                             data-bs-toggle="modal"
@@ -289,7 +288,7 @@ export default function ScheduleDetail() {
             >
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <div className="modal-header bg-danger">
+                        <div className="modal-header bg-primary">
                             <h5 className="modal-title text-white" id="staticBackdropLabel">
                                 XÁC NHẬN
                             </h5>
@@ -302,14 +301,7 @@ export default function ScheduleDetail() {
                         </div>
                         <div className="modal-body">
                             <div>
-                                <h5>Bạn thực sự muốn xác nhận lịch hẹn này?</h5>
-                                {/* <span>
-                                    - Mã vé: <strong>{maVeDelete}</strong>
-                                </span> */}
-                                <br></br>
-                                {/* <span>
-                                    - Hành khách: <strong>{tenHanhKhachDelete}</strong>
-                                </span> */}
+                                <h5>Bạn muốn xác nhận lịch hẹn này?</h5>
                             </div>
                         </div>
                         <div className="modal-footer">

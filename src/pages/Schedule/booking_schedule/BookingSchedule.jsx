@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
+import ReactStars from 'react-stars';
 import './BookingSchedule.css';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
@@ -13,10 +14,12 @@ export default function BookingSchedule() {
     const queryParams = new URLSearchParams(location.search);
     const [userName] = useState(localStorage.getItem('userName'));
     const [idAPM] = useState(queryParams.get('idAPM'));
+    const [idDoctor] = useState(queryParams.get('idDoctor'));
     const [patient, setPatient] = useState({});
     const [isDisabled, setIsDisabled] = useState(false);
     const [city, setCity] = useState([]);
     const [district, setDistrict] = useState([]);
+    const [doctor, setDoctor] = useState({});
 
     const initalValues = {
         idAPM: Number(idAPM),
@@ -35,6 +38,16 @@ export default function BookingSchedule() {
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8080/doctor/${idDoctor}`)
+            .then((resp) => {
+                console.log('doctor', resp.data);
+                setDoctor(resp.data);
+            })
+            .catch((error) => console.log(error));
+    }, []);
 
     useMemo(() => {
         axios.get('https://vapi.vnappmob.com/api/province/').then((resp) => {
@@ -74,8 +87,10 @@ export default function BookingSchedule() {
                 },
             })
             .then((response) => {
-                if (response.data.idSCD !== undefined) {
-                    toast.success('ĐĂNG KÝ THÀNH CÔNG!');
+                if (response.data === null) {
+                    toast.error('LỊCH HẸN ĐÃ ĐƯỢC ĐẶT');
+                } else {
+                    toast.success('ĐẶT LỊCH THÀNH CÔNG!');
                     navigate('/user/schedule-list');
                 }
             })
@@ -94,9 +109,53 @@ export default function BookingSchedule() {
 
     return (
         <div className="container">
-            <div className="">
-                <div className="d-flex align-items-center">
-                    <h5 className="text-uppercase">Div này để thông tin bác sĩ</h5>
+            <div>
+                <div className="col-12 d-flex ">
+                    {/* <div className="col-3 bg-img-doctor d-flex justify-content-center align-items-center">
+                        <img src={doctor.avatarUrl} alt={`Avatar of ${doctor.name}`} className="avatar-img shadow" />
+                    </div> */}
+                    <div className="d-flex ">
+                        <div>
+                            <div className="d-flex row">
+                                <div className=" col-2 bg-img-doctor d-flex justify-content-center align-items-center">
+                                    <img
+                                        src={doctor.avatarUrl}
+                                        alt={`Avatar of ${doctor.name}`}
+                                        className="avatar-img shadow"
+                                    />
+                                </div>
+                                <div className="col-10 d-flex  align-items-md-center">
+                                    <div className="">
+                                        <Link to={`/doctor-detail/${doctor.idDoctor}`}>
+                                            <div className="d-flex text-primary">
+                                                <h1>{doctor.name}</h1>
+                                                <span>({doctor.degree})</span>
+                                            </div>
+                                        </Link>
+                                        <h6>
+                                            <span className="text-primary mr-1">
+                                                <i className="fa-solid fa-house-medical-circle-check"></i>
+                                            </span>
+                                            <span>CHUYÊN KHOA:</span>
+                                            <span> {doctor.specialist?.name}</span>
+                                        </h6>
+                                        <div>
+                                            <ReactStars
+                                                count={5}
+                                                value={doctor.averageRate}
+                                                size={24}
+                                                color2={'#ffd700'}
+                                                half={false}
+                                            />
+                                        </div>
+                                        <div>
+                                            <p>{doctor.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -187,61 +246,7 @@ export default function BookingSchedule() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row my-2">
-                                    <div className="col-md-6" style={{ paddingRight: '15px' }}>
-                                        <div className="form-floating textbox mb-4">
-                                            {/* <select name="city" onChange={handleChangeCity}>
-                                                {city.map((item) =>
-                                                    item.province_id === doctor.city ? (
-                                                        <option
-                                                            value={item.province_id}
-                                                            key={item.province_id}
-                                                            selected
-                                                        >
-                                                            {item.province_name}
-                                                        </option>
-                                                    ) : (
-                                                        <option value={item.province_id} key={item.province_id}>
-                                                            {item.province_name}
-                                                        </option>
-                                                    ),
-                                                )}
-                                            </select> */}
-                                            {/* <input
-                                                type="text"
-                                                className="form-control input"
-                                                id="email"
-                                                placeholder="Email"
-                                                style={{ paddingTop: '10px' }}
-                                                readOnly={true}
-                                                name="name"
-                                                // value={patient.email}
-                                            />
-                                            <label htmlFor="full-name">
-                                                Thành phố
-                                                <span className="text-danger">*</span>
-                                            </label> */}
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6" style={{ paddingRight: '10px' }}>
-                                        <div className="form-floating textbox mb-4">
-                                            <input
-                                                type="text"
-                                                className="form-control input"
-                                                id="date-of-birth"
-                                                placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
-                                                name="phone"
-                                                readOnly={true}
-                                                // value={patient.birthday}
-                                            />
-                                            <label htmlFor="date-of-birth">
-                                                Tỉnh
-                                                <span className="text-danger">*</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div className="row my-2">
                                     <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating textbox mb-4">
@@ -256,7 +261,7 @@ export default function BookingSchedule() {
                                                 onChange={handleInputChange}
                                             />
                                             <label htmlFor="email">
-                                                Địa chỉ cụ thể
+                                                Địa chỉ khám cụ thể
                                                 <span className="text-danger">*</span>
                                             </label>
                                         </div>
@@ -284,9 +289,11 @@ export default function BookingSchedule() {
                                     </div>
                                 </div>
                                 <div className="form-group text-center mt-2">
-                                    {/* <button type="submit" className="btn btn-success bg" onClick={handleSubmitBack}>
+                                    <button type="submit" className="btn btn-success bg" onClick={()=>{
+                                        navigate(`/appointment-list?doctorId=${doctor.idDoctor}`)
+                                    }}>
                                         Trở Về
-                                    </button> */}
+                                    </button>
                                     <button disabled={isDisabled} type="submit" className="btn btn-success bg">
                                         ĐẶT LỊCH
                                     </button>

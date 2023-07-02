@@ -118,6 +118,11 @@ function Header() {
                             )}
                             {role === 'ROLE_DOCTOR' && (
                                 <>
+                                    <li>
+                                        <Link as={Link} to="/doctors" className="nav-link scrollto">
+                                            Danh sách bác sĩ
+                                        </Link>
+                                    </li>
                                     <li className="dropdown">
                                         <Link className="text-decoration-none">
                                             <span>Lịch Hẹn</span> <i className="bi bi-chevron-down"></i>
@@ -157,7 +162,7 @@ function Header() {
                             {role === 'ROLE_PATIENT' && (
                                 <>
                                     <li>
-                                        <Link as={Link} to="/user/schedule-list" className="nav-link scrollto">
+                                        <Link as={Link} to="/history-medical-list" className="nav-link scrollto">
                                             Lịch sử khám
                                         </Link>
                                     </li>
@@ -186,7 +191,7 @@ function Header() {
                                 </>
                             )}
 
-                            <li className="dropdown">
+                            {/* <li className="dropdown">
                                 <Link>
                                     <span>Bác sĩ</span> <i className="bi bi-chevron-down"></i>
                                 </Link>
@@ -205,7 +210,7 @@ function Header() {
                                         </Link>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> */}
                             {/* <li className="dropdown">
                                 <Link>
                                     <span>Patient</span> <i className="bi bi-chevron-down"></i>
@@ -265,11 +270,27 @@ function Header() {
                                                 Đăng xuất
                                             </Link>
                                         </li>
-                                        <li>
-                                            <Link className="text-decoration-none dropdown-item" to={`/editPatient`}>
-                                                Thông tin cá nhân
-                                            </Link>
-                                        </li>
+                                        {role === 'ROLE_PATIENT' ? (
+                                            <li>
+                                                <Link
+                                                    className="text-decoration-none dropdown-item"
+                                                    to={`/editPatient`}
+                                                >
+                                                    Thông tin cá nhân
+                                                </Link>
+                                            </li>
+                                        ) : (
+                                            role === 'ROLE_DOCTOR' && (
+                                                <li>
+                                                    <Link
+                                                        className="text-decoration-none dropdown-item"
+                                                        to={`/editDoctor`}
+                                                    >
+                                                        Thông tin cá nhân
+                                                    </Link>
+                                                </li>
+                                            )
+                                        )}
                                     </ul>
                                 </div>
                             </>

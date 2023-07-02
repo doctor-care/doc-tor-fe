@@ -25,13 +25,25 @@ export default function CreatePrescription() {
 
     useEffect(() => {
         getDrugList();
+        checkNullHistoryMedical();
     }, []);
-
-    console.log('idHM', idHM);
 
     useEffect(() => {
         showTotal();
-    }, [prescriptionList.length]);
+    }, [prescriptionList]);
+
+    const checkNullHistoryMedical = () => {
+        try {
+            axios.get(`http://localhost:8080/history-medical/id/${idHM}`).then((response) => {
+                console.log(response);
+                if (response.data === null) {
+                    navigate('/not-found');
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const getDrugList = () => {
         try {
@@ -124,10 +136,15 @@ export default function CreatePrescription() {
             });
     };
 
+    const cancelCreate = () => {
+        toast.success('ĐÃ HOÀN TẤT');
+        navigate('/doctor/schedule-list');
+    };
+
     return (
         <div className="container">
             <div className="d-flex justify-content-center">
-                <h2 className="text-uppercase">Thêm đơn thuốc</h2>
+                <h2 className="text-uppercase">TẠO đơn thuốc</h2>
             </div>
             <div className="d-flex row">
                 <div className="d-flex justify-content-center">
@@ -143,7 +160,7 @@ export default function CreatePrescription() {
                                             value={newPrescription.idDrug}
                                             onChange={handleChange}
                                         >
-                                            <option value={0}>Vui lòng chọn</option>
+                                            <option value={0}>Vui lòng chọn thuốc</option>
                                             {medicineList.map((drug) => (
                                                 <option key={drug.idDrug} value={drug.idDrug}>
                                                     {drug.drugName}
@@ -163,7 +180,7 @@ export default function CreatePrescription() {
                                             type="number"
                                             id="quantity"
                                             name="quantity"
-                                            className="w-50"
+                                            className="border w-50"
                                             value={newPrescription.quantity}
                                             onChange={handleChange}
                                         />
@@ -175,12 +192,6 @@ export default function CreatePrescription() {
                                 </tr>
                             </tbody>
                         </table>
-                        {/* 
-                        <div>
-                            <button disabled={false} type="submit" className="btn btn-primary">
-                                THÊM
-                            </button>
-                        </div> */}
                     </form>
                 </div>
                 <div className="d-flex justify-content-center">
@@ -225,10 +236,31 @@ export default function CreatePrescription() {
                         </div>
                     )}
                 </div>
+                {prescriptionList.length === 0 && (
+                    <div className="d-flex justify-content-center">
+                        <button
+                            className="btn btn-warning fw-bold text-white"
+                            data-bs-toggle="modal"
+                            data-bs-target="#notCreatePrescription"
+                            disabled={false}
+                        >
+                            KHÔNG TẠO ĐƠN THUỐC
+                        </button>
+                    </div>
+                )}
                 {prescriptionList.length > 0 && (
                     <div className="d-flex justify-content-sm-center">
                         <button
-                            className="btn btn-primary btn-sm"
+                            className="btn btn-secondary mr-2"
+                            onClick={() => {
+                                setPrescriptionList([]);
+                            }}
+                        >
+                            HỦY ĐƠN THUỐC
+                        </button>
+
+                        <button
+                            className="btn btn-success"
                             data-bs-toggle="modal"
                             data-bs-target="#staticBackdrop"
                             disabled={false}
@@ -249,7 +281,7 @@ export default function CreatePrescription() {
             >
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <div className="modal-header bg-danger">
+                        <div className="modal-header bg-primary">
                             <h5 className="modal-title text-white" id="staticBackdropLabel">
                                 XÁC NHẬN
                             </h5>
@@ -262,14 +294,7 @@ export default function CreatePrescription() {
                         </div>
                         <div className="modal-body">
                             <div>
-                                <h5>Bạn thực sự muốn xác nhận lịch hẹn này?</h5>
-                                {/* <span>
-                                    - Mã vé: <strong>{maVeDelete}</strong>
-                                </span> */}
-                                <br></br>
-                                {/* <span>
-                                    - Hành khách: <strong>{tenHanhKhachDelete}</strong>
-                                </span> */}
+                                <h5>XÁC NHẬN THÊM ĐƠN THUỐC NÀY?</h5>
                             </div>
                         </div>
                         <div className="modal-footer">
@@ -280,6 +305,50 @@ export default function CreatePrescription() {
                                 type="button"
                                 className="btn btn-warning"
                                 onClick={handleConfirm}
+                                data-bs-dismiss="modal"
+                            >
+                                Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                className="modal fade"
+                id="notCreatePrescription"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-warning">
+                            <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                XÁC NHẬN
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <div>
+                                <h5>Không tạo đơn thuốc cho bệnh án này?</h5>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Hủy bỏ
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={cancelCreate}
                                 data-bs-dismiss="modal"
                             >
                                 Xác nhận
