@@ -5,6 +5,7 @@ import './AppointmentFromDoctor.css';
 import ReactStars from 'react-stars';
 import WinChat from '../../Chat/WinChat';
 
+
 export default function AppointmentFromDoctor() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,6 +21,7 @@ export default function AppointmentFromDoctor() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState('');
     const [review, setReview] = useState([]);
+    const [role, setRole] = useState(localStorage.getItem('role'));
 
     const handleInputChange = (event) => {
         setDateSearch(event.target.value);
@@ -82,7 +84,13 @@ export default function AppointmentFromDoctor() {
     };
 
     const handleChoice = (idApp, idDoc) => {
-        navigate(`/booking-schedule?idAPM=${idApp}&idDoctor=${idDoc}`);
+        if('ROLE_PATIENT' === role){
+            navigate(`/booking-schedule?idAPM=${idApp}&idDoctor=${idDoc}`);
+        }
+        const result = window.confirm('Bạn phải đăng nhập để tiếp tục. Bấm OK để đăng nhập.');
+    if (result) {
+        navigate(`/login`);
+    } 
     };
 
     useEffect(() => {

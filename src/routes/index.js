@@ -80,6 +80,8 @@ const publicRoutes = [
     { path: '/listDoc', component: DoctorAD, layout: AdminLayout },
     { path: '/detailDoc/:id', component: DoctorDetail, layout: AdminLayout },
     { path: '/chatAD', component: ChatBox, layout: AdminLayout },
+    { path: '/servicesAD', component: Services ,layout:AdminLayout},
+    { path: '/serviceAD/:id', component: Services,layout:AdminLayout },
 
 
     //error

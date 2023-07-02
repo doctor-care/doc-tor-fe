@@ -118,3 +118,66 @@
         overflow-x: hidden;
     }
 }
+.dropdown ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 4px 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    z-index: 1;
+    min-width: 200px;
+  }
+  
+  .dropdown:hover > ul {
+    display: block;
+  }
+  
+  .dropdown ul li {
+    border-bottom: 1px solid #f2f2f2;
+    position: relative; /* Thêm thuộc tính position relative */
+  }
+  
+  .dropdown ul li:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown ul li a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  /* Thêm margin-top và top để đưa menu con lên gần menu mẹ */
+  .dropdown ul ul {
+    left: 100%;
+    top: 0;
+    margin-left: -1px;
+    display: none;
+    margin-top: -1px;
+    top: 0;
+  }
+  
+  .dropdown ul ul li {
+    display: block;
+    width: 100%;
+  }
+  
+  .dropdown ul ul li a {
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .dropdown ul ul li a:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .dropdown ul li:hover > ul {
+    display: block;
+  }
