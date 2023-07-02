@@ -59,7 +59,7 @@ function Navbar({ toggleSidebar }) {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link to="/about" className="nav-links" onClick={closeMobileMenu}>
+                            <Link to="/listPat" className="nav-links" onClick={closeMobileMenu}>
                                 Bệnh nhân
                             </Link>
                         </li>
@@ -111,7 +111,7 @@ function Navbar({ toggleSidebar }) {
                             </Link>
                         </li> */}
                         <li className="nav-item">
-                            <Link to="/contact" className="nav-links" onClick={closeMobileMenu}>
+                            <Link to="/dashboard" className="nav-links" onClick={closeMobileMenu}>
                                 Thống kê
                             </Link>
                         </li>

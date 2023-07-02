@@ -62,6 +62,7 @@ function ScheduleListForDoctor() {
                 return 'Đã xác nhận';
             case 4:
                 return 'Đã hoàn tất';
+          
             default:
                 return 'Không xác định';
         }
