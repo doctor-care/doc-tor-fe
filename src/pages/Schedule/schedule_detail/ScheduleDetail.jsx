@@ -20,6 +20,7 @@ export default function ScheduleDetail() {
     const [patient, setPatient] = useState({});
     const [appointment, setAppointment] = useState({});
     const [shifts, setShifts] = useState({});
+    const [role, setRole] = useState(localStorage.getItem('role'));
 
     const initalValues = {
         idAPM: Number(idAPM),

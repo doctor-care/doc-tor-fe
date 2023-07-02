@@ -303,9 +303,11 @@ export default function BookingSchedule() {
                                     </div>
                                 </div>
                                 <div className="form-group text-center mt-2">
-                                    {/* <button type="submit" className="btn btn-success bg" onClick={handleSubmitBack}>
+                                    <button type="submit" className="btn btn-success bg" onClick={()=>{
+                                        navigate(`/appointment-list?doctorId=${doctor.idDoctor}`)
+                                    }}>
                                         Trở Về
-                                    </button> */}
+                                    </button>
                                     <button disabled={isDisabled} type="submit" className="btn btn-success bg">
                                         ĐẶT LỊCH
                                     </button>

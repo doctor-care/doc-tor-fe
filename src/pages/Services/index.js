@@ -81,9 +81,6 @@ export default function Service() {
         <section id="services" className="services">
             <div className="container">
                 <div className="section-title">
-                    <br></br>
-                    <br></br>
-                    <br></br>
                     <h2>{service.nameService}</h2>
                     <h3>{service.priceService} vnd</h3>
                     <p>{service.description}</p>
