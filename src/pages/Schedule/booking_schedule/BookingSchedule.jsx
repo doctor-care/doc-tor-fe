@@ -51,7 +51,6 @@ export default function BookingSchedule() {
         axios
             .get(`http://localhost:8080/doctor/${idDoctor}`)
             .then((resp) => {
-                console.log('doctor', resp.data);
                 setDoctor(resp.data);
             })
             .catch((error) => console.log(error));
@@ -124,9 +123,6 @@ export default function BookingSchedule() {
         <div className="container">
             <div>
                 <div className="col-12 d-flex ">
-                    {/* <div className="col-3 bg-img-doctor d-flex justify-content-center align-items-center">
-                        <img src={doctor.avatarUrl} alt={`Avatar of ${doctor.name}`} className="avatar-img shadow" />
-                    </div> */}
                     <div className="d-flex ">
                         <div>
                             <div className="d-flex row">
@@ -303,9 +299,13 @@ export default function BookingSchedule() {
                                     </div>
                                 </div>
                                 <div className="form-group text-center mt-2">
-                                    <button type="submit" className="btn btn-success bg" onClick={()=>{
-                                        navigate(`/appointment-list?doctorId=${doctor.idDoctor}`)
-                                    }}>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-success bg"
+                                        onClick={() => {
+                                            navigate(`/appointment-list?doctorId=${doctor.idDoctor}`);
+                                        }}
+                                    >
                                         Trở Về
                                     </button>
                                     <button disabled={isDisabled} type="submit" className="btn btn-success bg">

@@ -45,7 +45,6 @@ export default function CreateHistoryMedical() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('formValues', formData);
         checkForm
             .validate(formData, { abortEarly: false })
             .then(() => {
@@ -189,44 +188,7 @@ export default function CreateHistoryMedical() {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="row my-2">
-                                    <div className="col-md-6" style={{ paddingRight: '15px' }}>
-                                        <div className="form-floating  mb-4">
-                                            <input
-                                                type="text"
-                                                className="form-control input"
-                                                id="email"
-                                                placeholder="Email"
-                                                style={{ paddingTop: '10px' }}
-                                                readOnly={true}
-                                                name="name"
-                                                // value={patient.email}
-                                            />
-                                            <label htmlFor="full-name">
-                                                Thành phố
-                                                <span className="text-danger">*</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6" style={{ paddingRight: '10px' }}>
-                                        <div className="form-floating  mb-4">
-                                            <input
-                                                type="text"
-                                                className="form-control input"
-                                                id="date-of-birth"
-                                                placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
-                                                name="phone"
-                                                readOnly={true}
-                                                // value={patient.birthday}
-                                            />
-                                            <label htmlFor="date-of-birth">
-                                                Tỉnh
-                                                <span className="text-danger">*</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div> */}
+
                                 <div className="row my-2">
                                     <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
