@@ -13,7 +13,7 @@ export default function CreatePrescription() {
     const [medicineList, setMedicineList] = useState([]);
     const [prescriptionList, setPrescriptionList] = useState([]);
     const [total, setTotal] = useState(0);
-
+    const [valid, setValid] = useState({});
     const [prescriptionDetailDTOList, setPrescriptionDetailDTOList] = useState([]);
 
     const [newPrescription, setNewPrescription] = useState({
@@ -21,6 +21,11 @@ export default function CreatePrescription() {
         price: '',
         quantity: '',
         drugName: '',
+    });
+
+    const checkForm = Yup.object().shape({
+        idDrug: Yup.string().required('Vui lòng chọn thuốc!'),
+        quantity: Yup.string().required('Vui lòng nhập số lượng!'),
     });
 
     useEffect(() => {
@@ -98,19 +103,30 @@ export default function CreatePrescription() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setPrescriptionList((prevList) => [...prevList, newPrescription]);
-        setPrescriptionDetailDTOList((prevList) => [
-            ...prevList,
-            { idDrug: newPrescription.idDrug, quantity: newPrescription.quantity },
-        ]);
-        // console.log('prescriptionDetailDTOList', prescriptionDetailDTOList);
-        // console.log(newPrescription);
-        setNewPrescription({
-            idDrug: '',
-            price: '',
-            quantity: '',
-            drugName: '',
-        });
+        checkForm
+            .validate(newPrescription, { abortEarly: false })
+            .then(() => {
+                setValid({});
+                setPrescriptionList((prevList) => [...prevList, newPrescription]);
+                setPrescriptionDetailDTOList((prevList) => [
+                    ...prevList,
+                    { idDrug: newPrescription.idDrug, quantity: newPrescription.quantity },
+                ]);
+                setNewPrescription({
+                    idDrug: '',
+                    price: '',
+                    quantity: '',
+                    drugName: '',
+                });
+            })
+            .catch((validationErrors) => {
+                const errors = {};
+                validationErrors.inner.forEach((error) => {
+                    errors[error.path] = error.message;
+                });
+                setValid(errors);
+                toast.error('VUI LÒNG NHẬP THÔNG TIN!');
+            });
     };
 
     const handleConfirm = () => {
@@ -184,9 +200,9 @@ export default function CreatePrescription() {
                                             value={newPrescription.quantity}
                                             onChange={handleChange}
                                         />
+
                                         <button disabled={false} type="submit" className="btn btn-success btn-sm">
                                             THÊM
-                                            {/* <i class="fa-solid fa-plus"></i> */}
                                         </button>
                                     </td>
                                 </tr>
@@ -219,7 +235,7 @@ export default function CreatePrescription() {
                                             <td className="d-flex justify-content-between">
                                                 {convertCurrency(prescription.quantity * prescription.price)}{' '}
                                                 <i
-                                                    class="fa-solid fa-xmark text-danger"
+                                                    className="fa-solid fa-xmark text-danger"
                                                     onClick={() => removePrescription(prescription.idDrug)}
                                                 ></i>
                                             </td>
