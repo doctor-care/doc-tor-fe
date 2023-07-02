@@ -107,7 +107,7 @@ export default function Patient() {
             data.district = checkEnable.district;
             data.avatarUrl = files;
             data.url = 'http://localhost:8080/patient/signup';
-            emailjs.sendForm('service_gu18tah', 'template_eomflh8', form.current, 'nGzNvmaDuhf2VKbq8').then(
+            emailjs.sendForm('service_3qk9rdh', 'template_g7hxijd', form.current, 'gkyCPWWwIvheO7BEy').then(
                 (result) => {
                     navigate('/otp', {
                         state: {

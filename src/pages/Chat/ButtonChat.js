@@ -5,7 +5,7 @@ function ButtonChat({ onOpen, isOpen, onClose }) {
   return (
     <button
       onClick={isOpen ? onClose : onOpen}
-      className="round-button"
+      className="button"
       style={{ bottom: "40px", right: "30px" }}
     >
       Nhắn tin
