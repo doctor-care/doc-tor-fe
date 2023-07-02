@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Moment from 'moment';
 import { toast } from 'react-toastify';
+import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
 // import './BookingSchedule.css';
 
@@ -11,10 +12,11 @@ export default function CreateHistoryMedical() {
     const navigate = useNavigate();
     const [userNameDoctor] = useState(localStorage.getItem('userName'));
     const [patient, setPatient] = useState({});
-
+    const [valid, setValid] = useState({});
     const [scheduleAddress, setScheduleAddress] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
     const { idScd } = useParams();
+
     const initalValues = {
         userNameDoctor: userNameDoctor,
         createDate: Moment().format('YYYY-MM-DD'),
@@ -23,6 +25,14 @@ export default function CreateHistoryMedical() {
         result: '',
     };
     const [formData, setFormData] = useState(initalValues);
+
+    const checkForm = Yup.object().shape({
+        userNameDoctor: Yup.string().required('Chưa có userNameDoctor!'),
+        createDate: Yup.date().required('Chưa có createDate!'),
+        symptom: Yup.string().required('Không được để trống!'),
+        diagnosis: Yup.string().required('Không được để trống!'),
+        result: Yup.string().required('Không được để trống!'),
+    });
 
     useEffect(() => {
         getScheduleInfo();
@@ -36,40 +46,45 @@ export default function CreateHistoryMedical() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('formValues', formData);
-        setIsDisabled(true);
-        // setFormErrors(validate(formValues));
-        // const errors = validate(formValues);
-
-        // if (Object.keys(errors).length === 0) {
-        axios
-            .post('http://localhost:8080/history-medical/create', formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+        checkForm
+            .validate(formData, { abortEarly: false })
+            .then(() => {
+                setIsDisabled(true);
+                axios
+                    .post('http://localhost:8080/history-medical/create', formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then((response) => {
+                        if (response.data.idHM === undefined) {
+                            toast.error('THÊM MỚI THẤT BẠI');
+                        } else {
+                            axios
+                                .post(`http://localhost:8080/schedule/update/${idScd}/4`)
+                                .then((schedule) => {
+                                    if (schedule.data === 'FAIL') {
+                                    } else {
+                                        navigate('/prescription/create/' + response.data.idHM);
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error(error);
+                                });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
-            .then((response) => {
-                if (response.data.idHM === undefined) {
-                    toast.error('THÊM MỚI THẤT BẠI');
-                } else {
-                    axios
-                        .post(`http://localhost:8080/schedule/update/${idScd}/4`)
-                        .then((schedule) => {
-                            if (schedule.data === 'FAIL') {
-                            } else {
-                                navigate('/prescription/create/' + response.data.idHM);
-                            }
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                        });
-                }
-            })
-            .catch((error) => {
-                console.log(error);
+            .catch((validationErrors) => {
+                const errors = {};
+                validationErrors.inner.forEach((error) => {
+                    errors[error.path] = error.message;
+                });
+                setValid(errors);
+                console.log('errors', errors);
             });
-        // setFormErrors({});
-        // setFormvalues(initalValues);
-        // }
     };
 
     const getScheduleInfo = () => {
@@ -94,26 +109,6 @@ export default function CreateHistoryMedical() {
                             <div>
                                 <h2 className="text-center">THÊM MỚI BỆNH ÁN</h2>
                             </div>
-                            {/* <form className="d-flex justify-content-center" onSubmit={showPatientInfo}>
-                                <div className="form-floating mb-4">
-                                    <input
-                                        type="text"
-                                        className="border"
-                                        id="full-name"
-                                        placeholder="Nhập tài khoản bệnh nhân"
-                                        style={{ paddingTop: '10px' }}
-                                        name="name"
-                                        onChange={(e) => {
-                                            setUserNamePatient(e.target.value);
-                                        }}
-                                    />
-                                </div>
-                                <div className="form-floating  mb-4">
-                                    <button type="submit" className="btn btn-primary">
-                                        Tìm
-                                    </button>
-                                </div>
-                            </form> */}
 
                             <form onSubmit={handleSubmit} className="mt-3">
                                 <div className="row my-2">
@@ -268,6 +263,7 @@ export default function CreateHistoryMedical() {
                                             <label htmlFor="email">
                                                 Triệu chứng
                                                 <span className="text-danger">*</span>
+                                                {valid.symptom && <span className="text-danger"> {valid.symptom}</span>}
                                             </label>
                                         </div>
                                     </div>
@@ -289,6 +285,9 @@ export default function CreateHistoryMedical() {
                                             <label htmlFor="email">
                                                 Chuẩn đoán
                                                 <span className="text-danger">*</span>
+                                                {valid.diagnosis && (
+                                                    <span className="text-danger"> {valid.diagnosis}</span>
+                                                )}
                                             </label>
                                         </div>
                                     </div>
@@ -309,6 +308,7 @@ export default function CreateHistoryMedical() {
                                             <label htmlFor="email">
                                                 Kết quả
                                                 <span className="text-danger">*</span>
+                                                {valid.result && <span className="text-danger"> {valid.result}</span>}
                                             </label>
                                         </div>
                                     </div>
