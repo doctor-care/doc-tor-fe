@@ -186,7 +186,7 @@ function Header() {
                                 </>
                             )}
 
-                            <li className="dropdown">
+                            {/* <li className="dropdown">
                                 <Link>
                                     <span>Bác sĩ</span> <i className="bi bi-chevron-down"></i>
                                 </Link>
@@ -205,7 +205,7 @@ function Header() {
                                         </Link>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> */}
                             {/* <li className="dropdown">
                                 <Link>
                                     <span>Patient</span> <i className="bi bi-chevron-down"></i>
@@ -265,11 +265,27 @@ function Header() {
                                                 Đăng xuất
                                             </Link>
                                         </li>
-                                        <li>
-                                            <Link className="text-decoration-none dropdown-item" to={`/editPatient`}>
-                                                Thông tin cá nhân
-                                            </Link>
-                                        </li>
+                                        {role === 'ROLE_PATIENT' ? (
+                                            <li>
+                                                <Link
+                                                    className="text-decoration-none dropdown-item"
+                                                    to={`/editPatient`}
+                                                >
+                                                    Thông tin cá nhân
+                                                </Link>
+                                            </li>
+                                        ) : (
+                                            role === 'ROLE_DOCTOR' && (
+                                                <li>
+                                                    <Link
+                                                        className="text-decoration-none dropdown-item"
+                                                        to={`/editDoctor`}
+                                                    >
+                                                        Thông tin cá nhân
+                                                    </Link>
+                                                </li>
+                                            )
+                                        )}
                                     </ul>
                                 </div>
                             </>
