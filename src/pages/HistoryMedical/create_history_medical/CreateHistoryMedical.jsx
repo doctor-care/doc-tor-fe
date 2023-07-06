@@ -87,7 +87,7 @@ export default function CreateHistoryMedical() {
                             toast.error('THÊM MỚI THẤT BẠI');
                         } else {
                             axios
-                                .post(`http://localhost:8080/schedule/update/${idScd}/4`)
+                                .post(`http://localhost:8080/schedule/completed/${idScd}`)
                                 .then((schedule) => {
                                     if (schedule.data === 'FAIL') {
                                     } else {
@@ -118,6 +118,8 @@ export default function CreateHistoryMedical() {
         axios
             .get('http://localhost:8080/schedule/id/' + idScd)
             .then((response) => {
+                console.log('SCHEDULE', response);
+                formData.scheduleId = response.data.idSCD;
                 formData.patientId = response.data.patient.idPatient;
                 setEmailPatient(response.data.patient.email);
                 setUserNamePatient(response.data.patient.name);
@@ -145,7 +147,7 @@ export default function CreateHistoryMedical() {
                             </div>
 
                             <form onSubmit={createHistoryMedical} className="mt-3">
-                                <div className="row my-2">
+                                <div className="row my-1">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input
@@ -184,7 +186,7 @@ export default function CreateHistoryMedical() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row my-2">
+                                <div className="row my-1">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input
@@ -224,7 +226,7 @@ export default function CreateHistoryMedical() {
                                     </div>
                                 </div>
 
-                                <div className="row my-2">
+                                <div className="row my-1">
                                     <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input
@@ -244,7 +246,7 @@ export default function CreateHistoryMedical() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row my-2">
+                                <div className="row my-1">
                                     <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input
@@ -266,7 +268,7 @@ export default function CreateHistoryMedical() {
                                     </div>
                                 </div>
 
-                                <div className="row my-2">
+                                <div className="row my-1">
                                     <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input
@@ -289,7 +291,7 @@ export default function CreateHistoryMedical() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row my-2">
+                                <div className="row my-1">
                                     <div className="col-md-12" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
                                             <input

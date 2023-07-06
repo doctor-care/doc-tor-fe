@@ -264,6 +264,7 @@ export default function CreatePrescription() {
                         </button>
                     </div>
                 )}
+
                 {prescriptionList.length > 0 && (
                     <div className="d-flex justify-content-sm-center">
                         <button

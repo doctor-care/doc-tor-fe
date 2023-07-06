@@ -12,21 +12,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 function ScheduleListForPatient() {
     const navigate = useNavigate();
     const [userName] = useState(localStorage.getItem('userName'));
-    const [idShift, setIdShift] = useState();
-    const [doctorId, setDoctorId] = useState('');
-    const [appDate, setAppDate] = useState('');
-    const [appointmentDate, setAppointmentDate] = useState([]);
     const [statusscd, setStatusscd] = useState(0);
-    const [shiftList, setShiftList] = useState([]);
     const [scheduleList, setScheduleList] = useState([]);
-    const [searchResult, setSearchResult] = useState([]);
-    const [isSearching, setIsSearching] = useState(false);
     const [formData, setFormData] = useState({});
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(5);
-
-    //CHỨC NĂNG TÌM KIẾM
-    const [pageNumber, setPageNumber] = useState(0);
+    const [sortDirection, setSortDirection] = useState('DESC');
 
     const [totalPages, setTotalPages] = useState();
 
@@ -58,76 +49,13 @@ function ScheduleListForPatient() {
             case 1:
                 return 'Đã xác nhận';
             case 4:
-                return 'Đã hoàn tất';
+                return 'hoàn tất';
             case 5:
                 return 'Đã hủy';
             default:
                 return 'Không xác định';
         }
     };
-
-    //CHỨC NĂNG IN VÉ
-    const handlePrint = (maVe) => {
-        axios
-            .get('http://localhost:8080/VeMayBay/InVe?maVe=' + maVe)
-            .then((response) => {
-                console.log('response.data ', response.data);
-                if (response.data === 'EMPTY') {
-                    // toast.error('VÉ KHÔNG TỒN TẠI!');
-                } else {
-                    window.location.href = `http://localhost:3000/InVe?maVe=${maVe.toString()}`;
-                }
-            })
-            .catch((error) => {
-                console.error('error at function handlePrint', error);
-            });
-    };
-
-    //CHỨC NĂNG XÓA
-    const [selectedObject, setSelectedObject] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const [maVeDelete, setMaVeDelete] = useState();
-    const [tenHanhKhachDelete, setTenHanhKhachDelete] = useState();
-    const confirmDelete = (veMayBay) => {
-        console.log('vemaybaytostring', veMayBay);
-        setSelectedObject(veMayBay);
-        setMaVeDelete(veMayBay.maVe);
-        setTenHanhKhachDelete(veMayBay.hanhKhach.tenHanhKhach);
-        setIsModalOpen(true);
-    };
-
-    const handleDelete = () => {
-        axios
-            .delete(`http://localhost:8080/VeMayBay/delete/${maVeDelete}`)
-            .then((response) => {
-                if (response.data === 'FAIL') {
-                    // toast.error('VÉ KHÔNG TỒN TẠI!');
-                } else {
-                    const cancelEmailDTO = {
-                        emailNguoiDung: response.data.hoaDon.nguoiDung.email,
-                        maVe: response.data.maVe,
-                        hangVe: response.data.hangVe,
-                        // giaVe: CurrencyFormat(response.data.giaVe),
-                        tenHanhKhach: response.data.hanhKhach.tenHanhKhach,
-                        ngayKhoiHanh: response.data.datCho.chuyenBay.ngayKhoiHanh,
-                        diemDi: response.data.datCho.chuyenBay.diemDi,
-                        diemDen: response.data.datCho.chuyenBay.diemDen,
-                    };
-                    fetchScheduleList();
-                    axios.post(`http://localhost:8080/Email/cancel`, cancelEmailDTO).catch((err) => console.error);
-                    // toast.success('HỦY VÉ THÀNH CÔNG!');
-                }
-                // setIsModalOpen(false);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-
-    // useEffect(() => {
-    //     getDoctorId();
-    // }, []);
 
     useEffect(() => {
         try {
@@ -138,6 +66,7 @@ function ScheduleListForPatient() {
                         statusscd,
                         page,
                         size,
+                        sortDirection,
                     },
                 })
                 .then((response) => {
@@ -149,57 +78,16 @@ function ScheduleListForPatient() {
         } catch (error) {
             console.log(error);
         }
-    }, [userName, statusscd, page, size]);
+    }, [userName, statusscd, page, size, sortDirection]);
 
-    // const getDoctorId = () => {
-    //     try {
-    //         //get doctor id from user which doctor login in localstorage
-    //         axios.get('http://localhost:8080/doctor/username/' + userName).then((response) => {
-    //             setDoctorId(response.data);
-    //             //get date list from doctor id
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
-    //DuyNT58 load lại danh sách vé máy bay khi có thay đổi
-    // useEffect(() => {
-    //     fetchTicketList();
-    //     console.log('tickets', tickets);
-    // }, [page, size, maVe, tenHanhKhach, diemDi, diemDen]);
-
-    //DuyNT58 lấy danh sách vé máy bay
-    const fetchScheduleList = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/schedule/page/doctor', {
-                params: {
-                    userName,
-                    idShift,
-                    appDate,
-                    statusscd,
-                    page,
-                    size,
-                },
-            });
-            console.log('RESPONSE LIST DATAA', response);
-            setTotalPages(response.data.totalPages);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    //DuyNT58 nhập thông tin tìm kiếm
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    //DuyNT58 chọn trang muốn hiển thị
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
 
-    //DuyNT58 tính toán trang được hiển thị trên màn hình
     const calculatePageNumbers = () => {
         const soTrangToiDa = 3;
         const trangDau = Math.max(0, page - Math.floor(soTrangToiDa / 2));
@@ -211,7 +99,6 @@ function ScheduleListForPatient() {
         return pageNumbers;
     };
 
-    //DuyNT58 hiển thị giao diện số trang
     const renderPageNumbers = () => {
         const pageNumbers = calculatePageNumbers();
         return pageNumbers.map((pageNumber) => (
@@ -231,43 +118,46 @@ function ScheduleListForPatient() {
                 </div>
 
                 {/* form search */}
-                <form className="row justify-content-center">
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <h5>Tìm Kiếm Theo</h5>
-                    </div>
+                <form className="row d-flex justify-content-around">
+                    <div className="col-6 d-flex">
+                        <div className="form-group col-4 d-flex justify-content-center align-items-center">
+                            <h5 className="fw-bold m-0">Tìm Kiếm Theo</h5>
+                        </div>
 
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            onChange={(e) => {
-                                setStatusscd(e.target.value);
-                            }}
-                            className="form-control text-center"
-                        >
-                            <option value="0"> Chưa xác nhận </option>
-                            <option value="1"> Đã xác nhận </option>
-                            <option value="4"> Đã hoàn tất </option>
-                            <option value="5"> Đã hủy </option>
-                        </select>
+                        <div className="d-flex justify-content-center align-items-center">
+                            <select
+                                name="diemDi"
+                                id="diemDi"
+                                onChange={(e) => {
+                                    setStatusscd(e.target.value);
+                                }}
+                                className="border text-center border-info"
+                            >
+                                <option value="0"> Chưa xác nhận </option>
+                                <option value="1"> Đã xác nhận </option>
+                                <option value="4"> Đã hoàn tất </option>
+                                <option value="5"> Đã hủy </option>
+                            </select>
+                        </div>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
-                        <button type="submit" className="btn bg">
-                            {' '}
-                            SẮP XẾP
-                        </button>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDen"
-                            id="diemDen"
-                            // value={formData.diemDen}
-                            // onChange={handleInputChange}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Mới nhất --</option>
-                            <option value="">-- Cũ nhất --</option>
-                        </select>
+                    <div className="col-6 d-flex justify-content-end">
+                        <div className="d-flex col-4 justify-content-end align-items-center">
+                            <h5 className="fw-bold m-0">Sắp xếp</h5>
+                        </div>
+
+                        <div className="col-4 d-flex justify-content-center align-items-center">
+                            <select
+                                value={sortDirection}
+                                onChange={(e) => {
+                                    setSortDirection(e.target.value);
+                                    console.log(sortDirection);
+                                }}
+                                className="text-center border border-info"
+                            >
+                                <option value="DESC">-- Mới nhất --</option>
+                                <option value="ASC">-- Cũ nhất --</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -291,16 +181,16 @@ function ScheduleListForPatient() {
                             return (
                                 <tr className="align-middle text-nowrap" key={item.idScd}>
                                     <th> {index + 1 + page * size}</th>
-                                    <td>{convertBookingDate(item.createDate)}</td>
-                                    <td>{convertTime(item.createDate)}</td>
+                                    <td className="text-center">{convertBookingDate(item.createDate)}</td>
+                                    <td className="text-center">{convertTime(item.createDate)}</td>
                                     <td>{item.patientName}</td>
-                                    <td>{convertAppointmentDate(item.apmDate)}</td>
+                                    <td className="text-center">{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
                                     <td>{item.doctorName}</td>
-                                    <td>{showStatusCSD(item.statusScd)}</td>
+                                    <td className="text-uppercase text-success">{showStatusCSD(item.statusScd)}</td>
                                     <td>
                                         <Link className="text-decoration-none" to={`/schedule/${item.idScd}`}>
-                                            Chi tiết
+                                            <button className="btn btn-primary btn-sm">Chi tiết</button>
                                         </Link>
                                     </td>
                                 </tr>
@@ -311,28 +201,26 @@ function ScheduleListForPatient() {
 
                 {scheduleList.length === 0 && (
                     <div className="row justify-content-center">
-                        <div className="col-6 justify-content-center" style={{ minHeight: '328px' }}>
-                            <img
-                                src="https://i.giphy.com/media/HTSsuRrErs54g1Tqr5/giphy.webp"
-                                alt="Flight"
-                                style={{ width: '100%', height: 'auto', marginBottom: '10px' }}
-                            />
+                        <div
+                            className="d-flex justify-content-center align-items-center"
+                            style={{ minHeight: '300px' }}
+                        >
                             <div className="text-center">
-                                <h5 className="">KHÔNG TÌM THẤY LỊCH HẸN NÀO!</h5>
+                                <h3 className="">KHÔNG CÓ LỊCH HẸN NÀO!</h3>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
 
-            {scheduleList.length >= 5 && (
+            {totalPages > 1 && (
                 <div className="pagination">
                     <nav aria-label="...">
                         <ul className="pagination">
                             <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
                                 <button
                                     type="button"
-                                    className="page-link bg-warning text-white bg"
+                                    className="page-link bg-primary text-white bg"
                                     onClick={() => setPage(0)}
                                     disabled={page === 0}
                                 >
@@ -358,7 +246,7 @@ function ScheduleListForPatient() {
                             <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
                                 <button
                                     type="button"
-                                    className="page-link bg-success text-white bg"
+                                    className="page-link bg-primary text-white bg"
                                     disabled={page === 0}
                                     onClick={() => handlePageChange(page - 1)}
                                 >
@@ -382,7 +270,7 @@ function ScheduleListForPatient() {
                             <li className={`page-item   ${page === totalPages - 1 ? 'disabled' : ''}`}>
                                 <button
                                     type="button"
-                                    className={`page-link  bg-success text-white none bg   ${
+                                    className={`page-link  bg-primary text-white none bg   ${
                                         page === totalPages - 1 ? 'disabled' : ''
                                     }`}
                                     onClick={() => handlePageChange(page + 1)}
@@ -405,7 +293,7 @@ function ScheduleListForPatient() {
                             </li>
                             <li className={`page-item   ${page === totalPages - 1 ? 'disabled' : ''}`}>
                                 <button
-                                    className={`page-link bg-danger text-white bg ${
+                                    className={`page-link bg-primary text-white bg ${
                                         page === totalPages - 1 ? 'disabled' : ''
                                     }`}
                                     onClick={() => setPage(totalPages - 1)}

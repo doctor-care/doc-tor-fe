@@ -42,10 +42,6 @@ export default function AppointmentFromDoctor() {
         return dayText;
     };
 
-    const handleCloseModal = () => {
-        setIsOpen(false);
-    };
-
     useEffect(() => {
         getAppointmentDateList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,16 +186,22 @@ export default function AppointmentFromDoctor() {
                         {appointmentList.map((app) => (
                             <div
                                 key={app.idAPM}
+                                title={
+                                    app.statusAPM === 2
+                                        ? 'LỊCH ĐÃ ĐƯỢC ĐẶT'
+                                        : app.statusAPM === 1
+                                        ? 'ĐANG CHỜ XÁC NHẬN'
+                                        : 'CÓ THỂ CHỌN'
+                                }
                                 className={`fw-bold col-2 text-center m-1 shift ${
-                                    app.statusAPM === 2 ? 'selected' : 'not-selected'
+                                    app.statusAPM === 2 ? 'confirmed' : app.statusAPM === 1 ? 'booking' : 'free'
                                 } `}
                             >
                                 <button
                                     className={`text-decoration-none ${app.statusAPM === 2 ? 'not-allow' : 'allow'} `}
-                                    title={app.statusAPM === 2 ? 'LỊCH ĐÃ ĐƯỢC ĐẶT' : 'CÓ THỂ CHỌN'}
-                                    disabled={app.statusAPM === 2}
+                                    disabled={app.statusAPM > 0}
                                     onClick={
-                                        app.statusAPM === 2 ? null : () => handleChoice(app.idAPM, app.doctor.idDoctor)
+                                        app.statusAPM > 0 ? null : () => handleChoice(app.idAPM, app.doctor.idDoctor)
                                     }
                                 >
                                     <span>{app.shifts.shiftsName}</span>
