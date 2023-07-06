@@ -59,6 +59,8 @@ function ScheduleListForPatient() {
                 return 'Đã xác nhận';
             case 4:
                 return 'Đã hoàn tất';
+            case 5:
+                return 'Đã hủy';
             default:
                 return 'Không xác định';
         }
@@ -192,21 +194,6 @@ function ScheduleListForPatient() {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    //DuyNT58 gởi thông tin search/ nếu không nhập gì lấy tìm tất cả
-    // const handleSearch = (event) => {
-    //     event.preventDefault();
-    //     setIsSearching(true);
-    //     setPage(0);
-    //     setMaVe(formData.maVe);
-    //     setTenHanhKhach(formData.tenHanhKhach);
-    //     setDiemDi(formData.diemDi);
-    //     setDiemDen(formData.diemDen);
-    //     if (!maVe && !tenHanhKhach && !diemDi && !diemDen) {
-    //         setIsSearching(false);
-    //         fetchScheduleList();
-    //     }
-    // };
-
     //DuyNT58 chọn trang muốn hiển thị
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -261,6 +248,7 @@ function ScheduleListForPatient() {
                             <option value="0"> Chưa xác nhận </option>
                             <option value="1"> Đã xác nhận </option>
                             <option value="4"> Đã hoàn tất </option>
+                            <option value="5"> Đã hủy </option>
                         </select>
                     </div>
                     <div className="form-group col-md-2 d-flex justify-content-end align-items-center">

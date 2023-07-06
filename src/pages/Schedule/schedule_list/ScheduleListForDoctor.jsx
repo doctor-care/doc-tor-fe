@@ -62,24 +62,11 @@ function ScheduleListForDoctor() {
                 return 'Đã xác nhận';
             case 4:
                 return 'Đã hoàn tất';
-          
+            case 5:
+                return 'Đã hủy';
             default:
                 return 'Không xác định';
         }
-    };
-
-    //CHỨC NĂNG XÓA
-    const [selectedObject, setSelectedObject] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const [maVeDelete, setMaVeDelete] = useState();
-    const [tenHanhKhachDelete, setTenHanhKhachDelete] = useState();
-    const confirmDelete = (veMayBay) => {
-        console.log('vemaybaytostring', veMayBay);
-        setSelectedObject(veMayBay);
-        setMaVeDelete(veMayBay.maVe);
-        setTenHanhKhachDelete(veMayBay.hanhKhach.tenHanhKhach);
-        setIsModalOpen(true);
     };
 
     useEffect(() => {
@@ -261,6 +248,7 @@ function ScheduleListForDoctor() {
                             <option value="0"> Chưa xác nhận </option>
                             <option value="1"> Đã xác nhận </option>
                             <option value="4"> Đã hoàn tất </option>
+                            <option value="5"> Đã hủy </option>
                         </select>
                     </div>
                     <div className="form-group col-md-2 d-flex justify-content-end align-items-center">

@@ -86,11 +86,13 @@ export default function AppointmentFromDoctor() {
     const handleChoice = (idApp, idDoc) => {
         if('ROLE_PATIENT' === role){
             navigate(`/booking-schedule?idAPM=${idApp}&idDoctor=${idDoc}`);
-        }
-        const result = window.confirm('Bạn phải đăng nhập để tiếp tục. Bấm OK để đăng nhập.');
+        }else{
+     const result = window.confirm('Bạn phải đăng nhập để tiếp tục. Bấm OK để đăng nhập.');
     if (result) {
         navigate(`/login`);
     } 
+        }
+   
     };
 
     useEffect(() => {

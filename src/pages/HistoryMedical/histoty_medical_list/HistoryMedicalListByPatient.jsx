@@ -176,7 +176,7 @@ function HistoryMedicalListByPatient() {
                                 style={{ width: '100%', height: 'auto', marginBottom: '10px' }}
                             />
                             <div className="text-center">
-                                <h5 className="">KHÔNG TÌM THẤY LỊCH HẸN NÀO!</h5>
+                                <h5 className="">KHÔNG TÌM THẤY LỊCH SỬ KHÁM!</h5>
                             </div>
                         </div>
                     </div>

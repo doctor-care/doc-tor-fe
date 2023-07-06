@@ -20,6 +20,14 @@ export default function BookingSchedule() {
     const [city, setCity] = useState([]);
     const [district, setDistrict] = useState([]);
     const [doctor, setDoctor] = useState({});
+    const [valid, setValid] = useState({});
+
+    const checkForm = Yup.object().shape({
+        idAPM: Yup.string().required('Chưa có idAPM!'),
+        createDate: Yup.date().required('Chưa có createDate!'),
+        statusSCD: Yup.number().required('Không được để trống!'),
+        scheduleAddress: Yup.string().required('Không được để trống!'),
+    });
 
     const initalValues = {
         idAPM: Number(idAPM),
@@ -43,22 +51,21 @@ export default function BookingSchedule() {
         axios
             .get(`http://localhost:8080/doctor/${idDoctor}`)
             .then((resp) => {
-                console.log('doctor', resp.data);
                 setDoctor(resp.data);
             })
             .catch((error) => console.log(error));
     }, []);
 
-    useMemo(() => {
-        axios.get('https://vapi.vnappmob.com/api/province/').then((resp) => {
-            console.log('here is ', resp.data.results);
-            setCity(resp.data.results);
-        });
+    // useMemo(() => {
+    //     axios.get('https://vapi.vnappmob.com/api/province/').then((resp) => {
+    //         console.log('here is ', resp.data.results);
+    //         setCity(resp.data.results);
+    //     });
 
-        // axios.get(`https://vapi.vnappmob.com/api/province/district/${patient.city}`).then((resp) => {
-        //     setDistrict(resp.data.results);
-        // });
-    }, []);
+    //     // axios.get(`https://vapi.vnappmob.com/api/province/district/${patient.city}`).then((resp) => {
+    //     //     setDistrict(resp.data.results);
+    //     // });
+    // }, []);
 
     const getPatientInfo = () => {
         try {
@@ -75,31 +82,36 @@ export default function BookingSchedule() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('formValues', formData);
-        setIsDisabled(true);
-        // setFormErrors(validate(formValues));
-        // const errors = validate(formValues);
 
-        // if (Object.keys(errors).length === 0) {
-        axios
-            .post('http://localhost:8080/schedule/create', formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+        checkForm
+            .validate(formData, { abortEarly: false })
+            .then(() => {
+                setIsDisabled(true);
+                axios
+                    .post('http://localhost:8080/schedule/create', formData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then((response) => {
+                        if (response.data === null) {
+                            toast.error('LỊCH HẸN ĐÃ ĐƯỢC ĐẶT');
+                        } else {
+                            toast.success('ĐẶT LỊCH THÀNH CÔNG!');
+                            navigate('/user/schedule-list');
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             })
-            .then((response) => {
-                if (response.data === null) {
-                    toast.error('LỊCH HẸN ĐÃ ĐƯỢC ĐẶT');
-                } else {
-                    toast.success('ĐẶT LỊCH THÀNH CÔNG!');
-                    navigate('/user/schedule-list');
-                }
-            })
-            .catch((error) => {
-                console.log(error);
+            .catch((validationErrors) => {
+                const errors = {};
+                validationErrors.inner.forEach((error) => {
+                    errors[error.path] = error.message;
+                });
+                setValid(errors);
             });
-        // setFormErrors({});
-        // setFormvalues(initalValues);
-        // }
     };
 
     const handleChangeCity = (e) => {
@@ -111,9 +123,6 @@ export default function BookingSchedule() {
         <div className="container">
             <div>
                 <div className="col-12 d-flex ">
-                    {/* <div className="col-3 bg-img-doctor d-flex justify-content-center align-items-center">
-                        <img src={doctor.avatarUrl} alt={`Avatar of ${doctor.name}`} className="avatar-img shadow" />
-                    </div> */}
                     <div className="d-flex ">
                         <div>
                             <div className="d-flex row">
@@ -263,8 +272,12 @@ export default function BookingSchedule() {
                                             <label htmlFor="email">
                                                 Địa chỉ khám cụ thể
                                                 <span className="text-danger">*</span>
+                                                {valid.scheduleAddress && (
+                                                    <span className="text-danger"> {valid.scheduleAddress}</span>
+                                                )}
                                             </label>
                                         </div>
+                                        <div></div>
                                     </div>
                                 </div>
 
@@ -281,17 +294,18 @@ export default function BookingSchedule() {
                                                 value={formData.note}
                                                 onChange={handleInputChange}
                                             />
-                                            <label htmlFor="email">
-                                                Ghi chú
-                                                <span className="text-danger">*</span>
-                                            </label>
+                                            <label htmlFor="email">Ghi chú</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form-group text-center mt-2">
-                                    <button type="submit" className="btn btn-success bg" onClick={()=>{
-                                        navigate(`/appointment-list?doctorId=${doctor.idDoctor}`)
-                                    }}>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-success bg"
+                                        onClick={() => {
+                                            navigate(`/appointment-list?doctorId=${doctor.idDoctor}`);
+                                        }}
+                                    >
                                         Trở Về
                                     </button>
                                     <button disabled={isDisabled} type="submit" className="btn btn-success bg">

@@ -45,7 +45,7 @@ function DoctorDetail() {
             .then((resp) => {
                 setDoctor(resp.data);
                 console.log('doctor', doctor);
-            })
+            })b
             .catch((error) => console.log(error));
         axios
             .get(`http://localhost:8080/doctor/review?id=${id}`)
