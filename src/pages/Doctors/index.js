@@ -132,9 +132,8 @@ export default function Doctor() {
                                         </li>
                                     )}
                                     <li
-                                        className={` flex  page-item ${
-                                            currentPage === totalPage - 1 ? 'disabled' : ''
-                                        }`}
+                                        className={` flex  page-item ${currentPage === totalPage - 1 ? 'disabled' : ''
+                                            }`}
                                     >
                                         <button className="page-link bg mr-1" onClick={handleNextPageClick}>
                                             <i className="fa-solid fa-chevron-right"></i>
