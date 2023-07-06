@@ -151,7 +151,7 @@ function HistoryMedicalListByPatient() {
                                     <td>{item.doctorName}</td>
                                     <td>
                                         <button
-                                            className="btn btn-primary"
+                                            className="btn btn-primary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#showPrescription"
                                             onClick={() => {
@@ -183,14 +183,14 @@ function HistoryMedicalListByPatient() {
                 )}
             </div>
 
-            {historyMedicalList.length >= 5 && (
+            {totalPages > 1 && (
                 <div className="pagination">
                     <nav aria-label="...">
                         <ul className="pagination">
                             <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
                                 <button
                                     type="button"
-                                    className="page-link bg-warning text-white bg"
+                                    className="page-link bg-primary text-white bg"
                                     onClick={() => setPage(0)}
                                     disabled={page === 0}
                                 >
@@ -216,7 +216,7 @@ function HistoryMedicalListByPatient() {
                             <li className={`page-item ${page === 0 ? 'disabled' : ''}`}>
                                 <button
                                     type="button"
-                                    className="page-link bg-success text-white bg"
+                                    className="page-link bg-primary text-white bg"
                                     disabled={page === 0}
                                     onClick={() => handlePageChange(page - 1)}
                                 >
@@ -240,7 +240,7 @@ function HistoryMedicalListByPatient() {
                             <li className={`page-item   ${page === totalPages - 1 ? 'disabled' : ''}`}>
                                 <button
                                     type="button"
-                                    className={`page-link  bg-success text-white none bg   ${
+                                    className={`page-link  bg-primary text-white none bg   ${
                                         page === totalPages - 1 ? 'disabled' : ''
                                     }`}
                                     onClick={() => handlePageChange(page + 1)}
@@ -263,7 +263,7 @@ function HistoryMedicalListByPatient() {
                             </li>
                             <li className={`page-item   ${page === totalPages - 1 ? 'disabled' : ''}`}>
                                 <button
-                                    className={`page-link bg-danger text-white bg ${
+                                    className={`page-link bg-primary text-white bg ${
                                         page === totalPages - 1 ? 'disabled' : ''
                                     }`}
                                     onClick={() => setPage(totalPages - 1)}

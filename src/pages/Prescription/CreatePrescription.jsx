@@ -142,7 +142,7 @@ export default function CreatePrescription() {
                 console.log('prescription response', response);
                 if (response.data === 'FAIL') {
                 } else {
-                    toast.success('ĐÃ HOÀN TẤT');
+                    toast.success('ĐÃ HOÀN TẤT LỊCH KHÁM');
                     navigate('/doctor/schedule-list');
                 }
             })
