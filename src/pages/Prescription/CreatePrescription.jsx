@@ -142,7 +142,7 @@ export default function CreatePrescription() {
                 console.log('prescription response', response);
                 if (response.data === 'FAIL') {
                 } else {
-                    toast.success('ĐÃ HOÀN TẤT');
+                    toast.success('ĐÃ HOÀN TẤT LỊCH KHÁM');
                     navigate('/doctor/schedule-list');
                 }
             })
@@ -264,6 +264,7 @@ export default function CreatePrescription() {
                         </button>
                     </div>
                 )}
+
                 {prescriptionList.length > 0 && (
                     <div className="d-flex justify-content-sm-center">
                         <button
