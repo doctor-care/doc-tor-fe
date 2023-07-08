@@ -3,9 +3,10 @@ import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import ReactStars from 'react-stars';
-
+import { useNavigate } from 'react-router-dom';
 export default function Review() {
     const [dataSchedule, setDataSchedule] = useState();
+    const navigate = useNavigate();
     const { id } = useParams();
     const [review, setReview] = useState({ id: id, rating: 5 });
     const [err, setErr] = useState();
@@ -36,6 +37,8 @@ export default function Review() {
                 .catch((err) => {
                     console.log(err);
                 });
+
+                navigate(`/doctor-detail/${dataSchedule?.appointment.doctor.idDoctor}`);   
         }
     };
     console.log(review);

@@ -11,7 +11,6 @@ function DoctorDetail() {
     const [doctor, setDoctor] = useState({});
     const { id } = useParams();
     const navigate = useNavigate();
-   
     const [city, setCity] = useState([]);
     const [district, setDistrict] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +44,7 @@ function DoctorDetail() {
             .then((resp) => {
                 setDoctor(resp.data);
                 console.log('doctor', doctor);
-            })b
+            })
             .catch((error) => console.log(error));
         axios
             .get(`http://localhost:8080/doctor/review?id=${id}`)
