@@ -3,10 +3,12 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './FormRegister.css';
 import ReactStars from 'react-stars';
+import { toast } from 'react-toastify';
 
 export default function Service() {
     const { id } = useParams();
     console.log('id', id);
+    const user = localStorage.getItem('userName');
     const [listDoctorService, setListDoctorService] = useState([]);
     const [service, setService] = useState('');
     const [nameDoctor, setNameDoctor] = useState('');
@@ -34,6 +36,7 @@ export default function Service() {
                     idPatient: data.idPatient,
                     phone: data.phone,
                     fullname: data.name,
+                    address:data.address
                 });
             })
             .catch((error) => console.error);
@@ -55,8 +58,11 @@ export default function Service() {
             })
             .then((response) => {
                 const data = response.data;
+                toast.success('Đăng kí thành công');
+                console.log('data', data);
             })
             .catch((error) => console.error);
+        console.log('form', form);
     };
 
     useEffect(() => {
@@ -101,7 +107,7 @@ export default function Service() {
                                     <h4>{doctorService.doctor.name}</h4>
                                     <h5>{doctorService.doctor.specialist?.name}</h5>
                                     <div>{doctorService.doctor.birthday}</div>
-                                    
+
                                     <span>
                                         <ReactStars
                                             count={5}
@@ -112,7 +118,7 @@ export default function Service() {
                                         />
                                     </span>
                                     <p>{doctorService.doctor.description}</p>
-                                    <div>
+                                    {user!=='admin'&&<div>
                                         <button
                                             className="btn btn-success"
                                             data-bs-toggle="modal"
@@ -121,7 +127,7 @@ export default function Service() {
                                         >
                                             Xác nhận lịch hẹn
                                         </button>
-                                    </div>
+                                    </div>}
                                     <div className="social">
                                         <a href="">
                                             <i class="ri-twitter-fill"></i>
@@ -166,7 +172,22 @@ export default function Service() {
                             </div>
                             <div className="modal-body">
                                 <div>
-                                    <span>{nameDoctor}</span>
+                                    <label>Bác sĩ:</label>
+                                    <input
+                                        type="text"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        value={nameDoctor}
+                                        readOnly
+                                    />
+                                    <label>Dịch vụ:</label>
+                                    <input
+                                        type="text"
+                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        value={service.nameService}
+                                        readOnly
+                                    />
+                                    <h5>Thông tin người đăng kí: </h5>
+                                    <label>Họ tên</label>
                                     <input
                                         type="text"
                                         name="name"
@@ -175,20 +196,21 @@ export default function Service() {
                                         value={data.name}
                                         readOnly
                                     />
+                                    <label>Số điện thoại</label>
                                     <input
                                         type="text"
                                         name="phone"
                                         className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
-                                        placeholder="Enter phone"
+                                        placeholder="Nhập số điện thoại"
                                         value={data.phone}
                                     />
+                                    <label>Địa chỉ</label>
                                     <input
                                         type="text"
                                         name="address"
-                                        className=" border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
-                                        placeholder="Enter address"
+                                        className="border w-full rounded-lg border-gray-200 p-3 pe-12 text-sm shadow-sm"
+                                        placeholder="Nhập địa chỉ"
                                         value={data.address}
-                                        onChange={handleInputChange}
                                     />
                                 </div>
                             </div>

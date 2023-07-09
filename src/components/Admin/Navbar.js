@@ -41,9 +41,9 @@ function Navbar({ toggleSidebar }) {
         <>
             <nav className="navbarAdmin">
                 <div className="navbar-container">
-                    <button className="navbar-logo" onClick={toggleSidebar}>
+                    {/* <button className="navbar-logo" onClick={toggleSidebar}>
                         ///
-                    </button>
+                    </button> */}
                     <div className="flex justify-center py-4">
                         <Link to={'/'}>
                             <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
@@ -61,6 +61,11 @@ function Navbar({ toggleSidebar }) {
                         <li className="nav-item">
                             <Link to="/listPat" className="nav-links" onClick={closeMobileMenu}>
                                 Bệnh nhân
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/create-doctor-service" className="nav-links" onClick={closeMobileMenu}>
+                            Đăng kí dịch vụ
                             </Link>
                         </li>
                         <li class="dropdown">

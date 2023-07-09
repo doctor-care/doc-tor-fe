@@ -36,6 +36,7 @@ import Dashboard from '@/pages/Admin/Dashboard/Dashboard';
 import NotFound from '@/components/common/NotFound';
 import PatientAD from '@/pages/Admin/Patient/PatientAD';
 import PatientDetailAD from '@/pages/Admin/Patient/PatientDetailAD';
+import CreateDoctorService from '@/pages/Admin/ServiceMedical/CreateDoctorService';
 // Public routes
 
 const publicRoutes = [
@@ -90,6 +91,7 @@ const publicRoutes = [
 
     //error
     { path: '/not-found', component: NotFound, layout: null },
+    { path: '/create-doctor-service', component: CreateDoctorService, layout: AdminLayout },
 ];
 
 const privateRoutes = [];
