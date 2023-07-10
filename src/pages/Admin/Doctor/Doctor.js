@@ -17,7 +17,7 @@ function DoctorAD() {
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
     const [fullName, setFullName] = useState('');
-    const [specialistId, setSpecialistId] = useState('');
+    const [specialistName, setSpecialistName] = useState('');
     const [specialists, setSpecialists] = useState([]);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
@@ -33,7 +33,7 @@ function DoctorAD() {
                     currentPage,
                     pageSize,
                     fullName,
-                    specialistId
+                    specialistName
                 },
             })
             .then((response) => {
@@ -43,7 +43,7 @@ function DoctorAD() {
                 setListDT(data.content);
             })
             .catch((error) => console.error);
-    }, [currentPage, pageSize, fullName, specialistId]);
+    }, [currentPage, pageSize]);
 
 
     const getSpecialist = () => {
@@ -56,7 +56,25 @@ function DoctorAD() {
             .catch((error) => console.error);
     }
 
-
+    const handleSearch = (e) => {
+        e.preventDefault();
+        axios
+            .get(`http://localhost:8080/doctor/page-all`, {
+                params: {
+                    currentPage,
+                    pageSize,
+                    fullName,
+                    specialistName
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                setTotalPage(data.totalPages);
+                setPageNumbers(Array.from(Array(data.totalPages).keys()));
+                setListDT(data.content);
+            })
+            .catch((error) => console.error);
+    }
 
 
     function handleNextPageClick() {
@@ -94,9 +112,9 @@ function DoctorAD() {
 
                 {/* form search */}
                 <div className="row">
-                    <div className='col-10 row'>
-                        <div className="form-group col-md-3 d-flex justify-content-center align-items-center">
-                            <h5>Tìm Kiếm Theo</h5>
+                    <form className='col-10 row' onSubmit={(e) => handleSearch(e)}>
+                        <div className="form-group col-md-3 d-flex justify-content-end align-items-center">
+                            <h5 className='m-0'>Tìm Kiếm Theo</h5>
                         </div>
 
                         <div className="form-group col-md-4 d-flex justify-content-center align-items-center">
@@ -108,27 +126,24 @@ function DoctorAD() {
                                 placeholder='Họ và tên'
                             />
                         </div>
-                        {/* <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
-                        <button type="submit" className="btn bg">
-                            {' '}
-                            SẮP XẾP
-                        </button>
-                    </div> */}
                         <div className="form-group col-md-3 d-flex justify-content-center align-items-center">
                             <select
 
                                 className="form-control"
-                                onChange={(e) => setSpecialistId(e.target.value)}
+                                onChange={(e) => setSpecialistName(e.target.value)}
                             >
                                 <option value="">-- Chọn chuyên khoa --</option>
                                 {specialists.map((item) => (
-                                    <option key={item.idSPL} value={item.idSPL}>
+                                    <option key={item.idSPL} value={item.name}>
                                         {item.name}
                                     </option>
                                 ))}
                             </select>
                         </div>
-                    </div>
+                        <div className="col-md-2 d-flex justify-content-start align-items-center">
+                            <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </form>
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
                         <button
                             className='btn btn-success'
@@ -146,7 +161,7 @@ function DoctorAD() {
                             <th scope="col">Tên</th>
                             <th scope="col">Chuyên ngành</th>
                             <th scope="col">Học vị</th>
-                            <th scope="col">Email</th>
+                            <th scope="col">Số điện thoại</th>
                             <th scope="col">Ngày sinh</th>
                             <th scope="col">Địa chỉ</th>
                             <th scope="col">Đánh giá</th>
@@ -159,11 +174,11 @@ function DoctorAD() {
                                 <tr className="align-middle text-nowrap" key={index}>
                                     <th> {index + 1 + currentPage * pageSize}</th>
                                     <td>{item.name}</td>
-                                    <td>{item.specialist.name}</td>
+                                    <td>{item.splName}</td>
                                     <td>{item.degree}</td>
-                                    <td className="address-cell">{item.email}</td>
+                                    <td className="address-cell">{item.phone}</td>
                                     <td>{item.birthday}</td>
-                                    <td className="address-cell">{item.address.address}</td>
+                                    <td className="address-cell">{item.address}</td>
                                     <td className='text-center'>{item.averageRate}</td>
                                     <td>
                                         <Link className="text-decoration-none" to={`/detailDoc/${item.idDoctor}`}>
@@ -185,7 +200,7 @@ function DoctorAD() {
                                 style={{ width: '100%', height: 'auto', marginBottom: '10px' }}
                             />
                             <div className="text-center">
-                                <h5 className="">KHÔNG TÌM THẤY LỊCH HẸN NÀO!</h5>
+                                <h5 className="">KHÔNG TÌM THẤY BÁC SĨ NÀO!</h5>
                             </div>
                         </div>
                     </div>
