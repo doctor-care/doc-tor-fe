@@ -32,7 +32,7 @@ function PatientAD() {
                 setListDT(data.content);
             })
             .catch((error) => console.error);
-    }, [currentPage, pageSize]);
+    }, []);
     function handleNextPageClick() {
         if (currentPage < totalPage - 1) {
             setCurrentPage(currentPage + 1);
