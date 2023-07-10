@@ -2,9 +2,7 @@ import { Grid } from '@mui/material';
 import React from 'react';
 import * as Yup from 'yup';
 import CardStatsVertical from './CardStatsVertical';
-
 import CartCheck from 'mdi-material-ui/CartCheck';
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd';
 import AccountPlus from 'mdi-material-ui/AccountPlus';
 import Account from 'mdi-material-ui/Account';
 import ApexChartWrapper from './ApexChartWrapper';
@@ -12,13 +10,10 @@ import { useEffect } from 'react';
 import moment from 'moment';
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import TopCategory from './TopCategory';
-import TopProduct from './TopProduct';
-import TopUser from './TopUser';
 import ChartReport from './ChartReport';
-import OrderRecent from './OrderRecent';
 import axios from 'axios';
 import TopDoctor from './TopDoctor';
+import './abc.css';
 
 const reportSchema = Yup.object().shape({
     startDate: Yup.string().required('Start date is required'),
@@ -91,7 +86,7 @@ function Dashboard() {
                             <p className="text-muted mb-0">Chào mừng bạn đến trang thống kê</p>
                         </div>
                     </Grid>
-                    <Grid md={6}>
+                    <Grid md={6} marginBottom={10}>
                         <Formik
                             initialValues={reportForm}
                             validationSchema={reportSchema}
@@ -105,7 +100,7 @@ function Dashboard() {
                                                 <label htmlFor="startDate">Ngày bắt đầu</label>
 
                                                 <Field
-                                                    className=""
+                                                    className="ngay"
                                                     id="startDate"
                                                     name="startDate"
                                                     as="input"
@@ -122,7 +117,7 @@ function Dashboard() {
                                                 <label htmlFor="endDate">Ngày kết thúc</label>
 
                                                 <Field
-                                                    className=""
+                                                    className="ngay"
                                                     id="endDate"
                                                     name="endDate"
                                                     as="input"
@@ -137,7 +132,7 @@ function Dashboard() {
                                             </div>
                                             <div className="col-2 ">
                                                 <label for="" className="form-label"></label>
-                                                <button className="btn btn-primary" style={{ background: '#0288D1' }}>
+                                                <button className="my-button" type="submit" style={{ zIndex: 999 }}>
                                                     Xem
                                                 </button>
                                             </div>
@@ -148,6 +143,7 @@ function Dashboard() {
                         </Formik>
                     </Grid>
                 </Grid>
+
                 <Grid container spacing={6}>
                     {summary && (
                         <Grid item md={12} lg={12}>

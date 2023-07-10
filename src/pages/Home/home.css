@@ -1,0 +1,19 @@
+.doctor-box {
+    width: 350px;
+    margin-right: 20px;
+}
+
+.doctor-box:last-child {
+    margin-right: 0;
+}
+
+.doctor-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.stroll-bar {
+    overflow-x: auto;
+    white-space: nowrap;
+}

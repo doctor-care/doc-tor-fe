@@ -34,6 +34,11 @@ import DoctorDetail from '@/pages/Doctors/DoctorDetail';
 import DoctorAD from '@/pages/Admin/Doctor/Doctor';
 import Dashboard from '@/pages/Admin/Dashboard/Dashboard';
 import NotFound from '@/components/common/NotFound';
+import PatientAD from '@/pages/Admin/Patient/PatientAD';
+import PatientDetailAD from '@/pages/Admin/Patient/PatientDetailAD';
+import CreateDoctorService from '@/pages/Admin/ServiceMedical/CreateDoctorService';
+import RegisterListForDoctor from '@/pages/Services/ListRegisterByDoctor';
+import RegisterListForPatient from '@/pages/Services/ListRegisterByPatient';
 // Public routes
 
 const publicRoutes = [
@@ -57,12 +62,10 @@ const publicRoutes = [
     { path: '/doctor/schedule-list', component: ScheduleListForDoctor, layout: OnlyHeader },
 
     //Bệnh nhân
-    { path: '/editPatient', component: AsyncDataEditPatient, layout: null },
-    { path: '/editPatient', component: EditPatient, layout: null },
+    { path: '/editPatient', component: AsyncDataEditPatient, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
     { path: '/review/:id', component: Review, layout: null },
     { path: '/user/schedule-list', component: ScheduleListForPatient, layout: OnlyHeader },
-
 
     //Đăng xuấst
     { path: '/logout', component: Logout, layout: null },
@@ -77,13 +80,19 @@ const publicRoutes = [
     //admin
     { path: '/createDoc', component: CreateDoctor, layout: AdminLayout },
     { path: '/listDoc', component: DoctorAD, layout: AdminLayout },
+    { path: '/listPat', component: PatientAD, layout: AdminLayout },
     { path: '/detailDoc/:id', component: DoctorDetail, layout: AdminLayout },
     { path: '/chatAD', component: ChatBox, layout: AdminLayout },
+    { path: '/servicesAD', component: Services, layout: AdminLayout },
+    { path: '/serviceAD/:id', component: Services, layout: AdminLayout },
     { path: '/dashboard', component: Dashboard, layout: AdminLayout },
-
+    { path: '/patient-detail-AD/:id', component: PatientDetailAD, layout: AdminLayout },
 
     //error
     { path: '/not-found', component: NotFound, layout: null },
+    { path: '/create-doctor-service', component: CreateDoctorService, layout: AdminLayout },
+    { path: '/get-register-doctor', component: RegisterListForDoctor, layout: OnlyHeader },
+    { path: '/get-register-patient', component: RegisterListForPatient, layout: OnlyHeader },
 ];
 
 const privateRoutes = [];

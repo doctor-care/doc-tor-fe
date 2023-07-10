@@ -137,6 +137,11 @@ function Header() {
                                                     Danh sách lịch hẹn
                                                 </Link>
                                             </li>
+                                            <li>
+                                                <Link as={Link} to="/get-register-doctor" className="nav-link scrollto">
+                                                    Danh sách lịch đăng kí dịch vụ
+                                                </Link>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li className="dropdown">
@@ -179,6 +184,15 @@ function Header() {
                                             <li>
                                                 <Link as={Link} to="/user/schedule-list" className="nav-link scrollto">
                                                     Danh sách lịch hẹn
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    as={Link}
+                                                    to="/get-register-patient"
+                                                    className="nav-link scrollto"
+                                                >
+                                                    Danh sách lịch đăng kí dịch vụ
                                                 </Link>
                                             </li>
                                         </ul>

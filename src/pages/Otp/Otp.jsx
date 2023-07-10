@@ -39,8 +39,8 @@ export default function Otp() {
                         axios.post(url, location.state.data).then((resp) => {
                             if (resp.status === HttpStatusCode.Created) {
                                 navigate('/');
-                            }else{  
-                                    return <div>Loading...</div>;
+                            } else {
+                                return <div>Loading...</div>;
                             }
                         });
                         return;
@@ -59,7 +59,7 @@ export default function Otp() {
     return (
         <div>
             <form onSubmit={onSubmit} className="flex justify-center items-center h-full ">
-                <div className="sm:px-0 px-4 md-screen">
+                <div className="sm:px-0 px-4 md-screen-otp ">
                     <div className="flex justify-center py-2">
                         <div>
                             <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />

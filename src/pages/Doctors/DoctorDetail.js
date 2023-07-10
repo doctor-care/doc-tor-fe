@@ -11,7 +11,6 @@ function DoctorDetail() {
     const [doctor, setDoctor] = useState({});
     const { id } = useParams();
     const navigate = useNavigate();
-   
     const [city, setCity] = useState([]);
     const [district, setDistrict] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
