@@ -90,11 +90,8 @@ function ScheduleListForDoctor() {
                     },
                 })
                 .then((response) => {
-                    console.log('RESPONSE LIST DATAA', response);
-                    console.log('length', response.data.content.length);
                     setScheduleList(response.data.content);
                     setTotalPages(response.data.totalPages);
-                    // setPage(0);
                 });
         } catch (error) {
             console.log(error);
