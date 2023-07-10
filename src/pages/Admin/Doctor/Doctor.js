@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { database } from '@/utils/firebase';
 import './DoctorAD.css';
 
 import axios from 'axios';
@@ -15,12 +16,26 @@ function DoctorAD() {
     const [listDT, setListDT] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
+    const [fullName, setFullName] = useState('');
+    const [specialistId, setSpecialistId] = useState('');
+    const [specialists, setSpecialists] = useState([]);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
 
     useEffect(() => {
+        getSpecialist();
+    }, []);
+
+    useEffect(() => {
         axios
-            .get(`http://localhost:8080/doctor/page-all?page=${currentPage}&size=${pageSize}`)
+            .get(`http://localhost:8080/doctor/page-all`, {
+                params: {
+                    currentPage,
+                    pageSize,
+                    fullName,
+                    specialistId
+                },
+            })
             .then((response) => {
                 const data = response.data;
                 setTotalPage(data.totalPages);
@@ -28,7 +43,22 @@ function DoctorAD() {
                 setListDT(data.content);
             })
             .catch((error) => console.error);
-    }, [currentPage, pageSize]);
+    }, [currentPage, pageSize, fullName, specialistId]);
+
+
+    const getSpecialist = () => {
+        axios
+            .get(`http://localhost:8080/specialist/get-all`)
+            .then((response) => {
+                console.log("setSpecialists", response.data);
+                setSpecialists(response.data);
+            })
+            .catch((error) => console.error);
+    }
+
+
+
+
     function handleNextPageClick() {
         if (currentPage < totalPage - 1) {
             setCurrentPage(currentPage + 1);
@@ -63,49 +93,50 @@ function DoctorAD() {
                 </div>
 
                 {/* form search */}
-                <form className="row justify-content-center">
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <h5>Tìm Kiếm Theo</h5>
-                    </div>
+                <div className="row">
+                    <div className='col-10 row'>
+                        <div className="form-group col-md-3 d-flex justify-content-center align-items-center">
+                            <h5>Tìm Kiếm Theo</h5>
+                        </div>
 
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            // onChange={(e) => {
-                            //     setStatusscd(e.target.value);
-                            // }}
-                            className="form-control text-center"
-                        >
-                            <option value="0"> Chưa xác nhận </option>
-                            <option value="1"> Đã xác nhận </option>
-                            <option value="4"> Đã hoàn tất </option>
-                        </select>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
+                        <div className="form-group col-md-4 d-flex justify-content-center align-items-center">
+                            <input
+                                className='form-control'
+                                value={fullName} onChange={(e) => {
+                                    setFullName(e.target.value)
+                                }}
+                                placeholder='Họ và tên'
+                            />
+                        </div>
+                        {/* <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <button type="submit" className="btn bg">
                             {' '}
                             SẮP XẾP
                         </button>
+                    </div> */}
+                        <div className="form-group col-md-3 d-flex justify-content-center align-items-center">
+                            <select
+
+                                className="form-control"
+                                onChange={(e) => setSpecialistId(e.target.value)}
+                            >
+                                <option value="">-- Chọn chuyên khoa --</option>
+                                {specialists.map((item) => (
+                                    <option key={item.idSPL} value={item.idSPL}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDen"
-                            id="diemDen"
-                            // value={formData.diemDen}
-                            // onChange={handleInputChange}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Mới nhất --</option>
-                            <option value="">-- Cũ nhất --</option>
-                        </select>
+                        <button
+                            className='btn btn-success'
+                            onClick={() => {
+                                navigate(`/createDoc`)
+                            }}>Thêm bác sĩ</button>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                       <button onClick={()=>{
-                        navigate(`/createDoc`)
-                       }}>Thêm bác sĩ</button>
-                    </div>
-                </form>
+                </div>
             </div>
             <div className="mh-300">
                 <table className="table table-striped border text-nowrap">
@@ -125,15 +156,15 @@ function DoctorAD() {
                     <tbody>
                         {listDT.map((item, index) => {
                             return (
-                                <tr className="align-middle text-nowrap" key={item.idScd}>
+                                <tr className="align-middle text-nowrap" key={index}>
                                     <th> {index + 1 + currentPage * pageSize}</th>
                                     <td>{item.name}</td>
                                     <td>{item.specialist.name}</td>
                                     <td>{item.degree}</td>
-                                    <td>{item.email}</td>
+                                    <td className="address-cell">{item.email}</td>
                                     <td>{item.birthday}</td>
-                                    <td>{item.address.address}</td>
-                                    <td>{item.averageRate}</td>
+                                    <td className="address-cell">{item.address.address}</td>
+                                    <td className='text-center'>{item.averageRate}</td>
                                     <td>
                                         <Link className="text-decoration-none" to={`/detailDoc/${item.idDoctor}`}>
                                             Chi tiết
@@ -161,8 +192,8 @@ function DoctorAD() {
                 )}
             </div>
 
-           
-                <div className="pagination justify-content-center mt-6">
+
+            <div className="pagination justify-content-center mt-6">
                 <nav aria-label="Page navigation example">
                     <ul className="pagination space-x-1">
                         <li className={` flex page-item ${currentPage === 0 ? 'disabled' : ''} `}>
@@ -192,9 +223,8 @@ function DoctorAD() {
                             </li>
                         )}
                         <li
-                            className={` flex  page-item ${
-                                currentPage === totalPage - 1 ? 'disabled' : ''
-                            }`}
+                            className={` flex  page-item ${currentPage === totalPage - 1 ? 'disabled' : ''
+                                }`}
                         >
                             <button className="page-link bg mr-1" onClick={handleNextPageClick}>
                                 <i className="fa-solid fa-chevron-right"></i>
