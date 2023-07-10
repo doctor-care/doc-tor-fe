@@ -1,0 +1,24 @@
+.address-cell {
+    max-width: 150px;
+    /* Độ rộng tối đa của ô địa chỉ */
+    white-space: nowrap;
+    /* Ngăn ngắt dòng */
+    overflow: hidden;
+    /* Ẩn nội dung vượt quá độ rộng */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu "..." cho nội dung vượt quá độ rộng */
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mh-300 {
+    min-height: 300px;
+}
+
+.schedule-container {
+    min-height: 512px;
+}
