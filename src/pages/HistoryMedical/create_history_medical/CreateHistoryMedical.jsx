@@ -118,7 +118,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="full-name"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={patient.name}
@@ -137,7 +136,6 @@ export default function CreateHistoryMedical() {
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
                                                 readOnly={true}
-                                                style={{ paddingTop: '10px' }}
                                                 name="phone"
                                                 value={patient.phone}
                                             />
@@ -157,7 +155,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Email"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={patient.email}
@@ -175,7 +172,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="birthday"
                                                 readOnly={true}
                                                 value={patient.birthday}
@@ -197,7 +193,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="symptom"
                                                 readOnly={true}
                                                 value={scheduleAddress}
@@ -217,7 +212,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="symptom"
                                                 value={formData.symptom}
                                                 onChange={handleInputChange}
@@ -239,7 +233,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="diagnosis"
                                                 value={formData.diagnosis}
                                                 onChange={handleInputChange}
@@ -262,7 +255,6 @@ export default function CreateHistoryMedical() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="result"
                                                 value={formData.result}
                                                 onChange={handleInputChange}

@@ -37,7 +37,7 @@ export default function Service() {
                     idPatient: data.idPatient,
                     phone: data.phone,
                     fullname: data.name,
-                    address:data.address
+                    address: data.address,
                 });
             })
             .catch((error) => console.error);
@@ -85,7 +85,7 @@ export default function Service() {
     }, [id]);
 
     return (
-        <section id="services" className="services">
+        <section id="services" className="services" style={{ marginTop: '100px' }}>
             <div className="container">
                 <div className="section-title">
                     <h2>{service.nameService}</h2>
@@ -98,11 +98,7 @@ export default function Service() {
                         <div className="col-lg-6 mt-4 mt-lg-0">
                             <div className="member d-flex align-items-start">
                                 <div className="pic">
-                                    <img
-                                        src={doctorService.doctor.avatarUrl}
-                                        class="img-fluid avatar-doctor"
-                                        alt=""
-                                    ></img>
+                                    <img src={doctorService.doctor.avatarUrl} className="" alt=""></img>
                                 </div>
                                 <div className="member-info">
                                     <h4>{doctorService.doctor.name}</h4>
@@ -119,16 +115,18 @@ export default function Service() {
                                         />
                                     </span>
                                     <p>{doctorService.doctor.description}</p>
-                                    {role==='ROLE_PATIENT'&&<div>
-                                        <button
-                                            className="btn btn-success"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#staticBackdrop"
-                                            onClick={() => confirm(doctorService.id, doctorService.doctor.name)}
-                                        >
-                                            Xác nhận lịch hẹn
-                                        </button>
-                                    </div>}
+                                    {role === 'ROLE_PATIENT' && (
+                                        <div>
+                                            <button
+                                                className="btn btn-success"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#staticBackdrop"
+                                                onClick={() => confirm(doctorService.id, doctorService.doctor.name)}
+                                            >
+                                                Xác nhận lịch hẹn
+                                            </button>
+                                        </div>
+                                    )}
                                     <div className="social">
                                         <a href="">
                                             <i class="ri-twitter-fill"></i>

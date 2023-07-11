@@ -40,14 +40,14 @@ function Navbar({ toggleSidebar }) {
 
     return (
         <>
-            <nav className="navbarAdmin">
-                <div className="navbar-container">
+            <nav className="navbarAdmin fixed-top">
+                <div className="navbar-container" style={{ padding: '0px' }}>
                     {/* <button className="navbar-logo" onClick={toggleSidebar}>
                         ///
                     </button> */}
                     <div className="flex justify-center py-4">
                         <Link to={'/'}>
-                            <img src="/logo.png" alt="logo" className="w-56 h-20 object-cover" />
+                            <img src="/logo.png" alt="logo" className="w-48  h-16 object-cover" />
                         </Link>
                     </div>
                     <div className="menu-icon" onClick={handleClick}>

@@ -213,31 +213,42 @@ export default function AppointmentFromDoctor() {
                 </div>
             </div>
             <div className="">
-                <div className="review-container">
+            <h2 className="mt-4">Bình luận</h2>
+                <div className="">
                     {review.length > 0 &&
                         review.map((item, index) => (
-                            <div className="review" key={index}>
+                            <div className=" shadow-sm rounded-1" key={index}>
                                 <div className="member d-flex align-items-start">
-                                    <div className="member-info">
-                                        <h4
-                                            onClick={() => {
-                                                navigate(`/doctor-detail/${item.idDoctor}`);
-                                            }}
-                                        >
-                                            {item.schedule.patient.name}
-                                        </h4>
-                                        <span>{item.dateCreate}</span>
-                                        <span>
-                                            <ReactStars
-                                                count={5}
-                                                value={item.rate}
-                                                size={24}
-                                                color2={'#ffd700'}
-                                                half={false}
-                                            />
-                                        </span>
+                                    <div className="member-info w-100 row">
+                                        <div className="col-1  ">
+                                            <img src={item.schedule.patient.avatarUrl} />
+                                        </div>
+                                        <div className="col-11  ">
+                                            <div className="flex justify-content-between">
+                                                <div className="flex ">
+                                                    <h5
+                                                        className="mr-2"
+                                                        onClick={() => {
+                                                            navigate(`/doctor-detail/${item.idDoctor}`);
+                                                        }}
+                                                    >
+                                                        {item.schedule.patient.name}
+                                                    </h5>
+                                                    <span>{item.dateCreate}</span>
+                                                </div>
 
-                                        <p>{item.reviewString}</p>
+                                                <div className="flex justify-content-center align-content-center">
+                                                    <ReactStars
+                                                        count={5}
+                                                        value={item.rate}
+                                                        size={24}
+                                                        color2={'#ffd700'}
+                                                        half={false}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <p className="mx-2 ">{item.reviewString}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
