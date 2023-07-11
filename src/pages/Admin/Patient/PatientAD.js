@@ -1,15 +1,14 @@
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // import { toast } from 'react-toastify';
 
 function PatientAD() {
-    const navigate = useNavigate();
     const [listDT, setListDT] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(3);
+    const [pageSize, setPageSize] = useState(5);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
     const [fullName, setFullName] = useState('');
@@ -113,7 +112,7 @@ function PatientAD() {
                             />
                         </div>
                         <div className="col-md-2 d-flex justify-content-start align-items-center">
-                            <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type='submit' className='btn btn-info btn-sm text-white'><i className="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </form>
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
@@ -138,7 +137,7 @@ function PatientAD() {
                     <tbody>
                         {listDT.map((item, index) => {
                             return (
-                                <tr className="align-middle text-nowrap" key={item.idScd}>
+                                <tr className="align-middle text-nowrap" key={index}>
                                     <th> {index + 1 + currentPage * pageSize}</th>
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>

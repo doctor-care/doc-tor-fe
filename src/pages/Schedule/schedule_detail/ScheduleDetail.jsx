@@ -1,35 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Moment from 'moment';
+
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function ScheduleDetail() {
     const { id } = useParams();
-    const location = useLocation();
     const navigate = useNavigate();
-    const queryParams = new URLSearchParams(location.search);
     const [userName] = useState(localStorage.getItem('userName'));
-    const [idAPM] = useState(queryParams.get('idAPM'));
     const [schedule, setSchedule] = useState({});
-    const [isDisabled, setIsDisabled] = useState(false);
     const [patient, setPatient] = useState({});
     const [appointment, setAppointment] = useState({});
     const [shifts, setShifts] = useState({});
-    const [role, setRole] = useState(localStorage.getItem('role'));
-
-    const initalValues = {
-        idAPM: Number(idAPM),
-        createDate: Moment().format('YYYY-MM-DD HH:mm:ss'),
-        statusSCD: 0,
-        scheduleAddress: '',
-        note: '',
-    };
-    const [formData, setFormData] = useState(initalValues);
 
     useEffect(() => {
         getScheduleInfo();
@@ -155,7 +139,6 @@ export default function ScheduleDetail() {
                                         className={`btn btn-sm fw-bold text-white ${getClassCSSByStatusSCD(
                                             schedule.statusSCD,
                                         )}`}
-                                        disabled={true}
                                     >
                                         {showStatusCSD(schedule.statusSCD)}
                                     </button>

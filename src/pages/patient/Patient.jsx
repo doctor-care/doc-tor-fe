@@ -29,7 +29,7 @@ export default function Patient() {
     const schema = yup.object().shape({
         userName: yup
             .string()
-            .required()
+            .required('Không được để trống!')
             .test('userName', 'Username already in use', function (value) {
                 if (value === '') return true;
                 return new Promise((resolve, reject) => {
@@ -46,10 +46,10 @@ export default function Patient() {
                         });
                 });
             }),
-        password: yup.string().required().min(6).max(25),
+        password: yup.string().required('Không được để trống!').min(6).max(25),
         email: yup
             .string()
-            .required()
+            .required('Không được để trống!')
             .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Mail sai định dạng')
             .test('email', 'Email already in use', function (value) {
                 if (value === '') return true;
@@ -68,23 +68,23 @@ export default function Patient() {
             }),
         phone: yup
             .string()
-            .required()
+            .required('Không được để trống!')
             .matches(/^([(0|(+84)])([79])([012])[0-9]{7,8}$/, 'phone sai định dạng'),
         birthday: yup
             .string()
-            .required()
+            .required('Không được để trống!')
             .test('dob', 'tuổi phải trên 18', function (value, ctx) {
                 const dob = new Date(value);
                 const validDate = new Date();
                 const valid = validDate.getFullYear() - dob.getFullYear() >= 18;
                 return !valid ? ctx.createError() : valid;
             }),
-        address: yup.string().required(),
+        address: yup.string().required('Không được để trống!'),
         otp: yup.string().required(),
-        name: yup.string().required(),
-        healthHistory: yup.string().required(),
-        bloodType: yup.string().required(),
-        sex: yup.string().required(),
+        name: yup.string().required('Không được để trống!'),
+        healthHistory: yup.string().required('Không được để trống!'),
+        bloodType: yup.string().required('Không được để trống!'),
+        sex: yup.string().required('Không được để trống!'),
     });
 
     const {
@@ -200,6 +200,13 @@ export default function Patient() {
                         error={errors?.password?.message}
                         type={'password'}
                     />
+                    <InputInForm
+                        label={'Họ và tên'}
+                        properties={'name'}
+                        register={register('name')}
+                        error={errors?.name?.message}
+                        type={'text'}
+                    />
                     <input name="otp" hidden {...register('otp')} defaultValue={randomOTP()} />
                     <div className="">
                         <div>
@@ -254,18 +261,10 @@ export default function Patient() {
                         type={'date'}
                     />
 
-                    <InputInForm
-                        label={'Địa chỉ'}
-                        properties={'address'}
-                        register={register('address')}
-                        error={errors?.address?.message}
-                        type={'text'}
-                    />
-
-                    <div className="">
+                    <div className="mb-3">
                         <div className="row">
                             <div className="col-md-6">
-                                <div className="mb-3">Tỉnh/Thành Phố</div>
+                                <div>Tỉnh/Thành Phố</div>
                                 <select
                                     className="form-control"
                                     name="city"
@@ -281,7 +280,7 @@ export default function Patient() {
                                 </select>
                             </div>
                             <div className="col-md-6">
-                                <div className="mb-3">Quận/Huyện</div>
+                                <div>Quận/Huyện</div>
                                 <select
                                     className="form-control"
                                     name="district"
@@ -300,15 +299,13 @@ export default function Patient() {
                         </div>
                         <div>{messageAddress !== '' && <ErrorMessage messageId={messageAddress} />}</div>
                     </div>
-
                     <InputInForm
-                        label={'Họ và tên'}
-                        properties={'name'}
-                        register={register('name')}
-                        error={errors?.name?.message}
+                        label={'Địa chỉ cụ thể'}
+                        properties={'address'}
+                        register={register('address')}
+                        error={errors?.address?.message}
                         type={'text'}
                     />
-
                     <InputInForm
                         label={'Lịch sử khám bệnh'}
                         properties={'healthHistory'}

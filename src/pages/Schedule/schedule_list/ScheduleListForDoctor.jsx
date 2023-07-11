@@ -135,37 +135,17 @@ function ScheduleListForDoctor() {
         }
     };
 
-    //DuyNT58 lấy danh sách vé máy bay
-    const fetchScheduleList = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/schedule/page/doctor', {
-                params: {
-                    userName,
-                    idShift,
-                    appDate,
-                    statusscd,
-                    page,
-                    size,
-                },
-            });
-            console.log('RESPONSE LIST DATAA', response);
-            setTotalPages(response.data.totalPages);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    //DuyNT58 nhập thông tin tìm kiếm
+   
     const handleInputChange = (event) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    //DuyNT58 chọn trang muốn hiển thị
+    
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
 
-    //DuyNT58 tính toán trang được hiển thị trên màn hình
+    
     const calculatePageNumbers = () => {
         const soTrangToiDa = 3;
         const trangDau = Math.max(0, page - Math.floor(soTrangToiDa / 2));
@@ -177,7 +157,6 @@ function ScheduleListForDoctor() {
         return pageNumbers;
     };
 
-    //DuyNT58 hiển thị giao diện số trang
     const renderPageNumbers = () => {
         const pageNumbers = calculatePageNumbers();
         return pageNumbers.map((pageNumber) => (
@@ -268,7 +247,7 @@ function ScheduleListForDoctor() {
                     <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <h5 className="fw-bold m-0">Sắp xếp</h5>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
+                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <select
                             value={sortDirection}
                             onChange={(e) => {
@@ -293,7 +272,9 @@ function ScheduleListForDoctor() {
                             <th scope="col">Ngày hẹn khám</th>
                             <th scope="col">Ca khám</th>
                             <th scope="col">Địa chỉ</th>
-                            <th scope="col">Trạng thái</th>
+                            <th scope="col" className="text-center">
+                                Trạng thái
+                            </th>
                             <th scope="col">Thao Tác</th>
                         </tr>
                     </thead>
@@ -316,12 +297,11 @@ function ScheduleListForDoctor() {
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
                                     <td className="address-cell">{item.scheduleAddress}</td>
-                                    <td className="">
+                                    <td className="text-center">
                                         <button
                                             className={`btn btn-sm fw-bold text-white ${getClassCSSByStatusSCD(
                                                 item.statusScd,
                                             )}`}
-                                            disabled={true}
                                         >
                                             {showStatusCSD(item.statusScd)}
                                         </button>

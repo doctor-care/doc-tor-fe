@@ -6,24 +6,14 @@ import Moment from 'moment';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css';
-import emailjs from '@emailjs/browser';
-import InputInForm from '@/components/common/SelectOption/InputInForm';
-import { useForm } from 'react-hook-form';
-// import './BookingSchedule.css';
 
 export default function CreateHistoryMedical() {
-    const form = useRef();
     const navigate = useNavigate();
     const [userNameDoctor] = useState(localStorage.getItem('userName'));
     const [patient, setPatient] = useState({});
     const [valid, setValid] = useState({});
     const [scheduleAddress, setScheduleAddress] = useState();
-    const [isDisabled, setIsDisabled] = useState(false);
     const { idScd } = useParams();
-    const [userNamePatient, setUserNamePatient] = useState('');
-    const [emailPatient, setEmailPatient] = useState('');
-    const [link, setLink] = useState('');
-    const [hidden] = useState(false);
 
     const initalValues = {
         userNameDoctor: userNameDoctor,
@@ -42,25 +32,6 @@ export default function CreateHistoryMedical() {
         result: Yup.string().required('Không được để trống!'),
     });
 
-    const onSubmit = (data) => {
-        // data.avatarUrl = files;
-        // data.url = 'http://localhost:8080/patient/signup';
-        emailjs.sendForm('service_3qk9rdh', 'template_sk8664j', form.current, 'gkyCPWWwIvheO7BEy').then(
-            (result) => {
-                console.log('form.current value', form.current);
-                console.log('result value', result);
-                // navigate('/otp', {
-                //     state: {
-                //         data: data,
-                //     },
-                // });
-            },
-            (error) => {
-                console.log(error.text);
-            },
-        );
-    };
-
     useEffect(() => {
         getScheduleInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,12 +41,10 @@ export default function CreateHistoryMedical() {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    const createHistoryMedical = (e) => {
-        e.preventDefault();
+    const createHistoryMedical = () => {
         checkForm
             .validate(formData, { abortEarly: false })
             .then(() => {
-                setIsDisabled(true);
                 axios
                     .post('http://localhost:8080/history-medical/create', formData, {
                         headers: {
@@ -84,14 +53,14 @@ export default function CreateHistoryMedical() {
                     })
                     .then((response) => {
                         if (response.data.idHM === undefined) {
-                            toast.error('THÊM MỚI THẤT BẠI');
+                            toast.error('THÊM MỚI THẤT BẠI!');
                         } else {
                             axios
                                 .post(`http://localhost:8080/schedule/completed/${idScd}`)
                                 .then((schedule) => {
                                     if (schedule.data === 'FAIL') {
                                     } else {
-                                        handleSubmit(onSubmit);
+                                        toast.success('THÊM MỚI BỆNH ÁN THÀNH CÔNG!');
                                         navigate('/prescription/create/' + response.data.idHM);
                                     }
                                 })
@@ -121,9 +90,7 @@ export default function CreateHistoryMedical() {
                 console.log('SCHEDULE', response);
                 formData.scheduleId = response.data.idSCD;
                 formData.patientId = response.data.patient.idPatient;
-                setEmailPatient(response.data.patient.email);
-                setUserNamePatient(response.data.patient.name);
-                setLink(`http://localhost:3000/review/${idScd}`);
+
                 setPatient(response.data.patient);
                 setScheduleAddress(response.data.scheduleAddress);
             })
@@ -131,10 +98,6 @@ export default function CreateHistoryMedical() {
                 console.log(error);
             });
     };
-
-    const { handleSubmit } = useForm({
-        Mode: 'onBlur',
-    });
 
     return (
         <div className="container">
@@ -146,7 +109,7 @@ export default function CreateHistoryMedical() {
                                 <h2 className="text-center">THÊM MỚI BỆNH ÁN</h2>
                             </div>
 
-                            <form onSubmit={createHistoryMedical} className="mt-3">
+                            <div className="mt-3">
                                 <div className="row my-1">
                                     <div className="col-md-6" style={{ paddingRight: '15px' }}>
                                         <div className="form-floating  mb-4">
@@ -315,37 +278,70 @@ export default function CreateHistoryMedical() {
                                 <div className="form-group text-center mt-2">
                                     <button
                                         type="submit"
-                                        className="btn btn-success bg"
+                                        className="btn btn-secondary bg mr-2"
                                         onClick={() => {
-                                            navigate('/');
+                                            navigate(-1);
                                         }}
                                     >
                                         Trở Về
                                     </button>
-                                    <button disabled={isDisabled} type="submit" className="btn btn-success bg">
+                                    <button
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#createHM"
+                                        className="btn btn-success bg"
+                                    >
                                         THÊM MỚI
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {hidden && (
-                <div>
-                    <form onSubmit={handleSubmit(onSubmit)} ref={form} className="space-y-4">
-                        <div>
-                            <input className="form-control" name="email" value={emailPatient} />
+
+            <div
+                className="modal fade"
+                id="createHM"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-success">
+                            <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                XÁC NHẬN
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
                         </div>
-                        <div>
-                            <input className="form-control" name="userName" value={userNamePatient} />
+                        <div className="modal-body">
+                            <div>
+                                <h5>Bạn muốn thêm bệnh án này?</h5>
+                            </div>
                         </div>
-                        <div>
-                            <input className="form-control" name="link" value={link} />
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Hủy bỏ
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={createHistoryMedical}
+                                data-bs-dismiss="modal"
+                            >
+                                Xác nhận
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
