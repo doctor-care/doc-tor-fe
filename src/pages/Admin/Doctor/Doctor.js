@@ -50,7 +50,6 @@ function DoctorAD() {
         axios
             .get(`http://localhost:8080/specialist/get-all`)
             .then((response) => {
-                console.log("setSpecialists", response.data);
                 setSpecialists(response.data);
             })
             .catch((error) => console.error);
@@ -141,7 +140,7 @@ function DoctorAD() {
                             </select>
                         </div>
                         <div className="col-md-2 d-flex justify-content-start align-items-center">
-                            <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type='submit' className='btn btn-info btn-sm text-white'><i className="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </form>
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">

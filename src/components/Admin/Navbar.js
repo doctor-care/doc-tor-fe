@@ -65,16 +65,16 @@ function Navbar({ toggleSidebar }) {
                         </li>
                         <li className="nav-item">
                             <Link to="/create-doctor-service" className="nav-links" onClick={closeMobileMenu}>
-                            Đăng kí dịch vụ
+                                Đăng kí dịch vụ
                             </Link>
                         </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle">
+                        <li className="dropdown">
+                            <a href="#" className="dropdown-toggle">
                                 Dịch vụ y tế
                             </a>
                             <ul>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle">
+                                <li className="dropdown">
+                                    <a href="#" className="dropdown-toggle">
                                         Dịch vụ Đông y
                                     </a>
                                     <ul>
@@ -90,8 +90,8 @@ function Navbar({ toggleSidebar }) {
                                         )}
                                     </ul>
                                 </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle">
+                                <li className="dropdown">
+                                    <a href="#" className="dropdown-toggle">
                                         Dịch vụ Tây y
                                     </a>
                                     <ul>

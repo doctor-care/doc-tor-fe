@@ -113,7 +113,7 @@ function PatientAD() {
                             />
                         </div>
                         <div className="col-md-2 d-flex justify-content-start align-items-center">
-                            <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type='submit' className='btn btn-info btn-sm text-white'><i className="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </form>
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
@@ -138,7 +138,7 @@ function PatientAD() {
                     <tbody>
                         {listDT.map((item, index) => {
                             return (
-                                <tr className="align-middle text-nowrap" key={item.idScd}>
+                                <tr className="align-middle text-nowrap" key={index}>
                                     <th> {index + 1 + currentPage * pageSize}</th>
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>

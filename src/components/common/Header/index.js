@@ -24,16 +24,6 @@ function Header() {
             .catch((error) => console.error);
     }, []);
 
-    // const getRole = () => {
-    //     if (localStorage.getItem('role') !== '') {
-    //         const loginRole = localStorage.getItem('role');
-    //         setRole(loginRole);
-    //     } else {
-    //         setRole('');
-    //     }
-    // }
-
-    // console.log("accessToken", localStorage.getItem('accessToken'));
 
     console.log('role', role);
 
