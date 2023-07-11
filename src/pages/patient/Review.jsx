@@ -11,6 +11,7 @@ export default function Review() {
     const [dataSchedule, setDataSchedule] = useState({});
     const navigate = useNavigate();
     const user = localStorage.getItem('userName');
+    const role = localStorage.getItem('role');
     const { id } = useParams();
     const [review, setReview] = useState({ id: id, rating: 5 });
     const [err, setErr] = useState();
@@ -60,10 +61,13 @@ export default function Review() {
                 console.log(err);
             });
         try {
-            axios.get(`http://localhost:8080/patient/username?userName=${user}`).then((response) => {
-                setPatientId(response.data.idPatient);
-                console.log('PatientId', patientId);
-            });
+            if(user!==''&&role==='ROLE_PATIENT'){
+                axios.get(`http://localhost:8080/patient/username?userName=${user}`).then((response) => {
+                    setPatientId(response.data.idPatient);
+                    console.log('PatientId', patientId);
+                });
+            }
+            
         } catch (error) {
             console.log(error);
         }
@@ -88,7 +92,7 @@ export default function Review() {
         // }
     }, []);
     return (
-        <div className="m-5">
+        <div className="m-5" style={{marginTop:30}}>
             {patientId === dataSchedule?.patient?.idPatient && (
                 <div>
                     <h3>-  </h3>
@@ -153,7 +157,7 @@ export default function Review() {
                             <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">Uh-oh!</p>
 
                             <p className="mt-4 text-gray-500">We can't find that page.</p>
-                            <p>Bạn cần phải đăng nhập</p>
+                            <p>Bạn không được cấp quyền truy cập trang này</p>
                         </div>
                     </div>
                 </div>

@@ -120,7 +120,7 @@ export default function BookingSchedule() {
     };
 
     return (
-        <div className="container">
+        <div className="container" style={{ marginTop: 30 }}>
             <div>
                 <div className="col-12 d-flex ">
                     <div className="d-flex ">
@@ -157,9 +157,6 @@ export default function BookingSchedule() {
                                                 half={false}
                                             />
                                         </div>
-                                        <div>
-                                            <p>{doctor.description}</p>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +182,6 @@ export default function BookingSchedule() {
                                                 className="form-control input"
                                                 id="full-name"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={patient.name}
@@ -204,7 +200,6 @@ export default function BookingSchedule() {
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
                                                 readOnly={true}
-                                                style={{ paddingTop: '10px' }}
                                                 name="phone"
                                                 value={patient.phone}
                                             />
@@ -224,7 +219,6 @@ export default function BookingSchedule() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Email"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={patient.email}
@@ -242,7 +236,6 @@ export default function BookingSchedule() {
                                                 className="form-control input"
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="birthday"
                                                 readOnly={true}
                                                 value={patient.birthday}
@@ -264,7 +257,6 @@ export default function BookingSchedule() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="scheduleAddress"
                                                 value={formData.scheduleAddress}
                                                 onChange={handleInputChange}
@@ -289,7 +281,6 @@ export default function BookingSchedule() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="note"
                                                 value={formData.note}
                                                 onChange={handleInputChange}
@@ -301,12 +292,12 @@ export default function BookingSchedule() {
                                 <div className="form-group text-center mt-2">
                                     <button
                                         type="submit"
-                                        className="btn btn-success bg"
+                                        className="btn btn-success bg m-3"
                                         onClick={() => {
                                             navigate(`/appointment-list?doctorId=${doctor.idDoctor}`);
                                         }}
                                     >
-                                        Trở Về
+                                        TRỞ VỀ
                                     </button>
                                     <button disabled={isDisabled} type="submit" className="btn btn-success bg">
                                         ĐẶT LỊCH

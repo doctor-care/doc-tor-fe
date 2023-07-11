@@ -1,17 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './Patient.css'
+import './Patient.css';
 
 export default function PatientDetailAD() {
-
     const [idChoice, setIdChoice] = useState();
     const [prescriptionDetailList, setPrescriptionDetailList] = useState([]);
 
     //search doctor from attribute
     const { id } = useParams();
     const [patient, setPatient] = useState({});
-
 
     useEffect(() => {
         axios
@@ -35,9 +33,9 @@ export default function PatientDetailAD() {
     };
 
     return (
-        <div className="containerDT">
-            <div>
-                <div className="col-12 d-flex ">
+        <div className="flex justify-content-center">
+            <div className=" max-w-screen-xl" style={{ marginTop: '95px ' }}>
+                <div className="col-12 d-flex shadow">
                     <div className="col-3 bg-img-doctor d-flex justify-content-center align-items-center">
                         <img src={patient.avatarUrl} alt={`Avatar of ${patient.name}`} className="avatar-img shadow" />
                     </div>
@@ -48,11 +46,11 @@ export default function PatientDetailAD() {
                             </div>
 
                             {/* <WinChat
-                            isOpen={isOpen}
-                            onClose={handleCloseModal}
-                            user={user}
-                            doctor={doctor.users?.userName}
-                        /> */}
+                                isOpen={isOpen}
+                                onClose={handleCloseModal}
+                                user={user}
+                                doctor={doctor.users?.userName}
+                            /> */}
 
                             <p>Số điện thoại: {patient.phone}</p>
                             <p>Email: {patient.email}</p>
@@ -60,33 +58,31 @@ export default function PatientDetailAD() {
                             <p>Lịch sử bệnh án:{patient.healthHistory}</p>
                             <p>Nhóm máu: {patient.bloodType}</p>
                             {/* <div className="city">
-                                {city.map(
-                                    (item) =>
-                                        item.province_id === doctor.address.city.toString() && (
-                                            <p className="font-weight-bold">{item.province_name}</p>
-                                        ),
-                                )}
-                            </div>
-
-                            <div className="district">
-                                {district.map(
-                                    (item) =>
-                                        item.district_id === doctor.address.district.toString() && (
-                                            <p className="font-weight-bold">{item.district_name}</p>
-                                        ),
-                                )}
-                            </div> */}
+                                    {city.map(
+                                        (item) =>
+                                            item.province_id === doctor.address.city.toString() && (
+                                                <p className="font-weight-bold">{item.province_name}</p>
+                                            ),
+                                    )}
+                                </div>
+    
+                                <div className="district">
+                                    {district.map(
+                                        (item) =>
+                                            item.district_id === doctor.address.district.toString() && (
+                                                <p className="font-weight-bold">{item.district_name}</p>
+                                            ),
+                                    )}
+                                </div> */}
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div>
-                <div className="col-8 d-flex row justify-content-between mt-2 listLSKB">
+                <div className="mt-4">
                     <div className="text-left">
                         <h3>LỊCH SỬ KHÁM BỆNH</h3>
                     </div>
-                    <div className="mh-300 ">
+                    <div className="mh-300 mt-1">
                         <table className="table table-striped border text-nowrap">
                             <thead>
                                 <tr>
@@ -117,7 +113,7 @@ export default function PatientDetailAD() {
                                                         data-bs-target="#showPrescription"
                                                         onClick={() => {
                                                             setIdChoice(item.idHM);
-                                                            console.log(item.idHM)
+                                                            console.log(item.idHM);
                                                         }}
                                                     >
                                                         Xem đơn thuốc
@@ -145,56 +141,56 @@ export default function PatientDetailAD() {
                         )}
                     </div>
                 </div>
-            </div>
 
-            <div
-                className="modal fade"
-                id="showPrescription"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabIndex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-            >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header bg-primary">
-                            <h5 className="modal-title text-white " id="staticBackdropLabel">
-                                THÔNG TIN ĐƠN THUỐC
-                            </h5>
-                            <button
-                                type="button"
-                                className="btn-close text-white"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            {prescriptionDetailList.length > 0 && (
-                                <table className="table table-striped border text-center">
-                                    <thead className="">
-                                        <tr>
-                                            <th>TÊN THUỐC</th>
-                                            {/* <td>ĐƠN GIÁ</td> */}
-                                            <th>SỐ LƯỢNG</th>
-                                            {/* <td>THÀNH TIỀN</td> */}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {prescriptionDetailList.map((item, index) => {
-                                            return (
-                                                <tr className="align-middle text-nowrap" key={index}>
-                                                    <td>{item.drugName}</td>
-                                                    {/* <td>{item.drugPrice}</td> */}
-                                                    <td>{item.quantity}</td>
-                                                    {/* <td>{item.drugPrice * item.quantity}</td> */}
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            )}
-                            {prescriptionDetailList.length === 0 && <div>BỆNH ÁN NÀY KHÔNG CÓ ĐƠN THUỐC!</div>}
+                <div
+                    className="modal fade"
+                    id="showPrescription"
+                    data-bs-backdrop="static"
+                    data-bs-keyboard="false"
+                    tabIndex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header bg-primary">
+                                <h5 className="modal-title text-white " id="staticBackdropLabel">
+                                    THÔNG TIN ĐƠN THUỐC
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close text-white"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                {prescriptionDetailList.length > 0 && (
+                                    <table className="table table-striped border text-center">
+                                        <thead className="">
+                                            <tr>
+                                                <th>TÊN THUỐC</th>
+                                                {/* <td>ĐƠN GIÁ</td> */}
+                                                <th>SỐ LƯỢNG</th>
+                                                {/* <td>THÀNH TIỀN</td> */}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {prescriptionDetailList.map((item, index) => {
+                                                return (
+                                                    <tr className="align-middle text-nowrap" key={index}>
+                                                        <td>{item.drugName}</td>
+                                                        {/* <td>{item.drugPrice}</td> */}
+                                                        <td>{item.quantity}</td>
+                                                        {/* <td>{item.drugPrice * item.quantity}</td> */}
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                )}
+                                {prescriptionDetailList.length === 0 && <div>BỆNH ÁN NÀY KHÔNG CÓ ĐƠN THUỐC!</div>}
+                            </div>
                         </div>
                     </div>
                 </div>

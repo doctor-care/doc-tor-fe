@@ -10,6 +10,7 @@ export default function ScheduleDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [userName] = useState(localStorage.getItem('userName'));
+    const [role] = useState(localStorage.getItem('role'));
     const [schedule, setSchedule] = useState({});
     const [patient, setPatient] = useState({});
     const [appointment, setAppointment] = useState({});
@@ -154,7 +155,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="full-name"
                                                 placeholder="Tên bệnh nhân"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={patient.name}
@@ -173,7 +173,6 @@ export default function ScheduleDetail() {
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
                                                 readOnly={true}
-                                                style={{ paddingTop: '10px' }}
                                                 name="phone"
                                                 value={patient.phone}
                                             />
@@ -193,7 +192,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Email"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={patient.sex}
@@ -211,7 +209,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="birthday"
                                                 readOnly={true}
                                                 value={getAge(patient.birthday)}
@@ -232,7 +229,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Email"
-                                                style={{ paddingTop: '10px' }}
                                                 name="name"
                                                 readOnly={true}
                                                 value={appointment.date}
@@ -250,7 +246,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="date-of-birth"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="birthday"
                                                 readOnly={true}
                                                 value={shifts.shiftsName}
@@ -272,7 +267,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="scheduleAddress"
                                                 value={schedule.scheduleAddress}
                                                 readOnly={true}
@@ -293,7 +287,6 @@ export default function ScheduleDetail() {
                                                 className="form-control input"
                                                 id="email"
                                                 placeholder="Họ và tên"
-                                                style={{ paddingTop: '10px' }}
                                                 name="note"
                                                 value={schedule.note}
                                                 readOnly={true}
@@ -305,7 +298,7 @@ export default function ScheduleDetail() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="text-center mt-2 d-flex justify-content-center">
+                               {role ==='ROLE_DOCTOR'&&<div className="text-center mt-2 d-flex justify-content-center">
                                     {schedule.statusSCD === 0 && (
                                         <button
                                             className="btn btn-warning mr-2 shadow"
@@ -324,7 +317,7 @@ export default function ScheduleDetail() {
                                             Xác nhận
                                         </button>
                                     )}
-                                </div>
+                                </div>}
                             </div>
                         </div>
                     </div>
