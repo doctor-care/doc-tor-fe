@@ -122,7 +122,7 @@ const Chat = ({ user }) => {
         if (searchText !== '') {
             const filteredUsers = listAllUser.filter((user) => user.toLowerCase().includes(searchText.toLowerCase()));
             setListUser(filteredUsers);
-           // console.log("filteredUsers",filteredUsers);
+            console.log("filteredUsers",filteredUsers);
         } else {
             axios
                 .get(`http://localhost:8080/chat-box/list-user?user=${user}`)
