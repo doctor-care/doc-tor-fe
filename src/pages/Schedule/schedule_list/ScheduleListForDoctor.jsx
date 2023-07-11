@@ -268,7 +268,7 @@ function ScheduleListForDoctor() {
                     <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <h5 className="fw-bold m-0">Sắp xếp</h5>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
+                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <select
                             value={sortDirection}
                             onChange={(e) => {
@@ -293,7 +293,9 @@ function ScheduleListForDoctor() {
                             <th scope="col">Ngày hẹn khám</th>
                             <th scope="col">Ca khám</th>
                             <th scope="col">Địa chỉ</th>
-                            <th scope="col">Trạng thái</th>
+                            <th scope="col" className="text-center">
+                                Trạng thái
+                            </th>
                             <th scope="col">Thao Tác</th>
                         </tr>
                     </thead>
@@ -316,12 +318,11 @@ function ScheduleListForDoctor() {
                                     <td>{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
                                     <td className="address-cell">{item.scheduleAddress}</td>
-                                    <td className="">
+                                    <td className="text-center">
                                         <button
                                             className={`btn btn-sm fw-bold text-white ${getClassCSSByStatusSCD(
                                                 item.statusScd,
                                             )}`}
-                                            disabled={true}
                                         >
                                             {showStatusCSD(item.statusScd)}
                                         </button>
