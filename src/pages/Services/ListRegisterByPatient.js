@@ -27,40 +27,28 @@ function RegisterListForPatient() {
 
     useEffect(() => {
         getPatientId();
-        getListRegister(0);
-    }, []);
-    const handleStatus = (stt) => {
-        setStatusscd(stt);
-        getListRegister(stt);
-    };
-
-    useEffect(() => {
         getListRegister(statusscd);
-    }, [statusscd]);
+    }, [patientId, statusscd]);
 
     const getPatientId = () => {
         try {
             axios.get(`http://localhost:8080/patient/username?userName=${userName}`).then((response) => {
-                console.log('response.data', response.data);
                 setPatientId(response.data.idPatient);
             });
         } catch (error) {
             console.log(error);
         }
     };
-    const getListRegister = (statusID) => {
+    const getListRegister = (stt) => {
         try {
             axios
-                .get(`http://localhost:8080/service/register-by-id-patient?idPatient=${patientId}&status=${statusID}`)
+                .get(`http://localhost:8080/service/register-by-id-patient?idPatient=${patientId}&status=${stt}`)
                 .then((response) => {
-                    console.log('response.data', response.data);
                     setRegisterList(response.data);
                 });
         } catch (error) {
             console.log(error);
         }
-        console.log('statusID', statusID);
-        console.log('getListRegister', registerList);
     };
     const getClassCSSByStatusSCD = (status) => {
         switch (status) {
@@ -83,16 +71,16 @@ function RegisterListForPatient() {
                 <div className="text-center pb-2">
                     <h1>DANH SÁCH LỊCH ĐĂNG KÍ DỊCH VỤ</h1>
                 </div>
-                <form className="row justify-content-center">
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
+                <form className="row justify-content-end">
+                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center p-0">
                         <h5 className="fw-bold m-0">Tìm Kiếm Theo</h5>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
+                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <select
                             name="diemDi"
                             id="diemDi"
                             onChange={(e) => {
-                                handleStatus(e.target.value);
+                                setStatusscd(e.target.value);
                             }}
                             value={statusscd}
                             className="border border-info text-center"
@@ -157,8 +145,6 @@ function RegisterListForPatient() {
                             <div className="text-center">
                                 <h3 className="">
                                     <span>KHÔNG CÓ LỊCH HẸN NÀO!</span>
-                                    {/* <span className="text-uppercase">{showStatusCSD(statusscd)}</span>
-                                    <span> NÀO!</span> */}
                                 </h3>
                             </div>
                         </div>
