@@ -117,7 +117,7 @@ export default function Home() {
                                 <div className="row">
                                     <div className="col-lg-4 d-flex align-items-stretch" style={{ width: '32%' }}>
                                         <div className="content">
-                                            <h3>Bác sĩ được yêu thích nhất!!</h3>
+                                            <h3>Bác sĩ được yêu thích nhất tuần qua!!</h3>
                                             <div className="text-center" onClick={()=>{
                                                     navigate(`/doctors`);
                                                 }}>
