@@ -49,11 +49,26 @@ function ScheduleListForPatient() {
             case 1:
                 return 'Đã xác nhận';
             case 4:
-                return 'hoàn tất';
+                return 'Đã hoàn tất';
             case 5:
                 return 'Đã hủy';
             default:
                 return 'Không xác định';
+        }
+    };
+
+    const getClassCSSByStatusSCD = (status) => {
+        switch (status) {
+            case 0:
+                return 'btn-warning';
+            case 1:
+                return 'btn-primary';
+            case 4:
+                return 'btn-success';
+            case 5:
+                return 'btn-danger';
+            default:
+                return 'btn-secondary';
         }
     };
 
@@ -145,7 +160,7 @@ function ScheduleListForPatient() {
                             <h5 className="fw-bold m-0">Sắp xếp</h5>
                         </div>
 
-                        <div className="col-4 d-flex justify-content-center align-items-center">
+                        <div className="col-4 d-flex justify-content-end align-items-center">
                             <select
                                 value={sortDirection}
                                 onChange={(e) => {
@@ -172,7 +187,9 @@ function ScheduleListForPatient() {
                             <th scope="col">Ngày hẹn khám</th>
                             <th scope="col">Ca khám</th>
                             <th scope="col">Bác sĩ khám</th>
-                            <th scope="col">Trạng thái</th>
+                            <th scope="col" className="text-center">
+                                Trạng thái
+                            </th>
                             <th scope="col">Thao Tác</th>
                         </tr>
                     </thead>
@@ -187,7 +204,15 @@ function ScheduleListForPatient() {
                                     <td className="text-center">{convertAppointmentDate(item.apmDate)}</td>
                                     <td>{item.shiftName}</td>
                                     <td>{item.doctorName}</td>
-                                    <td className="text-uppercase text-success">{showStatusCSD(item.statusScd)}</td>
+                                    <td className="text-center text-success">
+                                        <button
+                                            className={`btn btn-sm fw-bold text-white ${getClassCSSByStatusSCD(
+                                                item.statusScd,
+                                            )}`}
+                                        >
+                                            {showStatusCSD(item.statusScd)}
+                                        </button>
+                                    </td>
                                     <td>
                                         <Link className="text-decoration-none" to={`/schedule/${item.idScd}`}>
                                             <button className="btn btn-primary btn-sm">Chi tiết</button>
