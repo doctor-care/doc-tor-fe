@@ -9,7 +9,7 @@ function PatientAD() {
     const navigate = useNavigate();
     const [listDT, setListDT] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(3);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
     const [fullName, setFullName] = useState('');
@@ -32,7 +32,7 @@ function PatientAD() {
                 setListDT(data.content);
             })
             .catch((error) => console.error);
-    }, []);
+    }, [currentPage, pageSize]);
     function handleNextPageClick() {
         if (currentPage < totalPage - 1) {
             setCurrentPage(currentPage + 1);

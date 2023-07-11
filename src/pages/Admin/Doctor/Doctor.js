@@ -43,7 +43,7 @@ function DoctorAD() {
                 setListDT(data.content);
             })
             .catch((error) => console.error);
-    }, []);
+    }, [currentPage, pageSize]);
 
 
     const getSpecialist = () => {
