@@ -2,13 +2,14 @@ import './ListRegister.css';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 function RegisterListForDoctor() {
     const [userName] = useState(localStorage.getItem('userName'));
     const [doctorId, setDoctorId] = useState('');
     const [statusscd, setStatusscd] = useState(0);
     const [registerList, setRegisterList] = useState([]);
+    const [idForAction, setIdForAction] = useState();
 
     const showStatusCSD = (status) => {
         switch (status) {
@@ -27,72 +28,62 @@ function RegisterListForDoctor() {
 
     useEffect(() => {
         getDoctorId();
-        getListRegister(0);
-    }, []);
-    const handleStatus = (stt) => {
-        setStatusscd(stt);
-        getListRegister(stt);
-    };
-
-    useEffect(() => {
         getListRegister(statusscd);
-    }, [statusscd]);
+    }, [doctorId, statusscd]);
+
 
     const getDoctorId = () => {
         try {
             axios.get('http://localhost:8080/doctor/username/' + userName).then((response) => {
-                console.log('response.data', response.data);
                 setDoctorId(response.data.idDoctor);
             });
         } catch (error) {
             console.log(error);
         }
-    };
-    const getListRegister = (statusID) => {
-        try {
-            axios
-                .get(`http://localhost:8080/service/register-by-id-doctor?idDoctor=${doctorId}&status=${statusID}`)
-                .then((response) => {
-                    console.log('response.data', response.data);
-                    setRegisterList(response.data);
-                });
-        } catch (error) {
-            console.log(error);
-        }
-        console.log('statusID', statusID);
-        console.log('getListRegister', registerList);
     };
 
-    const confirmRegister = (id) => {
+    const getListRegister = (stt) => {
         try {
-            axios.get(`http://localhost:8080/service/set-status?id=${id}&status=1`).then((response) => {
-                console.log('response.data', response.data);
+            axios.get(`http://localhost:8080/service/register-by-id-doctor?idDoctor=${doctorId}&status=${stt}`).then((response) => {
+                setRegisterList(response.data);
             });
         } catch (error) {
             console.log(error);
         }
-        handleStatus(0);
     };
-    const cancelRegister = (id) => {
+
+    const confirmRegister = () => {
         try {
-            axios.get(`http://localhost:8080/service/set-status?id=${id}&status=3`).then((response) => {
-                console.log('response.data', response.data);
+            axios.get(`http://localhost:8080/service/set-status?id=${idForAction}&status=1`).then((response) => {
+                setStatusscd(1);
+                toast.success("XÁC NHẬN THÀNH CÔNG");
             });
         } catch (error) {
             console.log(error);
         }
-        handleStatus(0);
+
     };
-    const completeRegister = (id) => {
+    const cancelRegister = () => {
         try {
-            axios.get(`http://localhost:8080/service/set-status?id=${id}&status=2`).then((response) => {
-                console.log('response.data', response.data);
+            axios.get(`http://localhost:8080/service/set-status?id=${idForAction}&status=3`).then((response) => {
+                setStatusscd(3);
+                toast.warning("HỦY LỊCH THÀNH CÔNG");
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const completeRegister = () => {
+        try {
+            axios.get(`http://localhost:8080/service/set-status?id=${idForAction}&status=2`).then((response) => {
+                setStatusscd(2);
+                toast.success("HOÀN TẤT PHIẾU ĐĂNG KÝ");
                 setDoctorId(response.data.idDoctor);
             });
         } catch (error) {
             console.log(error);
         }
-        handleStatus(0);
+
     };
 
     const getClassCSSByStatusSCD = (status) => {
@@ -116,27 +107,27 @@ function RegisterListForDoctor() {
                 <div className="text-center pb-2">
                     <h1>DANH SÁCH LỊCH ĐĂNG KÍ DỊCH VỤ</h1>
                 </div>
-                <form className="row justify-content-center">
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <h5 className="fw-bold m-0">Tìm Kiếm Theo</h5>
+
+                <form className="row justify-content-end">
+                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center p-0">
+                        <h5 className="fw-bold m-0">Trạng thái</h5>
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
+                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
                         <select
-                            name="diemDi"
-                            id="diemDi"
                             onChange={(e) => {
-                                handleStatus(e.target.value);
+                                setStatusscd(e.target.value);
                             }}
                             value={statusscd}
                             className="border border-info text-center"
                         >
-                            <option value={0}> Chưa xác nhận </option>
-                            <option value={1}> Đã xác nhận </option>
-                            <option value={2}> Đã hoàn tất </option>
-                            <option value={3}> Đã hủy </option>
+                            <option value={0} selected={statusscd === 0}> Chưa xác nhận </option>
+                            <option value={1} selected={statusscd === 1}> Đã xác nhận </option>
+                            <option value={2} selected={statusscd === 2}> Đã hoàn tất </option>
+                            <option value={3} selected={statusscd === 3}> Đã hủy </option>
                         </select>
                     </div>
                 </form>
+
             </div>
             <div className="mh-300">
                 <table className="table table-striped border text-nowrap">
@@ -156,11 +147,10 @@ function RegisterListForDoctor() {
                     <tbody>
                         {registerList.map((item, index) => {
                             return (
-                                <tr className="align-middle text-nowrap" key={item.idScd}>
+                                <tr className="align-middle text-nowrap" key={index}>
                                     <td>{index + 1}</td>
                                     <td>{item.createTime}</td>
                                     <td>{item.fullname}</td>
-
                                     <td>{item.phone}</td>
                                     <td>{item.address}</td>
                                     <td>{item.doctorServiceMedical.serviceMedical.nameService}</td>
@@ -187,18 +177,22 @@ function RegisterListForDoctor() {
                                             >
                                                 Chọn
                                             </button>
-                                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            {item.status !== 3 && (<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 {item.status === 0 && (
                                                     <li>
                                                         <button
                                                             className="text-decoration-none dropdown-item"
-                                                            onClick={() => confirmRegister(item.id)}
+                                                            onClick={() => setIdForAction(item.id)}
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmRs"
                                                         >
                                                             XÁC NHẬN
                                                         </button>
                                                         <button
                                                             className="text-decoration-none dropdown-item"
-                                                            onClick={() => cancelRegister(item.id)}
+                                                            onClick={() => setIdForAction(item.id)}
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#cancelRs"
                                                         >
                                                             HỦY
                                                         </button>
@@ -208,19 +202,21 @@ function RegisterListForDoctor() {
                                                     <li>
                                                         <button
                                                             className="text-decoration-none dropdown-item"
-                                                            onClick={() => completeRegister(item.id)}
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#completedRs"
                                                         >
                                                             ĐÃ XONG
                                                         </button>
                                                         <button
                                                             className="text-decoration-none dropdown-item"
-                                                            onClick={() => cancelRegister(item.id)}
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#cancelRs"
                                                         >
                                                             HỦY
                                                         </button>
                                                     </li>
                                                 )}
-                                            </ul>
+                                            </ul>)}
                                         </div>
                                     </td>
                                 </tr>
@@ -237,14 +233,149 @@ function RegisterListForDoctor() {
                         >
                             <div className="text-center">
                                 <h3 className="">
-                                    <span>KHÔNG CÓ LỊCH HẸN NÀO!</span>
-                                    {/* <span className="text-uppercase">{showStatusCSD(statusscd)}</span>
-                                    <span> NÀO!</span> */}
+                                    <span>KHÔNG CÓ LỊCH ĐĂNG KÝ NÀO!</span>
+
                                 </h3>
                             </div>
                         </div>
                     </div>
                 )}
+            </div>
+
+            {/* modal confirm */}
+            <div
+                className="modal fade"
+                id="confirmRs"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-primary">
+                            <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                XÁC NHẬN
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <div>
+                                <h5>Bạn muốn xác nhận phiếu đăng ký này?</h5>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Hủy bỏ
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={confirmRegister}
+                                data-bs-dismiss="modal"
+                            >
+                                Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* modal cancel */}
+            <div
+                className="modal fade"
+                id="cancelRs"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-danger">
+                            <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                XÁC NHẬN
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <div>
+                                <h5>Bạn muốn hủy phiếu đăng ký này?</h5>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Hủy bỏ
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={cancelRegister}
+                                data-bs-dismiss="modal"
+                            >
+                                Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* modal complete */}
+            <div
+                className="modal fade"
+                id="completedRs"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-success">
+                            <h5 className="modal-title text-white" id="staticBackdropLabel">
+                                XÁC NHẬN
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <div>
+                                <h5>Xác nhận hoàn thành phiếu đăng ký này?</h5>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Hủy bỏ
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-warning"
+                                onClick={completeRegister}
+                                data-bs-dismiss="modal"
+                            >
+                                Xác nhận
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

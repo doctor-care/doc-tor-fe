@@ -12,10 +12,19 @@ function PatientAD() {
     const [pageSize, setPageSize] = useState(5);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
+    const [fullName, setFullName] = useState('');
+    const [phone, setPhone] = useState('');
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8080/patient/all?page=${currentPage}&size=${pageSize}`)
+            .get(`http://localhost:8080/patient/all`, {
+                params: {
+                    currentPage,
+                    pageSize,
+                    fullName,
+                    phone
+                },
+            })
             .then((response) => {
                 const data = response.data;
                 setTotalPage(data.totalPages);
@@ -23,7 +32,7 @@ function PatientAD() {
                 setListDT(data.content);
             })
             .catch((error) => console.error);
-    }, [currentPage, pageSize]);
+    }, []);
     function handleNextPageClick() {
         if (currentPage < totalPage - 1) {
             setCurrentPage(currentPage + 1);
@@ -50,6 +59,27 @@ function PatientAD() {
     function handlePageNumberClick(pageNumber) {
         setCurrentPage(pageNumber);
     }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        axios
+            .get(`http://localhost:8080/patient/all`, {
+                params: {
+                    currentPage,
+                    pageSize,
+                    fullName,
+                    phone
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                setTotalPage(data.totalPages);
+                setPageNumbers(Array.from(Array(data.totalPages).keys()));
+                setListDT(data.content);
+            })
+            .catch((error) => console.error);
+    }
+
     return (
         <div className="container ticket-container bg-body shadow mg-top-60">
             <div className="pt-5 pb-2">
@@ -58,44 +88,38 @@ function PatientAD() {
                 </div>
 
                 {/* form search */}
-                <form className="row justify-content-center">
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <h5>Tìm Kiếm Theo</h5>
-                    </div>
+                <div className="row">
+                    <form className='col-10 row' onSubmit={(e) => handleSearch(e)}>
+                        <div className="form-group col-md-3 d-flex justify-content-end align-items-center">
+                            <h5 className='m-0'>Tìm Kiếm Theo</h5>
+                        </div>
 
+                        <div className="form-group col-md-4 d-flex justify-content-center align-items-center">
+                            <input
+                                className='form-control'
+                                value={fullName} onChange={(e) => {
+                                    setFullName(e.target.value)
+                                }}
+                                placeholder='Họ và tên'
+                            />
+                        </div>
+                        <div className="form-group col-md-3 d-flex justify-content-center align-items-center">
+                            <input
+                                className='form-control'
+                                value={phone} onChange={(e) => {
+                                    setPhone(e.target.value)
+                                }}
+                                placeholder='Số điện thoại'
+                            />
+                        </div>
+                        <div className="col-md-2 d-flex justify-content-start align-items-center">
+                            <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </form>
                     <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDi"
-                            id="diemDi"
-                            // onChange={(e) => {
-                            //     setStatusscd(e.target.value);
-                            // }}
-                            className="form-control text-center"
-                        >
-                            <option value="0"> Chưa xác nhận </option>
-                            <option value="1"> Đã xác nhận </option>
-                            <option value="4"> Đã hoàn tất </option>
-                        </select>
+
                     </div>
-                    <div className="form-group col-md-2 d-flex justify-content-end align-items-center">
-                        <button type="submit" className="btn bg">
-                            {' '}
-                            SẮP XẾP
-                        </button>
-                    </div>
-                    <div className="form-group col-md-2 d-flex justify-content-center align-items-center">
-                        <select
-                            name="diemDen"
-                            id="diemDen"
-                            // value={formData.diemDen}
-                            // onChange={handleInputChange}
-                            className="form-control text-center"
-                        >
-                            <option value="">-- Mới nhất --</option>
-                            <option value="">-- Cũ nhất --</option>
-                        </select>
-                    </div>
-                </form>
+                </div>
             </div>
             <div className="mh-300">
                 <table className="table table-striped border text-nowrap">
