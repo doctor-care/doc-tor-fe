@@ -5,7 +5,6 @@ import './AppointmentFromDoctor.css';
 import ReactStars from 'react-stars';
 import WinChat from '../../Chat/WinChat';
 
-
 export default function AppointmentFromDoctor() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -80,15 +79,14 @@ export default function AppointmentFromDoctor() {
     };
 
     const handleChoice = (idApp, idDoc) => {
-        if('ROLE_PATIENT' === role){
+        if ('ROLE_PATIENT' === role) {
             navigate(`/booking-schedule?idAPM=${idApp}&idDoctor=${idDoc}`);
-        }else{
-     const result = window.confirm('Bạn phải đăng nhập để tiếp tục. Bấm OK để đăng nhập.');
-    if (result) {
-        navigate(`/login`);
-    } 
+        } else {
+            const result = window.confirm('Bạn phải đăng nhập để tiếp tục. Bấm OK để đăng nhập.');
+            if (result) {
+                navigate(`/login`);
+            }
         }
-   
     };
 
     useEffect(() => {
@@ -206,16 +204,9 @@ export default function AppointmentFromDoctor() {
                                 className={`fw-bold col-2 text-center m-1 shift ${
                                     app.statusAPM === 2 ? 'confirmed' : app.statusAPM === 1 ? 'booking' : 'free'
                                 } `}
+                                onClick={app.statusAPM > 0 ? null : () => handleChoice(app.idAPM, app.doctor.idDoctor)}
                             >
-                                <button
-                                    className={`text-decoration-none ${app.statusAPM === 2 ? 'not-allow' : 'allow'} `}
-                                    disabled={app.statusAPM > 0}
-                                    onClick={
-                                        app.statusAPM > 0 ? null : () => handleChoice(app.idAPM, app.doctor.idDoctor)
-                                    }
-                                >
-                                    <span>{app.shifts.shiftsName}</span>
-                                </button>
+                                <span>{app.shifts.shiftsName}</span>
                             </div>
                         ))}
                     </div>
