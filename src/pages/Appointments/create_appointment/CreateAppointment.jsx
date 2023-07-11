@@ -98,6 +98,7 @@ export default function CreateAppointment() {
                         .get('http://localhost:8080/appointment/get-date?doctorId=' + response.data.idDoctor)
                         .then((response) => {
                             if (response.data.length > 0) {
+                                console.log('response', response);
                                 setExistDayList(response.data);
                                 setMin(0);
                             }

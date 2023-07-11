@@ -181,3 +181,6 @@
   .dropdown ul li:hover > ul {
     display: block;
   }
+  .active{
+    border-bottom: 2px solid #000;
+  }

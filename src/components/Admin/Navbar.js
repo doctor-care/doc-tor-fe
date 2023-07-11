@@ -10,6 +10,7 @@ function Navbar({ toggleSidebar }) {
     const [left, setLeft] = useState('-100%');
     const [listService, setListService] = useState([]);
     const [role, setRole] = useState(localStorage.getItem('role'));
+    const [selected,setSelected] = useState('0')
     // useEffect(() => {
     //     getRole();
     // }, []);
@@ -53,23 +54,23 @@ function Navbar({ toggleSidebar }) {
                         <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                     </div>
                     <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-                        <li className="nav-item">
-                            <Link to="/listDoc" className="nav-links" onClick={closeMobileMenu}>
+                        <li className="nav-item" onClick={()=>{setSelected('0')}}>
+                            <Link to="/listDoc" className={`nav-links ${selected === '0' ? 'active' : ''}`} onClick={closeMobileMenu}>
                                 Bác sĩ
                             </Link>
                         </li>
-                        <li className="nav-item">
-                            <Link to="/listPat" className="nav-links" onClick={closeMobileMenu}>
+                        <li className="nav-item" onClick={()=>{setSelected('1')}}>
+                            <Link to="/listPat" className={`nav-links ${selected === '1' ? 'active' : ''}`} onClick={closeMobileMenu}>
                                 Bệnh nhân
                             </Link>
                         </li>
-                        <li className="nav-item">
-                            <Link to="/create-doctor-service" className="nav-links" onClick={closeMobileMenu}>
+                        <li className="nav-item" onClick={()=>{setSelected('2')}}>
+                            <Link to="/create-doctor-service" className={`nav-links ${selected === '2' ? 'active' : ''}`} onClick={closeMobileMenu}>
                             Đăng kí dịch vụ
                             </Link>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle">
+                            <a href="#"  className={`nav-links ${selected === '3' ? 'active' : ''}`}>
                                 Dịch vụ y tế
                             </a>
                             <ul>
@@ -81,7 +82,7 @@ function Navbar({ toggleSidebar }) {
                                         {listService.map(
                                             (service) =>
                                                 service.typeService === 1 && (
-                                                    <li key={service.idService}>
+                                                    <li key={service.idService} onClick={()=>{setSelected('3')}}>
                                                         <a href={`/serviceAD/${service.idService}`}>
                                                             {service.nameService}
                                                         </a>
@@ -98,7 +99,7 @@ function Navbar({ toggleSidebar }) {
                                         {listService.map(
                                             (service) =>
                                                 service.typeService === 2 && (
-                                                    <li key={service.idService}>
+                                                    <li key={service.idService} onClick={()=>{setSelected('3')}}>
                                                         <a href={`/serviceAD/${service.idService}`}>
                                                             {service.nameService}
                                                         </a>
@@ -115,8 +116,8 @@ function Navbar({ toggleSidebar }) {
                                 <button className="btn btn-warning">Nhắn tin</button>
                             </Link>
                         </li> */}
-                        <li className="nav-item">
-                            <Link to="/dashboard" className="nav-links" onClick={closeMobileMenu}>
+                        <li className="nav-item" onClick={()=>{setSelected('4')}}>
+                            <Link to="/dashboard" className={`nav-links ${selected === '4' ? 'active' : ''}`} onClick={closeMobileMenu}>
                                 Thống kê
                             </Link>
                         </li>

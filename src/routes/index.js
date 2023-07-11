@@ -64,7 +64,7 @@ const publicRoutes = [
     //Bệnh nhân
     { path: '/editPatient', component: AsyncDataEditPatient, layout: OnlyHeader },
     { path: '/appointments', component: Appointment, layout: OnlyHeader },
-    { path: '/review/:id', component: Review, layout: null },
+    { path: '/review/:id', component: Review, layout: OnlyHeader },
     { path: '/user/schedule-list', component: ScheduleListForPatient, layout: OnlyHeader },
 
     //Đăng xuấst

@@ -7,6 +7,7 @@ import './styles.css';
 function Header() {
     const [listService, setListService] = useState([]);
     const [role, setRole] = useState(localStorage.getItem('role'));
+    const [selected, setSelected] = useState('0');
     // useEffect(() => {
     //     getRole();
     // }, []);
@@ -51,27 +52,37 @@ function Header() {
 
                     <nav id="navbar" className="navbar order-last order-lg-0">
                         <ul>
-                            <li>
-                                <Link as={Link} to="/" className="nav-link scrollto active">
+                            <li
+                                onClick={() => {
+                                    setSelected('0');
+                                }}
+                            >
+                                <Link
+                                    as={Link}
+                                    to="/"
+                                    className={`nav-link scrollto ${selected === '0' ? 'active' : ''}`}
+                                >
                                     Trang chủ
                                 </Link>
                             </li>
                             {role !== 'ROLE_DOCTOR' && (
                                 <>
-                                    <li className="dropdown">
-                                        <Link className="text-decoration-none">
-                                            <span>Bác sĩ</span> <i className="bi bi-chevron-down"></i>
+                                    <li
+                                        onClick={() => {
+                                            setSelected('1');
+                                        }}
+                                    >
+                                        <Link
+                                            as={Link}
+                                            to="/doctors"
+                                            className={`nav-link scrollto ${selected === '1' ? 'active' : ''}`}
+                                        >
+                                            <span>Danh sách bác sĩ</span>
                                         </Link>
-                                        <ul>
-                                            <li>
-                                                <Link as={Link} to="/doctors" className="nav-link scrollto">
-                                                    Danh sách bác sĩ
-                                                </Link>
-                                            </li>
-                                        </ul>
                                     </li>
+
                                     <li className="dropdown">
-                                        <Link>
+                                        <Link className={`nav-link scrollto ${selected === '2' ? 'active' : ''}`}>
                                             <span>Dịch vụ y tế</span> <i className="bi bi-chevron-down"></i>
                                         </Link>
                                         <ul>
@@ -83,13 +94,19 @@ function Header() {
                                                     {listService.map(
                                                         (service) =>
                                                             service.typeService === 1 && (
-                                                                <Link
-                                                                    key={service.idService}
-                                                                    as={Link}
-                                                                    to={`/service/${service.idService}`}
+                                                                <li
+                                                                    onClick={() => {
+                                                                        setSelected('2');
+                                                                    }}
                                                                 >
-                                                                    <span>{service.nameService}</span>
-                                                                </Link>
+                                                                    <Link
+                                                                        key={service.idService}
+                                                                        as={Link}
+                                                                        to={`/service/${service.idService}`}
+                                                                    >
+                                                                        <span>{service.nameService}</span>
+                                                                    </Link>
+                                                                </li>
                                                             ),
                                                     )}
                                                 </ul>
@@ -102,12 +119,18 @@ function Header() {
                                                     {listService.map(
                                                         (service) =>
                                                             service.typeService === 2 && (
-                                                                <Link
-                                                                    key={service.idService}
-                                                                    to={`/service/${service.idService}`}
+                                                                <li
+                                                                    onClick={() => {
+                                                                        setSelected('2');
+                                                                    }}
                                                                 >
-                                                                    <span>{service.nameService}</span>
-                                                                </Link>
+                                                                    <Link
+                                                                        key={service.idService}
+                                                                        to={`/service/${service.idService}`}
+                                                                    >
+                                                                        <span>{service.nameService}</span>
+                                                                    </Link>
+                                                                </li>
                                                             ),
                                                     )}
                                                 </ul>
@@ -118,17 +141,29 @@ function Header() {
                             )}
                             {role === 'ROLE_DOCTOR' && (
                                 <>
-                                    <li>
-                                        <Link as={Link} to="/doctors" className="nav-link scrollto">
+                                    <li
+                                        onClick={() => {
+                                            setSelected('1');
+                                        }}
+                                    >
+                                        <Link
+                                            as={Link}
+                                            to="/doctors"
+                                            className={`nav-link scrollto ${selected === '1' ? 'active' : ''}`}
+                                        >
                                             Danh sách bác sĩ
                                         </Link>
                                     </li>
                                     <li className="dropdown">
-                                        <Link className="text-decoration-none">
+                                        <Link className={`text-decoration-none ${selected === '2' ? 'active' : ''}`}>
                                             <span>Lịch Hẹn</span> <i className="bi bi-chevron-down"></i>
                                         </Link>
                                         <ul>
-                                            <li>
+                                            <li
+                                                onClick={() => {
+                                                    setSelected('3');
+                                                }}
+                                            >
                                                 <Link
                                                     as={Link}
                                                     to="/doctor/schedule-list"
@@ -137,24 +172,21 @@ function Header() {
                                                     Danh sách lịch hẹn
                                                 </Link>
                                             </li>
-                                            <li>
+                                            <li
+                                                onClick={() => {
+                                                    setSelected('3');
+                                                }}
+                                            >
                                                 <Link as={Link} to="/get-register-doctor" className="nav-link scrollto">
                                                     Danh sách lịch đăng kí dịch vụ
                                                 </Link>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li className="dropdown">
-                                        <Link className="text-decoration-none">
-                                            <span>Lịch Làm việc</span> <i className="bi bi-chevron-down"></i>
+                                    <li className="dropdown" onClick={()=>{setSelected('4')}}>
+                                        <Link as={Link} to="/appointment/create" className={`nav-link scrollto ${selected === '4' ? 'active' : ''}`}>
+                                            Thêm lịch làm việc
                                         </Link>
-                                        <ul>
-                                            <li>
-                                                <Link as={Link} to="/appointment/create" className="nav-link scrollto">
-                                                    Thêm lịch làm việc
-                                                </Link>
-                                            </li>
-                                        </ul>
                                     </li>
                                     <li>
                                         <Link as={Link} to="/chat" className="nav-link scrollto">
@@ -166,27 +198,27 @@ function Header() {
 
                             {role === 'ROLE_PATIENT' && (
                                 <>
-                                    <li>
-                                        <Link as={Link} to="/history-medical-list" className="nav-link scrollto">
+                                    <li onClick={()=>{setSelected('5')}}>
+                                        <Link as={Link} to="/history-medical-list" className={`nav-link scrollto ${selected === '5' ? 'active' : ''}`}>
                                             Lịch sử khám
                                         </Link>
                                     </li>
                                     <li className="dropdown">
-                                        <Link className="text-decoration-none">
+                                        <Link className={`text-decoration-none ${selected === '6' ? 'active' : ''}`}>
                                             <span>Lịch Hẹn</span> <i className="bi bi-chevron-down"></i>
                                         </Link>
                                         <ul>
-                                            <li>
+                                            <li onClick={()=>{setSelected('6')}}>
                                                 <Link as={Link} to="/specialist" className="nav-link scrollto">
                                                     Đặt lịch hẹn
                                                 </Link>
                                             </li>
-                                            <li>
+                                            <li onClick={()=>{setSelected('6')}}>
                                                 <Link as={Link} to="/user/schedule-list" className="nav-link scrollto">
                                                     Danh sách lịch hẹn
                                                 </Link>
                                             </li>
-                                            <li>
+                                            <li onClick={()=>{setSelected('6')}}>
                                                 <Link
                                                     as={Link}
                                                     to="/get-register-patient"
