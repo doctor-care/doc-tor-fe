@@ -137,8 +137,10 @@ export default function EditPatient(props) {
     });
 
     return (
-        <div className="flex justify-center items-center h-full box-border  mt-[85px] ">
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex justify-center items-center h-full ">
+            <form className="space-y-4 sm:px-0 px-4 md-screen" onSubmit={handleSubmit(onSubmit)}>
+                <div className="" style={{ height: '420px' }}></div>
+
                 <input hidden name="idPatient" {...register.idPatient} />
                 <input hidden name="idAddress" {...register.idAddress} />
 
@@ -173,9 +175,9 @@ export default function EditPatient(props) {
                     error={errors?.healthHistory?.message}
                     type={'text'}
                 />
-                <div className="formData">
+                <div className="">
                     <div>
-                        <label>avatarUrl</label>
+                        <label>Avatar </label>
                     </div>
                     <div>
                         <input
@@ -219,7 +221,7 @@ export default function EditPatient(props) {
                     </div>
                     <div>{messageFile && <ErrorMessage messageId={messageFile} />}</div>
                 </div>
-                <div className="formData">
+                {/* <div className="formData">
                     <div>
                         <label>Blood Type</label>
                     </div>
@@ -229,8 +231,30 @@ export default function EditPatient(props) {
                         </select>
                     </div>
                     <div>{errors?.bloodType && <ErrorMessage messageId={errors.bloodType.message} />}</div>
+                </div> */}
+                <div className="">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="mb-3">Blood type </div>
+                            <select
+                                className="form-control"
+                                {...register('bloodType')}
+                                defaultValue=""
+                                name="bloodType"
+                            >
+                                <Option label={'Blood Type'} list={['A', 'B', 'AB', 'O', 'Other']} />
+                            </select>
+                            <div>{errors?.bloodType && <ErrorMessage messageId={errors.bloodType.message} />}</div>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="mb-3">Gender </div>
+                            <select className="form-control" {...register('sex')} defaultValue="" name="sex">
+                                <Option label={'sex'} list={['Nam', 'Nu', 'LBGT', 'Other']} />
+                            </select>
+                            <div>{errors?.sex && <ErrorMessage messageId={errors.sex.message} />}</div>
+                        </div>
+                    </div>
                 </div>
-
                 <InputInForm
                     label={'Birthday'}
                     properties={'birthday'}
@@ -238,7 +262,7 @@ export default function EditPatient(props) {
                     error={errors?.birthday?.message}
                     type={'date'}
                 />
-                <div className="formData">
+                {/* <div className="formData">
                     <div>
                         <label>Gender</label>
                     </div>
@@ -248,8 +272,8 @@ export default function EditPatient(props) {
                         </select>
                     </div>
                     <div>{errors?.sex && <ErrorMessage messageId={errors.sex.message} />}</div>
-                </div>
-                <div className="formData">
+                </div> */}
+                {/* <div className="formData">
                     <div>
                         <label>City</label>
                     </div>
@@ -292,16 +316,59 @@ export default function EditPatient(props) {
                         </React.Fragment>
                     </div>
                     <div>{errors?.district && <ErrorMessage messageId={errors.district.message} />}</div>
+                </div> */}
+
+                <div className="">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="mb-3">City </div>
+                            <select className="form-control" name="city" defaultValue="0" onChange={handleChangeCity}>
+                                <option value="0">Chọn Tỉnh/Thành</option>
+                                {city.map((item) =>
+                                    item.province_id === patient.city ? (
+                                        <option value={item.province_id} key={item.province_id} selected>
+                                            {item.province_name}
+                                        </option>
+                                    ) : (
+                                        <option value={item.province_id} key={item.province_id}>
+                                            {item.province_name}
+                                        </option>
+                                    ),
+                                )}
+                            </select>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="mb-3">District</div>
+                            <select
+                                className="form-control"
+                                name="district"
+                                onChange={handleChangeDistrict}
+                                {...register('district')}
+                            >
+                                {district.map((item) =>
+                                    item.district_id === patient.district ? (
+                                        <option value={item.district_id} key={item.district_id} selected>
+                                            {item.district_name}
+                                        </option>
+                                    ) : (
+                                        <option value={item.district_id} key={item.district_id}>
+                                            {item.district_name}
+                                        </option>
+                                    ),
+                                )}
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="formData">
-                    <div>
-                        <button className="btn btn-secondary" type="button" onClick={() => navigate('/')}>
+                <div className="flex flex-end my-4">
+                    <div className="" style={{ margin: '0px 4px 0px 0px ' }}>
+                        <button className="btn btn-warning px-4" type="button" onClick={() => navigate('/')}>
                             Back List
                         </button>
                     </div>
                     <div>
-                        <button className="btn btn-success" type="submit">
+                        <button className="btn btn-success px-4" type="submit">
                             Submit
                         </button>
                     </div>

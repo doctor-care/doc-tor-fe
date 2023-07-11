@@ -13,6 +13,10 @@ export default function Doctor() {
     const [pageSize, setPageSize] = useState(4);
     const [totalPage, setTotalPage] = useState(3);
     const [pageNumbers, setPageNumbers] = useState([]);
+    const [fullName, setFullName] = useState('');
+    const [specialistName, setSpecialistName] = useState('');
+    const [specialists, setSpecialists] = useState([]);
+
 
     useEffect(() => {
         axios
@@ -25,6 +29,64 @@ export default function Doctor() {
             })
             .catch((error) => console.error);
     }, [currentPage, pageSize]);
+    useEffect(() => {
+        getSpecialist();
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8080/doctor/page-all`, {
+                params: {
+                    currentPage,
+                    pageSize,
+                    fullName,
+                    specialistName
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                setTotalPage(data.totalPages);
+                setPageNumbers(Array.from(Array(data.totalPages).keys()));
+                setListDT(data.content);
+            })
+            .catch((error) => console.error);
+    }, []);
+
+
+    const getSpecialist = () => {
+        axios
+            .get(`http://localhost:8080/specialist/get-all`)
+            .then((response) => {
+                console.log("setSpecialists", response.data);
+                setSpecialists(response.data);
+            })
+            .catch((error) => console.error);
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        axios
+            .get(`http://localhost:8080/doctor/page-all`, {
+                params: {
+                    currentPage,
+                    pageSize,
+                    fullName,
+                    specialistName
+                },
+            })
+            .then((response) => {
+                const data = response.data;
+                setTotalPage(data.totalPages);
+                setPageNumbers(Array.from(Array(data.totalPages).keys()));
+                setListDT(data.content);
+            })
+            .catch((error) => console.error);
+    }
+
+
+
+
+
     function handleNextPageClick() {
         if (currentPage < totalPage - 1) {
             setCurrentPage(currentPage + 1);
@@ -59,6 +121,38 @@ export default function Doctor() {
                     <h1>Doctors</h1>
                     <h2>Đội ngũ Bác sĩ ưu tú từ các Bệnh viện hàng đầu</h2>
                 </div>
+                <form className='col-10 row' onSubmit={(e) => handleSearch(e)}>
+                        <div className="form-group col-md-3 d-flex justify-content-end align-items-center">
+                            <h5 className='m-0'>Tìm Kiếm Theo</h5>
+                        </div>
+
+                        <div className="form-group col-md-4 d-flex justify-content-center align-items-center">
+                            <input
+                                className='form-control'
+                                value={fullName} onChange={(e) => {
+                                    setFullName(e.target.value)
+                                }}
+                                placeholder='Họ và tên'
+                            />
+                        </div>
+                        <div className="form-group col-md-3 d-flex justify-content-center align-items-center">
+                            <select
+
+                                className="form-control"
+                                onChange={(e) => setSpecialistName(e.target.value)}
+                            >
+                                <option value="">-- Chọn chuyên khoa --</option>
+                                {specialists.map((item) => (
+                                    <option key={item.idSPL} value={item.name}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="col-md-2 d-flex justify-content-start align-items-center">
+                            <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    </form>
                 <div className="row">
                     {listDT.length > 0 &&
                         listDT.map((item, index) => (
