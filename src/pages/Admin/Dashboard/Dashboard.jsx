@@ -77,9 +77,9 @@ function Dashboard() {
     };
     console.log(startDate, endDate);
     return (
-        <div className="p-3">
-            <ApexChartWrapper>
-                <Grid container xs={12}>
+        <div className="wrap-content">
+            <ApexChartWrapper >
+                <Grid container xs={12} marginTop={5}>
                     <Grid item md={6}>
                         <div className="flex-grow-1">
                             <h4 className="fs-16 mb-1">Xin chào!</h4>

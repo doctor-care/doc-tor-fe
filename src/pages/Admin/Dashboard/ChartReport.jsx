@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { Line, Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import axios from 'axios';
 
 import { Button, Menu, MenuItem } from '@mui/material';
@@ -9,10 +9,6 @@ import { Download } from '@mui/icons-material';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import { styled } from '@mui/material/styles';
-import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
 import Chart from 'chart.js/auto';
 import { CategoryScale } from 'chart.js';
 import ExportExcel from './ExportExcel';

@@ -9,6 +9,7 @@ export default function Service() {
     const { id } = useParams();
     console.log('id', id);
     const user = localStorage.getItem('userName');
+    const role = localStorage.getItem('role');
     const [listDoctorService, setListDoctorService] = useState([]);
     const [service, setService] = useState('');
     const [nameDoctor, setNameDoctor] = useState('');
@@ -118,7 +119,7 @@ export default function Service() {
                                         />
                                     </span>
                                     <p>{doctorService.doctor.description}</p>
-                                    {user!=='admin'&&<div>
+                                    {role==='ROLE_PATIENT'&&<div>
                                         <button
                                             className="btn btn-success"
                                             data-bs-toggle="modal"

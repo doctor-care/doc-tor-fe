@@ -156,7 +156,7 @@ export default function Doctor() {
                         <button type='submit' className='btn btn-info btn-sm text-white'><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
-                <div className="row">
+                <div className="row mg-30">
                     {listDT.length > 0 &&
                         listDT.map((item, index) => (
                             <div className="col-lg-6" key={index}>
@@ -179,7 +179,8 @@ export default function Doctor() {
                                         >
                                             {item.degree}.{item.name}
                                         </h4>
-                                        <span>{item.specialist?.name}</span>
+                                        <span>{item.splName}</span>
+                                        <span>{item.phone}</span>
                                         <span>
                                             <ReactStars
                                                 count={5}
@@ -189,8 +190,6 @@ export default function Doctor() {
                                                 half={false}
                                             />
                                         </span>
-
-                                        <p>{item.description}</p>
                                     </div>
                                 </div>
                             </div>
