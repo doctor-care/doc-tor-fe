@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { startOfWeek, addDays, addWeeks, format } from 'date-fns';
+import { startOfWeek, addDays, addWeeks, format, set } from 'date-fns';
 import './CreateAppointment.css';
 
 import { toast } from 'react-toastify';
@@ -13,14 +13,12 @@ export default function CreateAppointment() {
     const [selectedDayList, setSelectedDayList] = useState([]);
     const [userNameDoctor, setUserNameDoctor] = useState(localStorage.getItem('userName'));
     const [disabled, setDisabled] = useState(false);
-
     const [min, setMin] = useState(5);
+
     useEffect(() => {
         showDayOfWeek();
-    }, []);
-
-    useEffect(() => {
         getExistDateList();
+        checkDayListToSetMin();
     }, []);
 
     const getNextMonday = () => {
@@ -45,12 +43,10 @@ export default function CreateAppointment() {
         const index = selectedDayList.indexOf(weekday);
         if (index === -1) {
             setSelectedDayList([...selectedDayList, weekday]);
-            console.log('selectedDayList', selectedDayList);
         } else {
             const updatedSeats = [...selectedDayList];
             updatedSeats.splice(index, 1);
             setSelectedDayList(updatedSeats);
-            console.log('selectedDayList', selectedDayList);
         }
     };
 
@@ -97,10 +93,9 @@ export default function CreateAppointment() {
                     axios
                         .get('http://localhost:8080/appointment/get-date?doctorId=' + response.data.idDoctor)
                         .then((response) => {
+                            console.log('response', response);
                             if (response.data.length > 0) {
-                                console.log('response', response);
                                 setExistDayList(response.data);
-                                setMin(0);
                             }
                         });
                 })
@@ -112,9 +107,18 @@ export default function CreateAppointment() {
         }
     };
 
+    const checkDayListToSetMin = () => {
+        for (let i = 0; i < dayList.length; i++) {
+            if (existDayList.includes(dayList[i])) {
+                setMin(0);
+                break;
+            }
+        }
+    };
+
     const createAppointment = () => {
         if (selectedDayList.length < min) {
-            toast.error('TỐI THIỂU 5 NGÀY LÀM VIỆC TRONG 1 TUẦN');
+            toast.error('ĐĂNG KÝ TỐI THIỂU 5 NGÀY!');
         } else {
             axios
                 .post(
@@ -149,8 +153,8 @@ export default function CreateAppointment() {
     return (
         <div className="container-fluid">
             <div className="d-flex justify-content-center">
-                <div className="d-flex align-items-center">
-                    <h5 className="text-uppercase">Lịch làm việc tuần tiếp theo</h5>
+                <div className="d-flex align-items-center mt-5">
+                    <h3 className="text-uppercase">đăng ký lịch làm việc tuần tiếp theo</h3>
                 </div>
             </div>
             <div className="container d-flex justify-content-center">
@@ -187,7 +191,7 @@ export default function CreateAppointment() {
                     ))}
                 </div>
             </div>
-            <div className="container d-flex justify-content-center">
+            <div className="container d-flex justify-content-center mt-2">
                 <button
                     className="btn btn-success"
                     data-bs-toggle="modal"
