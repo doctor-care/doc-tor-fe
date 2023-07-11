@@ -1,17 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './Patient.css'
 
 export default function PatientDetailAD() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
+
+    const [idChoice, setIdChoice] = useState();
+    const [prescriptionDetailList, setPrescriptionDetailList] = useState([]);
+
     //search doctor from attribute
     const { id } = useParams();
     const [patient, setPatient] = useState({});
 
-    const [role, setRole] = useState(localStorage.getItem('role'));
 
     useEffect(() => {
         axios
@@ -22,6 +22,17 @@ export default function PatientDetailAD() {
             })
             .catch((error) => console.log(error));
     }, []);
+
+    useEffect(() => {
+        getPrescriptionList();
+    }, [idChoice]);
+
+    const getPrescriptionList = () => {
+        axios.get(`http://localhost:8080/prescription/get-list/${idChoice}`).then((response) => {
+            console.log('RESPONSE LIST prescription', response.data[0]);
+            setPrescriptionDetailList(response.data);
+        });
+    };
 
     return (
         <div className="containerDT">
@@ -101,11 +112,12 @@ export default function PatientDetailAD() {
                                                 <td className="address-cell">{item.result}</td>
                                                 <td>
                                                     <button
-                                                        className="btn btn-primary"
+                                                        className="btn btn-primary btn-sm"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#showPrescription"
                                                         onClick={() => {
-                                                            navigate('');
+                                                            setIdChoice(item.idHM);
+                                                            console.log(item.idHM)
                                                         }}
                                                     >
                                                         Xem đơn thuốc
@@ -131,6 +143,59 @@ export default function PatientDetailAD() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            <div
+                className="modal fade"
+                id="showPrescription"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header bg-primary">
+                            <h5 className="modal-title text-white " id="staticBackdropLabel">
+                                THÔNG TIN ĐƠN THUỐC
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close text-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            {prescriptionDetailList.length > 0 && (
+                                <table className="table table-striped border text-center">
+                                    <thead className="">
+                                        <tr>
+                                            <th>TÊN THUỐC</th>
+                                            {/* <td>ĐƠN GIÁ</td> */}
+                                            <th>SỐ LƯỢNG</th>
+                                            {/* <td>THÀNH TIỀN</td> */}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {prescriptionDetailList.map((item, index) => {
+                                            return (
+                                                <tr className="align-middle text-nowrap" key={index}>
+                                                    <td>{item.drugName}</td>
+                                                    {/* <td>{item.drugPrice}</td> */}
+                                                    <td>{item.quantity}</td>
+                                                    {/* <td>{item.drugPrice * item.quantity}</td> */}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            )}
+                            {prescriptionDetailList.length === 0 && <div>BỆNH ÁN NÀY KHÔNG CÓ ĐƠN THUỐC!</div>}
+                        </div>
                     </div>
                 </div>
             </div>

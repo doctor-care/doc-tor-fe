@@ -41,3 +41,7 @@
 .containerDT {
     margin-top: 100px;
 }
+
+.free:hover {
+    cursor: pointer;
+}
